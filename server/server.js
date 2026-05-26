@@ -1,0 +1,159 @@
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const path = require("path");
+const morgan = require("morgan");
+const helmet = require("helmet");
+const http = require("http");
+const { Server } = require("socket.io");
+const connectDB = require("./config/db");
+
+dotenv.config();
+connectDB();
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+// Socket logic
+const onlineUsers = new Map(); // userId -> Set of socket.id
+
+io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+  
+  socket.on("join-team", (data) => {
+    const { userId } = data || {};
+    if (!userId) return;
+    socket.userId = userId;
+    if (!onlineUsers.has(userId)) {
+      onlineUsers.set(userId, new Set());
+    }
+    onlineUsers.get(userId).add(socket.id);
+    
+    // Broadcast updated list of online user IDs
+    io.emit("team-status-update", Array.from(onlineUsers.keys()));
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+    if (socket.userId && onlineUsers.has(socket.userId)) {
+      const sockets = onlineUsers.get(socket.userId);
+      sockets.delete(socket.id);
+      if (sockets.size === 0) {
+        onlineUsers.delete(socket.userId);
+      }
+    }
+    io.emit("team-status-update", Array.from(onlineUsers.keys()));
+  });
+});
+
+// Attach io to app and global for use in routes and services
+app.set("io", io);
+global.io = io;
+
+// ──────────────────────────────────────
+// SECURITY & RATE LIMITING
+// ──────────────────────────────────────
+const { generalLimiter, authLimiter, nosqlSanitizer } = require("./middleware/security");
+
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({ origin: "*", credentials: true }));
+
+// ──────────────────────────────────────
+// BODY PARSERS
+// ──────────────────────────────────────
+// Raw body for Razorpay webhook MUST come before express.json()
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(nosqlSanitizer);
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
+
+// ──────────────────────────────────────
+// STATIC FILES
+// ──────────────────────────────────────
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ──────────────────────────────────────
+// ROUTES
+// ──────────────────────────────────────
+app.get("/", (req, res) => res.json({ success: true, message: "🚀 Shyam Bhog API v2.0" }));
+
+app.use("/api/auth",          authLimiter, require("./routes/auth"));
+app.use("/api/users",         generalLimiter, require("./routes/users"));
+app.use("/api/settings",      generalLimiter, require("./routes/settings"));
+app.use("/api/services",      generalLimiter, require("./routes/services"));
+app.use("/api/bookings",      generalLimiter, require("./routes/bookings"));
+app.use("/api/feedback",      generalLimiter, require("./routes/feedback"));
+app.use("/api/faq",           generalLimiter, require("./routes/faq"));
+app.use("/api/gallery",       generalLimiter, require("./routes/gallery"));
+app.use("/api/content",       generalLimiter, require("./routes/content"));
+app.use("/api/payment",       require("./routes/payment")); // payment routes handle their own specific limiters
+app.use("/api/wallet",        generalLimiter, require("./routes/wallet"));
+app.use("/api/refunds",       generalLimiter, require("./routes/refunds"));
+app.use("/api/finance",       generalLimiter, require("./routes/finance"));
+app.use("/api/ritual-videos", generalLimiter, require("./routes/ritualVideos"));
+app.use("/api/crowd-status",  generalLimiter, require("./routes/crowdStatus"));
+app.use("/api/parking",       generalLimiter, require("./routes/parking"));
+app.use("/api/hotel-stay",    generalLimiter, require("./routes/hotelStay"));
+app.use("/api/hotels",        generalLimiter, require("./routes/hotels"));
+
+// ──────────────────────────────────────
+// PRODUCTION STATIC SERVING
+// ──────────────────────────────────────
+if (process.env.NODE_ENV === "production") {
+  const clientPath = path.join(__dirname, "..", "client", "dist");
+  app.use(express.static(clientPath));
+
+  app.get("*", (req, res) => {
+    // Only serve index.html for non-API routes
+    if (!req.path.startsWith("/api")) {
+      res.sendFile(path.resolve(clientPath, "index.html"));
+    } else {
+      res.status(404).json({ success: false, message: `API Route ${req.method} ${req.path} not found` });
+    }
+  });
+} else {
+  // 404 HANDLER (Dev Only)
+  app.use((req, res) => {
+    res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found` });
+  });
+}
+
+// ──────────────────────────────────────
+// GLOBAL ERROR HANDLER
+// ──────────────────────────────────────
+app.use((err, req, res, next) => {
+  console.error("🔥 SERVER ERROR:", err.message);
+
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({ success: false, message: "File too large. Maximum 2MB allowed." });
+  }
+
+  if (err.name === "MulterError") {
+    return res.status(400).json({ success: false, message: err.message });
+  }
+
+  const isProd = process.env.NODE_ENV === "production";
+  const statusCode = err.statusCode || err.status || 500;
+
+  res.status(statusCode).json({
+    success: false,
+    message: (statusCode === 500 && isProd) ? "Internal Server Error" : (err.message || "Internal Server Error"),
+  });
+});
+
+// ──────────────────────────────────────
+// START
+// ──────────────────────────────────────
+const PORT = process.env.PORT || 5001;
+server.listen(PORT, () => console.log(`🔥 Server running on http://localhost:${PORT}`));
