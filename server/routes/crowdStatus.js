@@ -5,6 +5,7 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 router.get('/', async (req, res) => {
   try {
+    const { tenantId } = req.query;
     let adminId = tenantId;
     if (!adminId || adminId === 'undefined') {
       const User = require('../models/User');
@@ -24,6 +25,7 @@ router.get('/', async (req, res) => {
 
 router.post('/share', async (req, res) => {
   try {
+    const { tenantId, platform } = req.body;
     let adminId = tenantId;
     if (!adminId || adminId === 'undefined') {
       const User = require('../models/User');

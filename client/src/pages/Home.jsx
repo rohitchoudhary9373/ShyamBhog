@@ -34,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+        const tenantId = settingsAdminId || '';
         console.log(`[Home] Fetching devotee data for tenantId: "${tenantId}"`);
         const [srvRes, faqRes, galRes, feedRes, crowdRes, parkRes, hotelRes] = await Promise.all([
           API.get(`/services?tenantId=${tenantId}`).catch(() => ({ data: [] })),
@@ -88,7 +88,7 @@ export default function Home() {
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     try {
-      const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+      const tenantId = settingsAdminId || '';
       await API.post('/feedback', { ...feedbackForm, tenantId });
       alert('Thank you! Your feedback has been submitted for review.');
       setFeedbackForm({ name: '', message: '' });

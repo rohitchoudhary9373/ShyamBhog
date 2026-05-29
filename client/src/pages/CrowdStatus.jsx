@@ -241,7 +241,7 @@ export default function CrowdStatus() {
 
                  <div className="space-y-1">
                     <motion.h2 key={crowd?.status} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`text-4xl font-black ${config.color} tracking-tight uppercase`}>
-                       {crowd?.status}
+                       {crowd?.status || 'Active Intel'}
                     </motion.h2>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">Intensity Index</p>
                  </div>
@@ -253,14 +253,14 @@ export default function CrowdStatus() {
                           <FaClock size={14} />
                        </div>
                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">Wait Est.</p>
-                       <p className="text-lg font-black text-[#0A1128] tracking-tight">{crowd?.waitingTime}</p>
+                       <p className="text-lg font-black text-[#0A1128] tracking-tight">{crowd?.waitingTime || '-- Mins'}</p>
                     </div>
                     <div className="bg-slate-50/50 rounded-[20px] p-4 border border-slate-100 group/stat transition-all">
                        <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-2 group-hover/stat:bg-amber-500 group-hover/stat:text-white transition-colors">
                           <FaBolt size={14} />
                        </div>
                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">Prime</p>
-                       <p className="text-sm font-black text-[#0A1128] tracking-tight">{crowd?.bestSlot}</p>
+                       <p className="text-sm font-black text-[#0A1128] tracking-tight">{crowd?.bestSlot || 'N/A'}</p>
                     </div>
                  </div>
 
@@ -271,16 +271,16 @@ export default function CrowdStatus() {
                           <FaStar className="text-orange-500" size={10} />
                           <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">Density Index</span>
                        </div>
-                       <span className={`text-[10px] font-black ${config.color} uppercase`}>{crowd?.percentage}%</span>
+                       <span className={`text-[10px] font-black ${config.color} uppercase`}>{crowd?.percentage || 0}%</span>
                     </div>
                     <div className="h-3 w-full bg-slate-100/50 rounded-full overflow-hidden p-0.5 border border-slate-100">
-                       <motion.div initial={{ width: 0 }} animate={{ width: `${crowd?.percentage}%` }} transition={{ duration: 1.5 }} className={`h-full rounded-full bg-gradient-to-r ${config.bar}`} />
+                       <motion.div initial={{ width: 0 }} animate={{ width: `${crowd?.percentage || 0}%` }} transition={{ duration: 1.5 }} className={`h-full rounded-full bg-gradient-to-r ${config.bar}`} />
                     </div>
                  </div>
 
                  <div className="w-full p-5 bg-[#0A1128]/5 rounded-[22px] border border-[#0A1128]/5">
                     <p className="text-[12px] font-bold text-slate-700 italic leading-snug line-clamp-2">
-                       "{crowd?.description}"
+                       "{crowd?.description || 'System online and monitoring current flow parameters.'}"
                     </p>
                  </div>
               </div>
@@ -301,7 +301,7 @@ export default function CrowdStatus() {
            <AnimatePresence mode="wait">
              {viewMode === 'today' ? (
                <motion.div key="today" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="grid gap-3">
-                  {(crowd?.slots || []).map((slot, i) => (
+                  {(crowd?.slots && crowd.slots.length > 0 ? crowd.slots : []).map((slot, i) => (
                     <div key={i} className="bg-white p-4 rounded-[22px] border border-orange-50 shadow-sm flex items-center justify-between group transition-all hover:border-orange-200">
                        <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-[#0A1128] group-hover:text-white transition-all"><FaClock size={16} /></div>
