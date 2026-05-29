@@ -6,7 +6,7 @@ import API from "./services/api";
 import axios from "axios";
 import { getBaseURL } from "./utils/url";
 
-// Layout
+// Layout (clean frontend components)
 import Navbar from "./components/Navbar";
 
 // Pages
