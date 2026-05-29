@@ -40,8 +40,6 @@ import ManageCrowd from "./pages/Admin/ManageCrowd";
 import ManageParkingDetailed from "./pages/Admin/ManageParkingDetailed";
 import ManageHotelsDetailed from "./pages/Admin/ManageHotelsDetailed";
 import WatchArjee from "./pages/WatchArjee";
-import HotelStayPage from "./pages/HotelStayPage";
-import ParkingGuidePage from "./pages/ParkingGuidePage";
 import CrowdStatus from "./pages/CrowdStatus";
 import { useSettings } from "./context/SettingsContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -479,8 +477,6 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/wallet" element={<MyWallet />} />
-          <Route path="/hotel-stay" element={<HotelStayPage />} />
-          <Route path="/parking-guide" element={<ParkingGuidePage />} />
           <Route path="/crowd-status" element={<CrowdStatus />} />
           <Route path="/policy/:type" element={<PolicyPage />} />
           <Route path="/razorpay-checkout" element={<RazorpayCheckout />} />
