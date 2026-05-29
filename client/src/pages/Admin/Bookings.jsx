@@ -21,6 +21,289 @@ export default function Bookings() {
 
   const user = getUser();
 
+  const [toastMessage, setToastMessage] = useState("");
+
+  const handleCopyMessage = (b) => {
+    let fullText = "";
+    const itemMessages = b.items?.filter(item => item.message || item.devoteeName) || [];
+    
+    if (itemMessages.length > 0) {
+      fullText = itemMessages.map((item, idx) => {
+        let entry = `Devotee ${idx + 1}:`;
+        if (item.devoteeName) entry += ` Name: ${item.devoteeName}`;
+        if (item.devoteeWhatsapp) entry += ` (WhatsApp: ${item.devoteeWhatsapp})`;
+        entry += `\nMessage: ${item.message || 'None'}`;
+        return entry;
+      }).join('\n\n');
+    } else if (b.message) {
+      fullText = b.message;
+    } else {
+      fullText = "No Arjee/Sankalp message submitted.";
+    }
+
+    navigator.clipboard.writeText(fullText).then(() => {
+      setToastMessage("Message copied successfully");
+      setTimeout(() => setToastMessage(""), 3000);
+    }).catch(err => {
+      console.error("Clipboard copy failed:", err);
+    });
+  };
+
+  const handlePrintMessage = (b) => {
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    if (!printWindow) {
+      alert("Please allow popups to print the Arjee card.");
+      return;
+    }
+
+    const itemMessages = b.items?.filter(item => item.message || item.devoteeName) || [];
+    let messagesHtml = "";
+
+    const escapeHtml = (unsafe) => {
+      return (unsafe || '')
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
+
+    if (itemMessages.length > 0) {
+      messagesHtml = itemMessages.map((item, idx) => `
+        <div class="message-card">
+          <div class="devotee-header">
+            <span>Devotee ${idx + 1}: ${escapeHtml(item.devoteeName) || 'N/A'}</span>
+            ${item.devoteeWhatsapp ? `<span>WhatsApp: ${escapeHtml(item.devoteeWhatsapp)}</span>` : ''}
+          </div>
+          <div class="message-body">${escapeHtml(item.message) || 'No message submitted.'}</div>
+        </div>
+      `).join('');
+    } else {
+      messagesHtml = `
+        <div class="message-card">
+          <div class="message-body">${escapeHtml(b.message) || 'No Arjee/Sankalp message submitted.'}</div>
+        </div>
+      `;
+    }
+
+    const orderDate = new Date(b.createdAt).toLocaleDateString('en-IN', {
+      dateStyle: 'long',
+      timeStyle: 'short'
+    });
+
+    const content = `
+      <html>
+        <head>
+          <title>Shyam Bhog - Devotee Arjee Printout</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+            body {
+              font-family: 'Outfit', sans-serif;
+              color: #1e293b;
+              margin: 40px;
+              line-height: 1.6;
+              background-color: #fff;
+            }
+            .container {
+              max-width: 700px;
+              margin: 0 auto;
+              border: 3px double #f97316;
+              padding: 30px;
+              border-radius: 20px;
+              background: #fff;
+              box-shadow: 0 0 20px rgba(0,0,0,0.02);
+            }
+            .header {
+              text-align: center;
+              border-bottom: 2px solid #fed7aa;
+              padding-bottom: 20px;
+              margin-bottom: 25px;
+            }
+            .salutation {
+              font-family: 'Playfair Display', serif;
+              color: #ea580c;
+              font-size: 24px;
+              font-weight: 800;
+              margin-bottom: 5px;
+              letter-spacing: -0.5px;
+            }
+            .brand {
+              font-size: 11px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+              color: #64748b;
+            }
+            .order-meta {
+              display: grid;
+              grid-template-cols: 1fr 1fr;
+              gap: 15px;
+              background: #fff8f6;
+              padding: 15px;
+              border-radius: 12px;
+              border: 1px solid #ffedd5;
+              font-size: 12px;
+              margin-bottom: 30px;
+            }
+            .meta-item {
+              display: flex;
+              flex-direction: column;
+            }
+            .meta-label {
+              font-weight: 800;
+              text-transform: uppercase;
+              font-size: 9px;
+              color: #94a3b8;
+              letter-spacing: 1px;
+              margin-bottom: 2px;
+            }
+            .meta-value {
+              font-weight: 600;
+              color: #0f172a;
+            }
+            .section-title {
+              font-size: 10px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              color: #ea580c;
+              margin-bottom: 15px;
+              border-left: 3px solid #ea580c;
+              padding-left: 8px;
+            }
+            .message-card {
+              border: 1px solid #fed7aa;
+              background: #fffaf7;
+              border-radius: 12px;
+              padding: 20px;
+              margin-bottom: 15px;
+            }
+            .devotee-header {
+              display: flex;
+              justify-content: space-between;
+              font-size: 11px;
+              font-weight: 800;
+              color: #c2410c;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              border-bottom: 1px dashed #fed7aa;
+              padding-bottom: 8px;
+              margin-bottom: 12px;
+            }
+            .message-body {
+              font-size: 14px;
+              color: #334155;
+              white-space: pre-wrap;
+              font-style: italic;
+            }
+            .footer {
+              text-align: center;
+              font-size: 10px;
+              color: #94a3b8;
+              margin-top: 40px;
+              border-top: 1px solid #f1f5f9;
+              padding-top: 15px;
+            }
+            @media print {
+              body { margin: 0; padding: 0; }
+              .container { border: none; box-shadow: none; padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <div class="salutation">|| जय श्री श्याम ||</div>
+              <div class="brand">Shyam Bhog - Offering & Arjee Portal</div>
+            </div>
+            
+            <div class="order-meta">
+              <div class="meta-item">
+                <span class="meta-label">Primary Devotee</span>
+                <span class="meta-value">${escapeHtml(b.name)}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">WhatsApp Contact</span>
+                <span class="meta-value">${escapeHtml(b.whatsapp)}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Order Reference ID</span>
+                <span class="meta-value">${escapeHtml(b._id)}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Sacred Slot Date</span>
+                <span class="meta-value">${new Date(b.slot || b.createdAt).toLocaleDateString('en-IN', { dateStyle: 'long' })}</span>
+              </div>
+            </div>
+
+            <div class="section-title">Devotional Arjee & Sankalp Messages</div>
+            ${messagesHtml}
+
+            <div class="footer">
+              Printed on ${orderDate} | Shri Khatu Shyam Ji Temple Services
+            </div>
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.write(content);
+    printWindow.document.close();
+  };
+
+  const renderDevoteeMessages = (b) => {
+    const itemMessages = b.items?.filter(item => item.message || item.devoteeName) || [];
+    
+    const escapeHtml = (unsafe) => {
+      return (unsafe || '')
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
+
+    if (itemMessages.length > 0) {
+      return (
+        <div className="space-y-3">
+          {itemMessages.map((item, idx) => (
+            <div key={idx} className="bg-white/70 p-3 rounded-xl border border-amber-100/50 space-y-1">
+              {item.devoteeName && (
+                <div className="text-[10px] font-black text-amber-900 uppercase tracking-wide flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                  Devotee: {escapeHtml(item.devoteeName)} {item.devoteeWhatsapp ? `(${escapeHtml(item.devoteeWhatsapp)})` : ''}
+                </div>
+              )}
+              <p className="text-xs font-semibold text-slate-700 leading-relaxed whitespace-pre-wrap pl-3">
+                {item.message ? escapeHtml(item.message) : <span className="italic text-slate-400">No Arjee message submitted.</span>}
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (b.message) {
+      return (
+        <p className="text-xs font-semibold text-slate-700 leading-relaxed whitespace-pre-wrap bg-white/70 p-3 rounded-xl border border-amber-100/50">
+          {escapeHtml(b.message)}
+        </p>
+      );
+    }
+
+    return (
+      <p className="text-xs font-bold text-slate-400 italic bg-white/40 p-3 rounded-xl border border-slate-100 text-center">
+        No Arjee/Sankalp message submitted.
+      </p>
+    );
+  };
+
   useEffect(() => {
     fetchBookings();
   }, []);
@@ -418,6 +701,36 @@ export default function Bookings() {
                   </div>
                 </div>
 
+                {/* Devotee Arjee / Sankalp Message Section */}
+                <div className="border border-amber-100/80 bg-amber-50/20 rounded-2xl p-5 space-y-4 relative overflow-hidden">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-100 pb-3">
+                    <span className="text-[10px] font-black text-amber-800 uppercase tracking-widest flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                      Devotee Arjee / Sankalp Message
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        type="button"
+                        onClick={() => handleCopyMessage(b)}
+                        className="flex items-center gap-1.5 text-[9px] font-black text-amber-800 bg-amber-100/80 hover:bg-amber-200/80 px-3.5 py-2 rounded-xl transition-all shadow-sm active:scale-95 border border-amber-200/40"
+                      >
+                        Copy Message
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => handlePrintMessage(b)}
+                        className="flex items-center gap-1.5 text-[9px] font-black text-amber-800 bg-amber-100/80 hover:bg-amber-200/80 px-3.5 py-2 rounded-xl transition-all shadow-sm active:scale-95 border border-amber-200/40"
+                      >
+                        Print Message
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="max-h-36 overflow-y-auto custom-scrollbar pr-1">
+                    {renderDevoteeMessages(b)}
+                  </div>
+                </div>
+
                 {/* Bottom Row: Admin Actions */}
                 <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-100">
                   {(b.status === 'Pending' || b.status === 'Payment_Verified') && (
@@ -483,6 +796,21 @@ export default function Bookings() {
           </div>
         )}
       </div>
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-8 right-8 z-[200] bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-xl border border-white/10 flex items-center gap-3 font-bold text-xs uppercase tracking-wider"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

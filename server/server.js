@@ -88,6 +88,94 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // ──────────────────────────────────────
 app.get("/", (req, res) => res.json({ success: true, message: "🚀 Shyam Bhog API v2.0" }));
 
+// ──────────────────────────────────────
+// RAZORPAY STANDARD CHECKOUT ENDPOINTS
+// ──────────────────────────────────────
+app.post("/api/create-order", async (req, res) => {
+  try {
+    const { amount, currency, receipt } = req.body;
+
+    // Validate amount >= 100 paise
+    if (amount === undefined || typeof amount !== "number") {
+      return res.status(400).json({ success: false, message: "Amount is required and must be a number" });
+    }
+    if (amount < 100) {
+      return res.status(400).json({ success: false, message: "Amount must be at least 100 paise" });
+    }
+
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      return res.status(401).json({ success: false, message: "Unauthorized: Razorpay API keys are missing" });
+    }
+
+    const Razorpay = require("razorpay");
+    let rzp;
+    try {
+      rzp = new Razorpay({ key_id: keyId, key_secret: keySecret });
+    } catch (e) {
+      return res.status(401).json({ success: false, message: "Unauthorized: Invalid Razorpay credentials configuration" });
+    }
+
+    try {
+      const order = await rzp.orders.create({
+        amount: Math.round(amount), // ensure it's integer paise
+        currency: currency || "INR",
+        receipt: receipt || `rcpt_${Date.now()}`
+      });
+
+      return res.status(200).json({
+        order_id: order.id,
+        amount: order.amount,
+        currency: order.currency
+      });
+    } catch (apiError) {
+      console.error("Razorpay API Error:", apiError);
+      // Handle Razorpay auth failures (often returns 401 or has auth in message)
+      if (apiError.statusCode === 401 || (apiError.message && apiError.message.toLowerCase().includes("auth"))) {
+        return res.status(401).json({ success: false, message: "Unauthorized: Razorpay authentication failed" });
+      }
+      return res.status(500).json({ success: false, message: apiError.message || "Razorpay API error" });
+    }
+  } catch (error) {
+    console.error("Error creating order:", error);
+    return res.status(500).json({ success: false, message: error.message || "Internal server error" });
+  }
+});
+
+app.post("/api/verify-payment", async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    // Missing fields: return 400
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Missing required verification fields" });
+    }
+
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    if (!keySecret) {
+      return res.status(500).json({ success: false, message: "Razorpay key secret not configured on server" });
+    }
+
+    const crypto = require("crypto");
+    const generated_signature = crypto
+      .createHmac("sha256", keySecret)
+      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .digest("hex");
+
+    if (generated_signature === razorpay_signature) {
+      return res.status(200).json({ success: true, message: "Payment verified successfully" });
+    } else {
+      // Signature mismatch: return 400, do NOT mark as paid
+      return res.status(400).json({ success: false, message: "Signature mismatch. Verification failed." });
+    }
+  } catch (error) {
+    console.error("Error verifying signature:", error);
+    return res.status(500).json({ success: false, message: error.message || "Internal server error" });
+  }
+});
+
 app.use("/api/auth",          authLimiter, require("./routes/auth"));
 app.use("/api/users",         generalLimiter, require("./routes/users"));
 app.use("/api/settings",      generalLimiter, require("./routes/settings"));
