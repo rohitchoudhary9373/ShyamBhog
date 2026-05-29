@@ -29,12 +29,13 @@ export default function ParkingGuidePage() {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
-            console.log(`[ParkingGuidePage] Fetching parkings for tenantId: "${tenantId}"`);
+            const tenantId = settingsAdminId || '';
+            console.log(`[ParkingGuidePage] Fetching ALL parkings (ignoring local tenantId)`);
             const [parkRes, faqRes] = await Promise.all([
-               API.get(`/parking?tenantId=${tenantId}`),
-               API.get(`/faq?category=Parking&tenantId=${tenantId}`)
+               API.get('/parking'),
+               API.get(`/faq?category=Parking${tenantId ? `&tenantId=${tenantId}` : ''}`)
             ]);
+            console.log('Live Parking API Response:', parkRes.data);
             console.log('[ParkingGuidePage] API Responses received:', { parkings: parkRes.data, faqs: faqRes.data });
             setParkings(parkRes.data);
             const faqArray = Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data.data || []);
@@ -107,6 +108,16 @@ export default function ParkingGuidePage() {
                         transition={{ delay: idx * 0.1 }}
                         className="bg-white rounded-[32px] p-6 border border-orange-100/50 shadow-xl shadow-orange-900/5 group hover:border-orange-400 transition-all"
                      >
+                        {p.imageUrl && (
+                           <div className="w-full h-48 rounded-[20px] overflow-hidden mb-6 bg-slate-50">
+                              <img 
+                                 src={p.imageUrl.startsWith('http') ? p.imageUrl : `https://shyambhog.onrender.com${p.imageUrl}`} 
+                                 alt={p.name} 
+                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                                 onError={(e) => { e.target.style.display = 'none'; }}
+                              />
+                           </div>
+                        )}
                         <div className="flex justify-between items-start mb-6">
                            <div className="flex flex-col gap-1">
                               <div className="flex items-center gap-1.5 bg-orange-50 text-orange-600 px-2.5 py-1 rounded-lg border border-orange-100/50 w-fit">
