@@ -36,20 +36,12 @@ import {
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ total: 0, revenue: 0, pending: 0, walletFloat: 0, adminBalance: 0 });
-  const [chartData, setChartData] = useState([
-    { name: 'Mon', revenue: 4000 },
-    { name: 'Tue', revenue: 3000 },
-    { name: 'Wed', revenue: 5000 },
-    { name: 'Thu', revenue: 2780 },
-    { name: 'Fri', revenue: 1890 },
-    { name: 'Sat', revenue: 2390 },
-    { name: 'Sun', revenue: 3490 },
-  ]);
+  const [chartData, setChartData] = useState([]);
   const [recent, setRecent] = useState([]);
   const [crowd, setCrowd] = useState("Normal");
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
-
+ 
   const fetchData = async () => {
     try {
       const res = await API.get("/finance/reseller-stats");
@@ -62,6 +54,9 @@ export default function Dashboard() {
         adminBalance: d.adminBalance || 0
       });
       setRecent(d.recentBookings);
+      if (d.dailyRevenue) {
+        setChartData(d.dailyRevenue);
+      }
     } catch (err) {
       console.error("Dashboard Error:", err);
     } finally {

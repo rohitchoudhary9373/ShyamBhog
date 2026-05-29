@@ -26,6 +26,15 @@ export default function ManageCrowd() {
     emergencyBanner: '',
     slots: [],
     advisories: [],
+    weekly: [
+      { day: 'Mon', intensity: 15 },
+      { day: 'Tue', intensity: 20 },
+      { day: 'Wed', intensity: 40 },
+      { day: 'Thu', intensity: 15 },
+      { day: 'Fri', intensity: 50 },
+      { day: 'Sat', intensity: 90 },
+      { day: 'Sun', intensity: 95 }
+    ],
     shareConfig: {
       enableSharing: true,
       platforms: { whatsapp: true, telegram: true, twitter: true, instagram: true },
@@ -53,7 +62,11 @@ export default function ManageCrowd() {
       const tenantId = user?.role === 'agent' ? user?.parentAdmin : user?._id;
       const res = await API.get(`/crowd-status?tenantId=${tenantId}`);
       if (res.data) {
-          setData(prev => ({ ...prev, ...res.data }));
+          setData(prev => ({ 
+            ...prev, 
+            ...res.data,
+            weekly: res.data.weekly || prev.weekly
+          }));
       }
     } catch (err) {
       console.error("Error fetching status:", err);
@@ -128,6 +141,7 @@ export default function ManageCrowd() {
                  { id: 'hero', label: 'Hero Content', icon: <FaStar /> },
                  { id: 'slots', label: 'Time Slots', icon: <FaClock /> },
                  { id: 'advisory', label: 'Advisories', icon: <FaShieldAlt /> },
+                 { id: 'weekly', label: 'Weekly Patterns', icon: <FaChartLine /> },
                  { id: 'share', label: 'Share Engine', icon: <FaShareAlt /> }
                ].map(tab => (
                  <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-[#0A1128] text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}>
@@ -301,6 +315,51 @@ export default function ManageCrowd() {
                              <textarea value={data.shareConfig.template.message} onChange={e => setData({...data, shareConfig: {...data.shareConfig, template: {...data.shareConfig.template, message: e.target.value}}})} className="w-full p-6 bg-slate-50 border border-slate-100 rounded-[28px] outline-none focus:border-orange-500 font-medium text-sm leading-relaxed italic resize-none" rows="4" />
                              <p className="text-[9px] font-bold text-slate-400 italic px-2">Use tags: <span className="text-orange-500">{"{status}"}, {"{wait}"}, {"{temple}"}, {"{link}"}</span></p>
                           </div>
+                       </div>
+                    </motion.div>
+                  )}
+
+                  {activeTab === 'weekly' && (
+                    <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                       <div className="flex items-center justify-between border-b border-slate-50 pb-6">
+                          <div>
+                             <h3 className="text-xl font-black text-[#0A1128] tracking-tighter uppercase italic">Weekly Rush <span className="text-orange-600 not-italic">Patterns</span></h3>
+                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Adjust historical weekly density estimates</p>
+                          </div>
+                       </div>
+                       <div className="space-y-6">
+                          {(data.weekly || []).map((w, idx) => (
+                             <div key={idx} className="flex flex-col md:flex-row items-center gap-6 p-6 bg-slate-50/50 border border-slate-100 rounded-[24px]">
+                                <div className="w-24 shrink-0 font-black text-slate-700 uppercase tracking-widest text-xs italic">{w.day}</div>
+                                <div className="flex-grow w-full flex items-center gap-4">
+                                   <input 
+                                     type="range" 
+                                     min="0" 
+                                     max="100" 
+                                     value={w.intensity} 
+                                     onChange={e => {
+                                        const newWeekly = [...data.weekly];
+                                        newWeekly[idx].intensity = parseInt(e.target.value);
+                                        setData({...data, weekly: newWeekly});
+                                     }}
+                                     className="w-full accent-orange-650 cursor-pointer h-2 bg-slate-200 rounded-lg appearance-none" 
+                                   />
+                                   <input 
+                                     type="number" 
+                                     min="0" 
+                                     max="100"
+                                     value={w.intensity}
+                                     onChange={e => {
+                                        const newWeekly = [...data.weekly];
+                                        newWeekly[idx].intensity = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                                        setData({...data, weekly: newWeekly});
+                                     }}
+                                     className="w-16 px-3 py-2 bg-white border border-slate-150 rounded-xl font-black text-center text-xs" 
+                                   />
+                                   <span className="text-xs font-black text-slate-400">%</span>
+                                </div>
+                             </div>
+                          ))}
                        </div>
                     </motion.div>
                   )}

@@ -18,18 +18,7 @@ const AboutUsModal = ({ isOpen, onClose }) => {
           setContent(res.data.data);
         } catch (err) {
           console.error('About content fetch error:', err);
-          // Fallback static content if backend is empty
-          setContent({
-            intro: "Welcome to Shyam Bhog, your premier destination for authentic devotional services. We are dedicated to bridging the gap between devotees and the divine, providing transparent and sacred experiences for Khatu Shyam Ji followers worldwide.",
-            mission: "Our mission is to digitize and democratize spiritual services, ensuring every devotee can experience the grace of the Lord with complete trust and ease.",
-            whyUs: [
-              { title: "Transparency", desc: "Real-time updates and clear ritual documentation." },
-              { title: "Sacred Authenticity", desc: "Every ritual is performed by authorized temple sevadaars." },
-              { title: "Devotee-First", desc: "Personalized support and intuitive booking flows." }
-            ],
-            services: "We offer Arjee, Bhog, and Swamani services with the highest level of devotion and professional care.",
-            contact: "support@shyambhog.com | +91 98765 43210"
-          });
+          setContent(null);
         } finally {
           setLoading(false);
         }
@@ -77,76 +66,93 @@ const AboutUsModal = ({ isOpen, onClose }) => {
 
           {/* Content Scrollable Area */}
           <div className="flex-1 overflow-y-auto p-6 sm:p-10 custom-scrollbar space-y-12">
-            
-            {/* Intro Section */}
-            <section className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 rounded-full text-[9px] font-black text-orange-600 uppercase tracking-widest">
-                 <FaQuoteLeft size={8} /> The Genesis
+            {loading ? (
+              <div className="py-20 text-center flex flex-col items-center justify-center gap-4">
+                 <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Invoking Brand Story...</p>
               </div>
-              <p className="text-lg font-medium text-slate-600 leading-relaxed italic">
-                "{content?.intro || 'Experiencing the divine grace through technology and devotion.'}"
-              </p>
-            </section>
-
-            {/* Mission Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <section className="space-y-4 p-6 bg-slate-50 rounded-[32px] border border-white">
-                <FaRocket className="text-orange-500 text-2xl" />
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Our Mission</h3>
-                <p className="text-xs font-medium text-slate-500 leading-relaxed">
-                  {content?.mission || 'Digitizing spiritual services for a seamless devotee experience.'}
-                </p>
-              </section>
-
-              <section className="space-y-4 p-6 bg-[#0A1128] rounded-[32px]">
-                <FaHandHoldingHeart className="text-orange-500 text-2xl" />
-                <h3 className="text-sm font-black text-white uppercase tracking-widest">Devotional Value</h3>
-                <p className="text-xs font-medium text-slate-400 leading-relaxed">
-                  {content?.services || 'Providing authentic Arjee, Bhog, and Swamani rituals with care.'}
-                </p>
-              </section>
-            </div>
-
-            {/* Why Choose Us Section */}
-            <section className="space-y-6">
-              <div className="text-center">
-                 <h3 className="text-sm font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Why Choose Us</h3>
-                 <div className="w-8 h-1 bg-orange-600 mx-auto rounded-full"></div>
+            ) : !content ? (
+              <div className="py-20 text-center space-y-4">
+                 <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-orange-200 mx-auto">
+                    <FaQuoteLeft size={20} />
+                 </div>
+                 <p className="text-sm font-black text-slate-900 uppercase tracking-wider">Story Updating</p>
+                 <p className="text-xs font-medium text-slate-400 max-w-xs mx-auto">The administrator is currently calibrating this brand's chronicle. Please consult Seva Support for immediate queries.</p>
               </div>
-              <div className="grid grid-cols-1 gap-4">
-                {(content?.whyUs || []).map((item, idx) => (
-                  <div key={idx} className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all group">
-                     <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform shrink-0 border border-slate-50">
-                        <FaShieldAlt size={16} />
-                     </div>
-                     <div>
-                        <h4 className="text-sm font-black text-slate-900 mb-1">{item.title}</h4>
-                        <p className="text-[11px] font-medium text-slate-500">{item.desc}</p>
-                     </div>
+            ) : (
+              <>
+                {/* Intro Section */}
+                <section className="space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 rounded-full text-[9px] font-black text-orange-600 uppercase tracking-widest">
+                     <FaQuoteLeft size={8} /> The Genesis
                   </div>
-                ))}
-              </div>
-            </section>
+                  <p className="text-lg font-medium text-slate-600 leading-relaxed italic">
+                    "{content.intro}"
+                  </p>
+                </section>
 
-            {/* Contact Footer in Modal */}
-            <section className="pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
-               <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-white">
-                     <FaPhoneAlt size={18} />
-                  </div>
-                  <div>
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Need Assistance?</p>
-                     <p className="text-sm font-bold text-slate-900">{content?.contact || 'support@shyambhog.com'}</p>
-                  </div>
-               </div>
-               <button 
-                  onClick={onClose}
-                  className="px-8 py-3 bg-orange-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl hover:bg-orange-700 transition-all active:scale-95"
-               >
-                  Connect with Seva
-               </button>
-            </section>
+                {/* Mission Section */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <section className="space-y-4 p-6 bg-slate-50 rounded-[32px] border border-white">
+                    <FaRocket className="text-orange-500 text-2xl" />
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Our Mission</h3>
+                    <p className="text-xs font-medium text-slate-500 leading-relaxed">
+                      {content.mission}
+                    </p>
+                  </section>
 
+                  <section className="space-y-4 p-6 bg-[#0A1128] rounded-[32px]">
+                    <FaHandHoldingHeart className="text-orange-500 text-2xl" />
+                    <h3 className="text-sm font-black text-white uppercase tracking-widest">Devotional Value</h3>
+                    <p className="text-xs font-medium text-slate-400 leading-relaxed">
+                      {content.services}
+                    </p>
+                  </section>
+                </div>
+
+                {/* Why Choose Us Section */}
+                {content.whyUs && content.whyUs.length > 0 && (
+                  <section className="space-y-6">
+                    <div className="text-center">
+                       <h3 className="text-sm font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Why Choose Us</h3>
+                       <div className="w-8 h-1 bg-orange-600 mx-auto rounded-full"></div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
+                      {content.whyUs.map((item, idx) => (
+                        <div key={idx} className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all group">
+                           <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform shrink-0 border border-slate-50">
+                              <FaShieldAlt size={16} />
+                           </div>
+                           <div>
+                              <h4 className="text-sm font-black text-slate-900 mb-1">{item.title}</h4>
+                              <p className="text-[11px] font-medium text-slate-500">{item.desc}</p>
+                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Contact Footer in Modal */}
+                <section className="pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
+                   <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-white">
+                         <FaPhoneAlt size={18} />
+                      </div>
+                      <div>
+                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Need Assistance?</p>
+                         <p className="text-sm font-bold text-slate-900">{content.contact}</p>
+                      </div>
+                   </div>
+                   <button 
+                      onClick={onClose}
+                      className="px-8 py-3 bg-orange-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl hover:bg-orange-700 transition-all active:scale-95"
+                   >
+                      Connect with Seva
+                   </button>
+                </section>
+              </>
+            )}
           </div>
         </motion.div>
       </div>

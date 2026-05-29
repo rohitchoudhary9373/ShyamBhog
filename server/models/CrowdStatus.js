@@ -32,6 +32,23 @@ const CrowdStatusSchema = new mongoose.Schema({
     order: { type: Number, default: 0 }
   }],
 
+  // WEEKLY RUSH INDEX
+  weekly: {
+    type: [{
+      day: { type: String },
+      intensity: { type: Number }
+    }],
+    default: [
+      { day: 'Mon', intensity: 15 },
+      { day: 'Tue', intensity: 20 },
+      { day: 'Wed', intensity: 40 },
+      { day: 'Thu', intensity: 15 },
+      { day: 'Fri', intensity: 50 },
+      { day: 'Sat', intensity: 90 },
+      { day: 'Sun', intensity: 95 }
+    ]
+  },
+
   // ADVISORIES
   advisories: [{
     text: String,

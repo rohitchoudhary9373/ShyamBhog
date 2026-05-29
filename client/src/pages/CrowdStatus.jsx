@@ -313,7 +313,15 @@ export default function CrowdStatus() {
              ) : (
                <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white p-8 rounded-[32px] border border-orange-50 shadow-lg">
                   <div className="flex items-end justify-between h-40 gap-4">
-                     {[{day:'Mon', intensity:15},{day:'Tue', intensity:20},{day:'Wed', intensity:40},{day:'Thu', intensity:15},{day:'Fri', intensity:50},{day:'Sat', intensity:90},{day:'Sun', intensity:95}].map((d, i) => (
+                     {(crowd?.weekly || [
+                       { day: 'Mon', intensity: 15 },
+                       { day: 'Tue', intensity: 20 },
+                       { day: 'Wed', intensity: 40 },
+                       { day: 'Thu', intensity: 15 },
+                       { day: 'Fri', intensity: 50 },
+                       { day: 'Sat', intensity: 90 },
+                       { day: 'Sun', intensity: 95 }
+                     ]).map((d, i) => (
                        <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
                           <div className="w-full flex-grow relative flex flex-col justify-end"><motion.div initial={{ height: 0 }} animate={{ height: `${d.intensity}%` }} className={`w-full rounded-t-xl bg-orange-500/80 group-hover:bg-orange-500 transition-colors`} /></div>
                           <span className="text-[9px] font-black text-[#0A1128] uppercase opacity-40 group-hover:opacity-100">{d.day}</span>

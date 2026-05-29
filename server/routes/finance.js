@@ -77,6 +77,46 @@ router.get('/reseller-stats', protect, admin, async (req, res) => {
     const adminUser = await User.findById(req.user._id);
     const adminBalance = adminUser?.walletBalance || 0;
 
+    // Calculate 7 days revenue aggregation
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const dailyRevenueAgg = await ArjeeOrder.aggregate([
+      { 
+        $match: { 
+          status: { $in: ['Completed', 'Active'] },
+          createdAt: { $gte: sevenDaysAgo }
+        } 
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          revenue: { $sum: "$totalPrice" }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const dailyMap = {};
+    dailyRevenueAgg.forEach(item => {
+      dailyMap[item._id] = item.revenue;
+    });
+
+    const dailyRevenue = [];
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const dayName = daysOfWeek[d.getDay()];
+      dailyRevenue.push({
+        name: dayName,
+        date: dateStr,
+        revenue: dailyMap[dateStr] || 0
+      });
+    }
+
     res.json({
       success: true,
       data: {
@@ -86,7 +126,8 @@ router.get('/reseller-stats', protect, admin, async (req, res) => {
         totalRevenue,
         totalWalletFloat,
         adminBalance,
-        recentBookings
+        recentBookings,
+        dailyRevenue
       }
     });
   } catch (err) {
