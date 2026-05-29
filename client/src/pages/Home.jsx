@@ -317,8 +317,7 @@ export default function Home() {
       </div>
 
       {/* ── FAQ ── */}
-      {faqs.length > 0 && (
-        <section className="w-full max-w-xl px-6 mb-20">
+      <section className="w-full max-w-xl px-6 mb-20">
           <div className="mb-12 text-center">
              <h2 className="text-2xl md:text-3xl font-black text-[#0A1128] uppercase tracking-[0.2em]">{t('home.faq')}</h2>
           </div>
@@ -342,7 +341,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-      )}
 
       {/* ── GALLERY ── */}
       {galleries.length > 0 && (
