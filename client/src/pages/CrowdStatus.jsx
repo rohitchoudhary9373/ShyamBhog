@@ -16,6 +16,7 @@ import html2canvas from 'html2canvas';
 export default function CrowdStatus() {
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const settingsAdminId = settings?.adminId;
   const [crowd, setCrowd] = useState(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('today');
@@ -33,11 +34,11 @@ export default function CrowdStatus() {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [settings?.adminId]);
+  }, [settingsAdminId]);
 
   const fetchCrowdStatus = async () => {
     try {
-      const tenantId = settings?.adminId || '';
+      const tenantId = settingsAdminId || '';
       const res = await API.get(`/crowd-status?tenantId=${tenantId}`);
       setCrowd(res.data);
     } catch (err) {
@@ -50,7 +51,7 @@ export default function CrowdStatus() {
   const trackShare = async (platform) => {
     try {
       await API.post('/crowd-status/share', { 
-        tenantId: settings?.adminId || '', 
+        tenantId: settingsAdminId || '', 
         platform 
       });
     } catch (err) {

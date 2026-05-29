@@ -33,9 +33,21 @@ export const SettingsProvider = ({ children }) => {
 
   const refreshSettings = async () => {
     try {
-      const res = await API.get('/settings');
+      const urlParams = new URLSearchParams(window.location.search);
+      let tenantId = urlParams.get('tenantId') || localStorage.getItem('tenantId') || '';
+      
+      if (urlParams.get('tenantId')) {
+        localStorage.setItem('tenantId', urlParams.get('tenantId'));
+      }
+
+      console.log(`[SettingsContext] Loading settings for tenantId: "${tenantId}"`);
+      const res = await API.get(`/settings${tenantId ? `?tenantId=${tenantId}` : ''}`);
       if (res.data && typeof res.data === 'object') {
+        console.log('[SettingsContext] Loaded settings successfully:', res.data);
         setSettings({ ...DEFAULTS, ...res.data });
+        if (res.data.adminId) {
+          localStorage.setItem('tenantId', res.data.adminId);
+        }
       }
     } catch (err) {
       console.warn('Could not load settings, using defaults.', err.message);

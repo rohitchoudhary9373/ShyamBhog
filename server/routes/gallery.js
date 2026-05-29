@@ -46,15 +46,9 @@ router.get('/', async (req, res) => {
     const { tenantId } = req.query;
     let adminId = tenantId;
 
-    if (!adminId) {
-      // Try to find the admin that actually has settings configured (like a logo)
-      const configuredSettings = await Setting.findOne({ logoUrl: { $ne: "" } }).lean();
-      if (configuredSettings) {
-        adminId = configuredSettings.adminId;
-      } else {
-        // Fallback to Master Platform ID
-        adminId = "69f89457adbfe9c7a0aa0f11";
-      }
+    if (!adminId || adminId === 'undefined') {
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      adminId = superAdmin ? superAdmin._id : null;
     }
     const filter = { adminId };
 

@@ -89,9 +89,15 @@ class PaymentService {
       }
     }
 
+    let finalAdminId = tenantId;
+    if (!finalAdminId || finalAdminId === 'undefined') {
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      finalAdminId = superAdmin ? superAdmin._id : null;
+    }
+
     // Save consolidated order as Pending
     const order = new ArjeeOrder({
-      adminId: tenantId || "69f89457adbfe9c7a0aa0f11",
+      adminId: finalAdminId,
       userId,
       name,
       whatsapp,

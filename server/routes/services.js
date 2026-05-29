@@ -83,10 +83,9 @@ router.get("/", async (req, res) => {
     if (tenantId) {
       filter.adminId = tenantId;
     } else {
-      // Fallback to configured admin if no tenantId provided
-      const configuredSettings = await (require("../models/Setting")).findOne({ logoUrl: { $ne: "" } }).lean();
-      if (configuredSettings) {
-        filter.adminId = configuredSettings.adminId;
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      if (superAdmin) {
+        filter.adminId = superAdmin._id;
       }
     }
 
@@ -135,9 +134,9 @@ router.get("/featured-cart", async (req, res) => {
     if (tenantId) {
       filter.adminId = tenantId;
     } else {
-      const configuredSettings = await (require("../models/Setting")).findOne({ logoUrl: { $ne: "" } }).lean();
-      if (configuredSettings) {
-        filter.adminId = configuredSettings.adminId;
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      if (superAdmin) {
+        filter.adminId = superAdmin._id;
       }
     }
 

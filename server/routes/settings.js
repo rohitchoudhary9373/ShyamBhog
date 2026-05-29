@@ -50,18 +50,10 @@ router.get("/", async (req, res) => {
     // Always find the main admin (admin) for the storefront
     let adminId = req.query.tenantId;
 
-    if (!adminId) {
-      // Try to find the admin that actually has settings configured (like a logo)
-      let configuredSettings = await Setting.findOne({ logoUrl: { $ne: "" } }).lean();
-      
-      if (configuredSettings) {
-        adminId = configuredSettings.adminId;
-      } else {
-        // Fallback to the first admin if nothing is configured
-        const superAdmin = await User.findOne({ role: "admin" }).lean();
-        if (!superAdmin) return res.status(404).json({ message: "Platform not configured yet" });
-        adminId = superAdmin._id;
-      }
+    if (!adminId || adminId === 'undefined') {
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      if (!superAdmin) return res.status(404).json({ message: "Platform not configured yet" });
+      adminId = superAdmin._id;
     }
 
     let settings = await Setting.findOne({ adminId }).select("-razorpayKeySecret");

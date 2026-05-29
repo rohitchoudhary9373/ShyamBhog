@@ -5,9 +5,12 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 router.get('/', async (req, res) => {
   try {
-    const { tenantId } = req.query;
-    // Fallback to Master Platform if no tenantId provided
-    const adminId = tenantId || "69f89457adbfe9c7a0aa0f11";
+    let adminId = tenantId;
+    if (!adminId || adminId === 'undefined') {
+      const User = require('../models/User');
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      adminId = superAdmin ? superAdmin._id : null;
+    }
 
     let status = await CrowdStatus.findOne({ adminId });
     if (!status) {
@@ -21,8 +24,12 @@ router.get('/', async (req, res) => {
 
 router.post('/share', async (req, res) => {
   try {
-    const { tenantId, platform } = req.body;
-    const adminId = tenantId || "69f89457adbfe9c7a0aa0f11";
+    let adminId = tenantId;
+    if (!adminId || adminId === 'undefined') {
+      const User = require('../models/User');
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      adminId = superAdmin ? superAdmin._id : null;
+    }
 
     const allowedPlatforms = ['whatsapp', 'telegram', 'facebook', 'twitter', 'link'];
     if (!allowedPlatforms.includes(platform)) {

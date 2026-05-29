@@ -56,25 +56,27 @@ router.get('/revenue', protect, admin, async (req, res) => {
 
 router.get('/reseller-stats', protect, admin, async (req, res) => {
   try {
-    const totalBookings = await ArjeeOrder.countDocuments({ status: { $in: ['Completed', 'Active'] } });
-    const pendingRefunds = await Refund.countDocuments({ status: 'pending' });
-    const agentsCount = await User.countDocuments({ role: 'agent' });
+    const filter = { adminId: req.effectiveId };
+
+    const totalBookings = await ArjeeOrder.countDocuments({ ...filter, status: { $in: ['Completed', 'Active'] } });
+    const pendingRefunds = await Refund.countDocuments({ ...filter, status: 'pending' });
+    const agentsCount = await User.countDocuments({ role: 'agent', parentAdmin: req.effectiveId });
     
     const revenueAgg = await ArjeeOrder.aggregate([
-      { $match: { status: { $in: ['Completed', 'Active'] } } },
+      { $match: { ...filter, status: { $in: ['Completed', 'Active'] } } },
       { $group: { _id: null, totalRevenue: { $sum: "$totalPrice" } } }
     ]);
     const totalRevenue = revenueAgg[0]?.totalRevenue || 0;
 
     const walletAgg = await User.aggregate([
-      { $match: { role: 'user' } },
+      { $match: { role: 'user', parentAdmin: req.effectiveId } },
       { $group: { _id: null, totalWalletBalance: { $sum: "$walletBalance" } } }
     ]);
     const totalWalletFloat = walletAgg[0]?.totalWalletBalance || 0;
 
-    const recentBookings = await ArjeeOrder.find().sort({ createdAt: -1 }).limit(5);
+    const recentBookings = await ArjeeOrder.find(filter).sort({ createdAt: -1 }).limit(5);
 
-    const adminUser = await User.findById(req.user._id);
+    const adminUser = await User.findById(req.effectiveId);
     const adminBalance = adminUser?.walletBalance || 0;
 
     // Calculate 7 days revenue aggregation
@@ -85,6 +87,7 @@ router.get('/reseller-stats', protect, admin, async (req, res) => {
     const dailyRevenueAgg = await ArjeeOrder.aggregate([
       { 
         $match: { 
+          ...filter,
           status: { $in: ['Completed', 'Active'] },
           createdAt: { $gte: sevenDaysAgo }
         } 

@@ -4,11 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaBed, FaPhoneAlt, FaMapMarkerAlt, FaStar, FaGlobe, FaSearch, FaTimes, FaChevronLeft } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useSettings } from '../context/SettingsContext';
 import { getMediaUrl } from '../utils/url';
 
 export default function HotelStayPage() {
    const { t } = useTranslation();
    const navigate = useNavigate();
+   const { settings } = useSettings();
+   const settingsAdminId = settings?.adminId;
    const [hotels, setHotels] = useState([]);
    const [faqs, setFaqs] = useState([]);
    const [loading, setLoading] = useState(true);
@@ -18,10 +21,13 @@ export default function HotelStayPage() {
    useEffect(() => {
       const fetchData = async () => {
          try {
+            const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+            console.log(`[HotelStayPage] Fetching stays for tenantId: "${tenantId}"`);
             const [hotelRes, faqRes] = await Promise.all([
-               API.get('/hotels'),
-               API.get('/faq?category=Hotel')
+               API.get(`/hotels?tenantId=${tenantId}`),
+               API.get(`/faq?category=Hotel&tenantId=${tenantId}`)
             ]);
+            console.log('[HotelStayPage] API Responses received:', { hotels: hotelRes.data, faqs: faqRes.data });
             setHotels(Array.isArray(hotelRes.data) ? hotelRes.data : (hotelRes.data?.data || []));
             setFaqs(Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data?.data || []));
          } catch (err) {
@@ -31,7 +37,7 @@ export default function HotelStayPage() {
          }
       };
       fetchData();
-   }, []);
+   }, [settingsAdminId]);
 
    const filters = ['All', '5 Star', '4 Star', '3 Star'];
    const filteredHotels = activeFilter === 'All' 

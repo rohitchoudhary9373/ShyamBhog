@@ -11,6 +11,7 @@ import { FaVideo, FaUsers, FaParking, FaBed, FaArrowRight, FaWhatsapp, FaShoppin
 export default function Home() {
   const { cart, addToCart, updateQuantity } = useCart();
   const { settings } = useSettings();
+  const settingsAdminId = settings?.adminId;
   const { t } = useTranslation();
   const [services, setServices] = useState([]);
   const [faqs, setFaqs] = useState([]);
@@ -33,7 +34,8 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tenantId = settings?.adminId || '';
+        const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+        console.log(`[Home] Fetching devotee data for tenantId: "${tenantId}"`);
         const [srvRes, faqRes, galRes, feedRes, crowdRes, parkRes, hotelRes] = await Promise.all([
           API.get(`/services?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/faq?tenantId=${tenantId}`).catch(() => ({ data: [] })),
@@ -43,6 +45,16 @@ export default function Home() {
           API.get(`/parking?tenantId=${tenantId}`).catch(() => ({ data: null })),
           API.get(`/hotel-stay?tenantId=${tenantId}`).catch(() => ({ data: null }))
         ]);
+
+        console.log('[Home] API Responses received:', {
+          services: srvRes.data,
+          faqs: faqRes.data,
+          gallery: galRes.data,
+          feedback: feedRes.data,
+          crowd: crowdRes.data,
+          parking: parkRes.data,
+          hotel: hotelRes.data
+        });
 
         const servicesArray = Array.isArray(srvRes.data) ? srvRes.data : (srvRes.data.data || []);
         setServices(servicesArray.filter(s => s.isActive));
@@ -69,14 +81,15 @@ export default function Home() {
       }
     };
     fetchData();
-  }, [settings?.adminId]);
+  }, [settingsAdminId]);
 
   const filteredServices = services.filter(s => s.category === activeTab);
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post('/feedback', feedbackForm);
+      const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+      await API.post('/feedback', { ...feedbackForm, tenantId });
       alert('Thank you! Your feedback has been submitted for review.');
       setFeedbackForm({ name: '', message: '' });
     } catch (err) {

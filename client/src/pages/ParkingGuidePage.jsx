@@ -13,10 +13,13 @@ import {
 } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useSettings } from '../context/SettingsContext';
 
 export default function ParkingGuidePage() {
    const { t } = useTranslation();
    const navigate = useNavigate();
+   const { settings } = useSettings();
+   const settingsAdminId = settings?.adminId;
    const [parkings, setParkings] = useState([]);
    const [faqs, setFaqs] = useState([]);
    const [loading, setLoading] = useState(true);
@@ -26,22 +29,24 @@ export default function ParkingGuidePage() {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const tenantId = ''; // Adjust as needed
+            const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+            console.log(`[ParkingGuidePage] Fetching parkings for tenantId: "${tenantId}"`);
             const [parkRes, faqRes] = await Promise.all([
-               API.get('/parking'),
-               API.get('/faq?category=Parking')
+               API.get(`/parking?tenantId=${tenantId}`),
+               API.get(`/faq?category=Parking&tenantId=${tenantId}`)
             ]);
+            console.log('[ParkingGuidePage] API Responses received:', { parkings: parkRes.data, faqs: faqRes.data });
             setParkings(parkRes.data);
             const faqArray = Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data.data || []);
             setFaqs(faqArray.filter(f => f.isActive));
          } catch (err) {
-            console.error("Failed to load data");
+            console.error("Failed to load data", err);
          } finally {
             setLoading(false);
          }
       };
       fetchData();
-   }, []);
+   }, [settingsAdminId]);
 
    const filteredParkings = filter === 'All' 
       ? parkings 

@@ -10,15 +10,9 @@ router.get('/', async (req, res) => {
     const { tenantId } = req.query;
     let adminId = tenantId;
 
-    if (!adminId) {
-      const Setting = require('../models/Setting');
-      const configuredSettings = await Setting.findOne({ logoUrl: { $ne: "" } }).lean();
-      if (configuredSettings) {
-        adminId = configuredSettings.adminId;
-      } else {
-        const superAdminUser = await User.findOne({ role: 'admin' });
-        if (superAdminUser) adminId = superAdminUser._id;
-      }
+    if (!adminId || adminId === 'undefined') {
+      const superAdminUser = await User.findOne({ role: 'admin' });
+      if (superAdminUser) adminId = superAdminUser._id;
     }
 
     const filter = { isApproved: true, adminId };
@@ -39,16 +33,9 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: "Name and message are required" });
     }
 
-    let adminId = tenantId;
-    if (!adminId) {
-      const Setting = require('../models/Setting');
-      const configuredSettings = await Setting.findOne({ logoUrl: { $ne: "" } }).lean();
-      if (configuredSettings) {
-        adminId = configuredSettings.adminId;
-      } else {
-        const superAdminUser = await User.findOne({ role: 'admin' });
-        if (superAdminUser) adminId = superAdminUser._id;
-      }
+    if (!adminId || adminId === 'undefined') {
+      const superAdminUser = await User.findOne({ role: 'admin' });
+      if (superAdminUser) adminId = superAdminUser._id;
     }
 
     if (!adminId) return res.status(400).json({ message: "No tenant found" });

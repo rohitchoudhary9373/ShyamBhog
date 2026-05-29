@@ -53,6 +53,7 @@ export default function Cart() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { settings } = useSettings();
+  const settingsAdminId = settings?.adminId;
   const user = getUser();
 
   const [recommended, setRecommended] = useState([]);
@@ -66,7 +67,10 @@ export default function Cart() {
   useEffect(() => {
     const fetchRecommended = async () => {
       try {
-        const response = await API.get('/services/featured-cart');
+        const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+        console.log(`[Cart] Fetching recommended services for tenantId: "${tenantId}"`);
+        const response = await API.get(`/services/featured-cart?tenantId=${tenantId}`);
+        console.log('[Cart] Recommended services response:', response.data);
         if (response.data && response.data.success) {
           setRecommended(response.data.data);
         }
@@ -75,7 +79,7 @@ export default function Cart() {
       }
     };
     fetchRecommended();
-  }, []);
+  }, [settingsAdminId]);
 
   useEffect(() => {
     if (user) {
@@ -150,7 +154,7 @@ export default function Cart() {
         payableAmount,
         serviceType: 'Cart',
         paymentMode: 'one-time',
-        tenantId: cart[0]?.adminId || settings?.adminId
+        tenantId: cart[0]?.adminId || settingsAdminId
       };
 
       // 1. Create Pending Booking Order

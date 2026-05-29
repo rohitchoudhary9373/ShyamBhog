@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import API from '../services/api';
 import { useCart } from '../context/CartContext';
+import { useSettings } from '../context/SettingsContext';
 import { FaShoppingCart, FaBolt, FaCrown } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { getMediaUrl } from '../utils/url';
@@ -12,13 +13,18 @@ export default function ServiceCatalog() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
+  const { settings } = useSettings();
+  const settingsAdminId = settings?.adminId;
 
   const dbCategory = category.charAt(0).toUpperCase() + category.slice(1);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await API.get(`/services?category=${dbCategory}&activeOnly=true`);
+        const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+        console.log(`[ServiceCatalog] Fetching services for tenantId: "${tenantId}" and category: "${dbCategory}"`);
+        const res = await API.get(`/services?category=${dbCategory}&activeOnly=true&tenantId=${tenantId}`);
+        console.log('[ServiceCatalog] Services response:', res.data);
         setServices(res.data.data || []);
       } catch (err) {
         console.error(err);
@@ -27,7 +33,7 @@ export default function ServiceCatalog() {
       }
     };
     fetchServices();
-  }, [category, dbCategory]);
+  }, [category, dbCategory, settingsAdminId]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in bg-[#FDF8F1] min-h-screen">

@@ -15,6 +15,7 @@ export default function BookingFlow() {
   const user = getUser();
   const { cart, totalPrice, clearCart } = useCart();
   const { settings } = useSettings();
+  const settingsAdminId = settings?.adminId;
 
   const [walletData, setWalletData] = useState({ balance: 0, walletFrozen: false });
   const [useWallet, setUseWallet] = useState(false);
@@ -38,7 +39,10 @@ export default function BookingFlow() {
         return;
       }
       try {
-        const res = await API.get(`/services`);
+        const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
+        console.log(`[BookingFlow] Fetching services for tenantId: "${tenantId}"`);
+        const res = await API.get(`/services?tenantId=${tenantId}`);
+        console.log('[BookingFlow] Services response:', res.data);
         const found = res.data.data.find(s => s._id === serviceId);
         if (found) {
           setServiceDetails(found);
@@ -61,7 +65,7 @@ export default function BookingFlow() {
         }
       }).catch(() => { });
     }
-  }, [serviceId]);
+  }, [serviceId, settingsAdminId]);
 
   const isArjee = serviceDetails?.category === 'Arjee';
 

@@ -9,13 +9,14 @@ import { getMediaUrl } from '../utils/url';
 export default function WatchArjee() {
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const settingsAdminId = settings?.adminId;
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const tenantId = settings?.adminId || '';
+        const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
         const res = await API.get(`/ritual-videos?tenantId=${tenantId}`);
         setVideos(res.data);
       } catch (err) {
@@ -24,8 +25,8 @@ export default function WatchArjee() {
         setLoading(false);
       }
     };
-    if (settings?.adminId) fetchVideos();
-  }, [settings?.adminId]);
+    fetchVideos();
+  }, [settingsAdminId]);
 
   const getInstaThumbnail = (url) => {
     if (!url) return null;
