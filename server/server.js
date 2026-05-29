@@ -198,24 +198,16 @@ app.use("/api/hotels",        generalLimiter, require("./routes/hotels"));
 // ──────────────────────────────────────
 // PRODUCTION STATIC SERVING
 // ──────────────────────────────────────
-if (process.env.NODE_ENV === "production") {
-  const clientPath = path.join(__dirname, "..", "client", "dist");
-  app.use(express.static(clientPath));
-
-  app.get("/*", (req, res) => {
-    // Only serve index.html for non-API routes
-    if (!req.path.startsWith("/api")) {
-      res.sendFile(path.resolve(clientPath, "index.html"));
-    } else {
-      res.status(404).json({ success: false, message: `API Route ${req.method} ${req.path} not found` });
-    }
-  });
-} else {
-  // 404 HANDLER (Dev Only)
-  app.use((req, res) => {
-    res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found` });
-  });
-}
+app.use((req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.resolve(clientPath, "index.html"));
+  } else {
+    res.status(404).json({
+      success: false,
+      message: `API Route ${req.method} ${req.path} not found`
+    });
+  }
+});
 
 // ──────────────────────────────────────
 // GLOBAL ERROR HANDLER
