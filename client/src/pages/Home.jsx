@@ -6,7 +6,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
 import { getMediaUrl } from '../utils/url';
-import { FaVideo, FaUsers, FaParking, FaBed, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass } from 'react-icons/fa';
+import { FaVideo, FaUsers, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass } from 'react-icons/fa';
 
 export default function Home() {
   const { cart, addToCart, updateQuantity } = useCart();
@@ -22,8 +22,6 @@ export default function Home() {
 
   // Hub Data States
   const [crowd, setCrowd] = useState(null);
-  const [parking, setParking] = useState(null);
-  const [hotel, setHotel] = useState(null);
 
   // Feedback form state
   const [feedbackForm, setFeedbackForm] = useState({ name: '', message: '' });
@@ -36,14 +34,12 @@ export default function Home() {
       try {
         const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
         console.log(`[Home] Fetching devotee data for tenantId: "${tenantId}"`);
-        const [srvRes, faqRes, galRes, feedRes, crowdRes, parkRes, hotelRes] = await Promise.all([
+        const [srvRes, faqRes, galRes, feedRes, crowdRes] = await Promise.all([
           API.get(`/services?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/faq?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/gallery?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/feedback?tenantId=${tenantId}`).catch(() => ({ data: [] })),
-          API.get(`/crowd-status?tenantId=${tenantId}`).catch(() => ({ data: null })),
-          API.get(`/parking?tenantId=${tenantId}`).catch(() => ({ data: null })),
-          API.get(`/hotel-stay?tenantId=${tenantId}`).catch(() => ({ data: null }))
+          API.get(`/crowd-status?tenantId=${tenantId}`).catch(() => ({ data: null }))
         ]);
 
         console.log('[Home] API Responses received:', {
@@ -51,9 +47,7 @@ export default function Home() {
           faqs: faqRes.data,
           gallery: galRes.data,
           feedback: feedRes.data,
-          crowd: crowdRes.data,
-          parking: parkRes.data,
-          hotel: hotelRes.data
+          crowd: crowdRes.data
         });
 
         const servicesArray = Array.isArray(srvRes.data) ? srvRes.data : (srvRes.data.data || []);
@@ -67,8 +61,6 @@ export default function Home() {
         setFeedbacks(Array.isArray(feedRes.data) ? feedRes.data : []);
 
         setCrowd(crowdRes.data);
-        setParking(parkRes.data);
-        setHotel(hotelRes.data);
 
         const style = document.createElement('style');
         style.innerHTML = '.gallery-iframe-container iframe { pointer-events: none; }';
