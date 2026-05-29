@@ -112,7 +112,7 @@ function StorefrontLayout() {
       details: [
         { icon: <FaWhatsapp className="text-green-500" />, label: 'WhatsApp', value: settings?.whatsapp, link: `https://wa.me/${settings?.whatsapp?.replace(/\D/g, '')}` },
         { icon: <FaEnvelope className="text-blue-500" />, label: 'Email', value: settings?.contactEmail, link: `mailto:${settings?.contactEmail}` },
-        { icon: <FaMapMarkerAlt className="text-red-500" />, label: 'Address', value: 'Khatu Shyam Ji, Rajasthan', link: settings?.parkingUrl || '#' },
+        { icon: <FaMapMarkerAlt className="text-red-500" />, label: 'Address', value: 'Khatu Shyam Ji, Rajasthan', link: '#' },
       ]
     };
     return null;
