@@ -21,9 +21,6 @@ export default function Settings() {
   const [adminPassword, setAdminPassword] = useState('');
   const [logoError, setLogoError] = useState(false);
 
-  useEffect(() => {
-    setLogoError(false);
-  }, [logoPreview, form.logoUrl]);
 
   const [form, setForm] = useState({
     brandName: '',
@@ -52,6 +49,10 @@ export default function Settings() {
     gstEnabled: true,
     taxRate: 18,
   });
+
+  useEffect(() => {
+    setLogoError(false);
+  }, [logoPreview, form.logoUrl]);
 
   useEffect(() => {
     const load = async () => {

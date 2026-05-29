@@ -33,6 +33,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: "Name and message are required" });
     }
 
+    let adminId = tenantId;
     if (!adminId || adminId === 'undefined') {
       const superAdminUser = await User.findOne({ role: 'admin' });
       if (superAdminUser) adminId = superAdminUser._id;
