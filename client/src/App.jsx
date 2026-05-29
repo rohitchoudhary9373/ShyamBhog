@@ -6,7 +6,7 @@ import API from "./services/api";
 import axios from "axios";
 import { getBaseURL } from "./utils/url";
 
-// Layout (clean frontend components)
+// Layout
 import Navbar from "./components/Navbar";
 
 // Pages
@@ -40,6 +40,8 @@ import ManageCrowd from "./pages/Admin/ManageCrowd";
 import ManageParkingDetailed from "./pages/Admin/ManageParkingDetailed";
 import ManageHotelsDetailed from "./pages/Admin/ManageHotelsDetailed";
 import WatchArjee from "./pages/WatchArjee";
+import HotelStayPage from "./pages/HotelStayPage";
+import ParkingGuidePage from "./pages/ParkingGuidePage";
 import CrowdStatus from "./pages/CrowdStatus";
 import { useSettings } from "./context/SettingsContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -110,7 +112,7 @@ function StorefrontLayout() {
       details: [
         { icon: <FaWhatsapp className="text-green-500" />, label: 'WhatsApp', value: settings?.whatsapp, link: `https://wa.me/${settings?.whatsapp?.replace(/\D/g, '')}` },
         { icon: <FaEnvelope className="text-blue-500" />, label: 'Email', value: settings?.contactEmail, link: `mailto:${settings?.contactEmail}` },
-        { icon: <FaMapMarkerAlt className="text-red-500" />, label: 'Address', value: 'Khatu Shyam Ji, Rajasthan', link: '#' },
+        { icon: <FaMapMarkerAlt className="text-red-500" />, label: 'Address', value: 'Khatu Shyam Ji, Rajasthan', link: settings?.parkingUrl || '#' },
       ]
     };
     return null;
@@ -477,6 +479,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/wallet" element={<MyWallet />} />
+          <Route path="/hotel-stay" element={<HotelStayPage />} />
+          <Route path="/parking-guide" element={<ParkingGuidePage />} />
           <Route path="/crowd-status" element={<CrowdStatus />} />
           <Route path="/policy/:type" element={<PolicyPage />} />
           <Route path="/razorpay-checkout" element={<RazorpayCheckout />} />

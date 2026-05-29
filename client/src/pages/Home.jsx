@@ -6,7 +6,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
 import { getMediaUrl } from '../utils/url';
-import { FaVideo, FaUsers, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass } from 'react-icons/fa';
+import { FaVideo, FaUsers, FaParking, FaBed, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass } from 'react-icons/fa';
 
 export default function Home() {
   const { cart, addToCart, updateQuantity } = useCart();
@@ -22,6 +22,8 @@ export default function Home() {
 
   // Hub Data States
   const [crowd, setCrowd] = useState(null);
+  const [parking, setParking] = useState(null);
+  const [hotel, setHotel] = useState(null);
 
   // Feedback form state
   const [feedbackForm, setFeedbackForm] = useState({ name: '', message: '' });
@@ -34,12 +36,14 @@ export default function Home() {
       try {
         const tenantId = settingsAdminId || localStorage.getItem('tenantId') || '';
         console.log(`[Home] Fetching devotee data for tenantId: "${tenantId}"`);
-        const [srvRes, faqRes, galRes, feedRes, crowdRes] = await Promise.all([
+        const [srvRes, faqRes, galRes, feedRes, crowdRes, parkRes, hotelRes] = await Promise.all([
           API.get(`/services?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/faq?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/gallery?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/feedback?tenantId=${tenantId}`).catch(() => ({ data: [] })),
-          API.get(`/crowd-status?tenantId=${tenantId}`).catch(() => ({ data: null }))
+          API.get(`/crowd-status?tenantId=${tenantId}`).catch(() => ({ data: null })),
+          API.get(`/parking?tenantId=${tenantId}`).catch(() => ({ data: null })),
+          API.get(`/hotel-stay?tenantId=${tenantId}`).catch(() => ({ data: null }))
         ]);
 
         console.log('[Home] API Responses received:', {
@@ -47,7 +51,9 @@ export default function Home() {
           faqs: faqRes.data,
           gallery: galRes.data,
           feedback: feedRes.data,
-          crowd: crowdRes.data
+          crowd: crowdRes.data,
+          parking: parkRes.data,
+          hotel: hotelRes.data
         });
 
         const servicesArray = Array.isArray(srvRes.data) ? srvRes.data : (srvRes.data.data || []);
@@ -61,6 +67,8 @@ export default function Home() {
         setFeedbacks(Array.isArray(feedRes.data) ? feedRes.data : []);
 
         setCrowd(crowdRes.data);
+        setParking(parkRes.data);
+        setHotel(hotelRes.data);
 
         const style = document.createElement('style');
         style.innerHTML = '.gallery-iframe-container iframe { pointer-events: none; }';
@@ -131,7 +139,9 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-3">
           {[
             { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
-            { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true }
+            { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
+            { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
+            { to: "/hotel-stay", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: 'Stay Guide' }
           ].map((item, idx) => (
             <Link key={idx} to={item.to} className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner">
