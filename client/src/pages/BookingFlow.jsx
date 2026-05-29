@@ -193,6 +193,7 @@ export default function BookingFlow() {
                   src={getImageUrl(serviceDetails?.imageUrl)}
                   alt={serviceDetails?.title}
                   className="w-full aspect-[16/10] object-cover"
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
                 />
                 <div className="absolute bottom-4 left-4">
                   <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-white shadow-sm">

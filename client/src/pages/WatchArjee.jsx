@@ -93,6 +93,7 @@ export default function WatchArjee() {
                         src={thumbUrl || 'https://images.unsplash.com/photo-1544111306-699703f8373a?q=80&w=800&auto=format&fit=crop'} 
                         alt={vid.title} 
                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
                       />
                     ) : (
                       <video 

@@ -2,10 +2,7 @@ export const getBaseURL = () => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
-  if (import.meta.env.PROD) {
-    return window.location.origin;
-  }
-  return `http://${window.location.hostname}:5001`;
+  return "https://shyambhog.onrender.com";
 };
 
 export const getMediaUrl = (path) => {

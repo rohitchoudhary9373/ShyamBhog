@@ -188,7 +188,12 @@ export default function Home() {
                   >
                     {/* Compact Image */}
                     <div className="relative aspect-square rounded-[20px] overflow-hidden mb-3">
-                      <img src={getImageUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
+                      <img 
+                        src={getImageUrl(service.imageUrl)} 
+                        alt={service.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" 
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
+                      />
                       <div className="absolute top-2 right-2">
                          <div className="px-2 py-0.5 bg-white/90 backdrop-blur-md rounded-full text-[8px] font-bold text-orange-600 shadow-sm">
                             Few slots left
@@ -246,7 +251,12 @@ export default function Home() {
                 >
                   {/* Image with Tag inside */}
                   <div className="relative aspect-[16/8] rounded-[24px] overflow-hidden">
-                    <img src={getImageUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
+                     <img 
+                       src={getImageUrl(service.imageUrl)} 
+                       alt={service.title} 
+                       className="w-full h-full object-cover" 
+                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
+                     />
                     <div className="absolute top-4 right-4">
                        <div className="px-3 py-1 bg-white/80 backdrop-blur-md rounded-full text-[10px] font-bold text-slate-800 shadow-sm border border-white/50">
                           {service.tag || "Few slots left"}
@@ -337,7 +347,12 @@ export default function Home() {
                   {img.instagramUrl ? (
                      <a href={img.instagramUrl} target="_blank" rel="noreferrer" className="block w-full h-full">
                         <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 via-pink-500/20 to-indigo-600/20"></div>
-                        <img src={getInstaThumbnail(img.instagramUrl) || getImageUrl(img.imageUrl)} alt={img.altText} className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" />
+                         <img 
+                           src={getInstaThumbnail(img.instagramUrl) || getImageUrl(img.imageUrl)} 
+                           alt={img.altText} 
+                           className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
+                           onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
+                         />
                         <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
                               <FaRegCompass size={16} />
@@ -345,7 +360,12 @@ export default function Home() {
                         </div>
                      </a>
                   ) : (
-                     <img src={getImageUrl(img.imageUrl)} alt={img.altText} className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" />
+                      <img 
+                        src={getImageUrl(img.imageUrl)} 
+                        alt={img.altText} 
+                        className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
+                      />
                   )}
                 </motion.div>
               ))}

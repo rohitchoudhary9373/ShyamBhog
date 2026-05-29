@@ -297,7 +297,7 @@ export default function Cart() {
               {recommended.map(item => (
                 <div key={item._id} className="bg-gradient-to-br from-amber-50/50 to-orange-50/30 border border-orange-100/50 rounded-[24px] p-4 flex gap-3 items-center hover:border-amber-200 transition-all group">
                   <div className="w-16 h-16 rounded-[16px] overflow-hidden bg-white border border-orange-100 flex-shrink-0">
-                    <img src={getMediaUrl(item.imageUrl) || 'https://via.placeholder.com/150'} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <img src={getMediaUrl(item.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                   </div>
                   <div className="flex-grow min-w-0">
                     <h4 className="text-xs font-black text-slate-900 truncate leading-tight">{item.title}</h4>
@@ -343,7 +343,7 @@ export default function Cart() {
                 className="bg-white border border-orange-50 rounded-[28px] p-4 flex items-center gap-4 group shadow-sm hover:shadow-xl hover:shadow-orange-100/40 transition-all relative"
               >
                 <div className="w-20 h-20 rounded-[20px] overflow-hidden bg-slate-50 border border-slate-50 flex-shrink-0">
-                  <img src={getMediaUrl(item.imageUrl) || 'https://via.placeholder.com/150'} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={getMediaUrl(item.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={item.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                 </div>
 
                 <div className="flex-grow">
@@ -381,7 +381,7 @@ export default function Cart() {
               {shownRecommendations.map(item => (
                 <div key={item._id} className="snap-start w-64 bg-gradient-to-br from-amber-50/40 to-orange-50/20 border border-orange-100/30 rounded-3xl p-3.5 flex gap-3.5 items-center flex-shrink-0 shadow-sm hover:shadow-md hover:border-orange-100 transition-all group">
                   <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white border border-orange-100/50 flex-shrink-0">
-                    <img src={getMediaUrl(item.imageUrl) || 'https://via.placeholder.com/150'} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <img src={getMediaUrl(item.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                   </div>
                   <div className="flex-grow min-w-0">
                     <h4 className="text-xs font-black text-slate-900 truncate leading-tight">{item.title}</h4>

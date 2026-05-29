@@ -24,6 +24,7 @@ export default function Login() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("logout_success") === "true") {
@@ -148,10 +149,10 @@ export default function Login() {
           
           {/* ── LOGO ── */}
           <div className="text-center mb-10">
-            <div className="flex flex-col items-center gap-4">
-               {settings?.logoUrl && (
-                  <img src={getMediaUrl(settings.logoUrl)} alt="logo" className="h-20 w-auto object-contain drop-shadow-sm" />
-               )}
+             <div className="flex flex-col items-center gap-4">
+                {settings?.logoUrl && !logoError && (
+                   <img src={getMediaUrl(settings.logoUrl)} alt="logo" className="h-20 w-auto object-contain drop-shadow-sm" onError={() => setLogoError(true)} />
+                )}
                <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic">{settings?.brandName || "Shyam Bhog"}</h1>
             </div>
           </div>

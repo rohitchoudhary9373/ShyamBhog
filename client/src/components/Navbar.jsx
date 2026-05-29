@@ -19,6 +19,7 @@ export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [logoError, setLogoError] = useState(false);
   const { settings } = useSettings();
   const { totalItems } = useCart();
 
@@ -83,11 +84,12 @@ export default function Navbar() {
           {/* ── LOGO ── */}
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center overflow-hidden border border-orange-100/50 shadow-inner">
-              {settings?.logoUrl ? (
+              {settings?.logoUrl && !logoError ? (
                 <img
                   src={getFullUrl(settings?.logoUrl)}
                   alt={settings?.brandName}
                   className="w-full h-full object-contain transition-transform group-hover:scale-110"
+                  onError={() => setLogoError(true)}
                 />
               ) : (
                 <span className="text-primary font-black text-xl italic">{settings?.brandName?.charAt(0) || 'S'}</span>

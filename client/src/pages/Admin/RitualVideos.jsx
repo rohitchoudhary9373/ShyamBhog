@@ -167,7 +167,7 @@ export default function RitualVideos() {
                                <source src={fullUrl} type="video/mp4" />
                             </video>
                          ) : (vid.videoUrl?.includes('youtube.com') || vid.videoUrl?.includes('youtu.be')) ? (
-                            <img src={`https://img.youtube.com/vi/${vid.videoUrl.split('v=')[1]?.split('&')[0] || vid.videoUrl.split('/').pop()}/mqdefault.jpg`} className="w-full h-full object-cover opacity-60" />
+                            <img src={`https://img.youtube.com/vi/${vid.videoUrl.split('v=')[1]?.split('&')[0] || vid.videoUrl.split('/').pop()}/mqdefault.jpg`} className="w-full h-full object-cover opacity-60" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                          ) : (
                             <FaVideo size={40} className="text-white/20" />
                          )}

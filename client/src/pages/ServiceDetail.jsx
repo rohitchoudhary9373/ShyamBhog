@@ -211,7 +211,7 @@ export default function ServiceDetail() {
                
                {/* IMAGE ASSET */}
                <div className="w-full aspect-[16/10] overflow-hidden rounded-[26px] relative">
-                  <img src={getMediaUrl(service.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={service.title} className="w-full h-full object-cover" />
+                  <img src={getMediaUrl(service.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={service.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                   <div className="absolute top-4 left-4">
                      <span className="px-3 py-1 bg-orange-600 text-white font-black text-[8px] uppercase tracking-widest rounded-lg shadow-xl">{service.category}</span>
                   </div>

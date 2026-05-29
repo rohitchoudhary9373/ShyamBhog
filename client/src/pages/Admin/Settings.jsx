@@ -19,6 +19,11 @@ export default function Settings() {
   const [logoPreview, setLogoPreview] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
+  const [logoError, setLogoError] = useState(false);
+
+  useEffect(() => {
+    setLogoError(false);
+  }, [logoPreview, form.logoUrl]);
 
   const [form, setForm] = useState({
     brandName: '',
@@ -176,9 +181,9 @@ export default function Settings() {
                   <div className="space-y-3 md:col-span-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Global Platform Logo</label>
                     <label className="flex items-center gap-6 p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[32px] cursor-pointer hover:bg-orange-50/30 hover:border-orange-500 transition-all group">
-                      {logoSrc ? (
+                      {logoSrc && !logoError ? (
                         <div className="w-16 h-16 rounded-2xl bg-white p-2 shadow-xl border border-slate-100">
-                           <img src={logoSrc} alt="Logo" className="w-full h-full object-contain" />
+                           <img src={logoSrc} alt="Logo" className="w-full h-full object-contain" onError={() => setLogoError(true)} />
                         </div>
                       ) : (
                         <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-300">

@@ -288,7 +288,7 @@ export default function ManageHotelsDetailed() {
               )}
               {!imageFile && editingId && form.imageUrl && (
                 <div className="mt-2 w-24 h-16 rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
-                  <img src={getHotelImageUrl(form)} alt="Current Image" className="w-full h-full object-cover" />
+                  <img src={getHotelImageUrl(form)} alt="Current Image" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'; }} />
                 </div>
               )}
             </div>
@@ -352,7 +352,7 @@ export default function ManageHotelsDetailed() {
                       src={getHotelImageUrl(hotel)} 
                       alt={hotel.name} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/350?text=No+Image'; }}
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'; }}
                     />
                     <div className="absolute top-4 left-4 flex gap-1.5">
                       <span className="bg-slate-900/80 backdrop-blur-sm text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">

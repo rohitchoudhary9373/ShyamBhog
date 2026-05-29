@@ -381,7 +381,7 @@ export default function ManageServices() {
                      <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Offering Visual</label>
                      <div className="relative group cursor-pointer h-28 border-2 border-dashed border-slate-100 rounded-xl bg-slate-50 flex flex-col items-center justify-center gap-2 hover:bg-white hover:border-slate-300 transition-all overflow-hidden">
                         {imagePreview ? (
-                           <img src={imagePreview} className="absolute inset-0 w-full h-full object-cover opacity-20" alt="Preview" />
+                           <img src={imagePreview} className="absolute inset-0 w-full h-full object-cover opacity-20" alt="Preview" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                         ) : (
                            <FaPlus className="text-slate-300 group-hover:text-slate-900 transition-colors" />
                         )}
@@ -475,7 +475,7 @@ export default function ManageServices() {
 
                          <div className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-50">
-                               <img src={srv.imageUrl ? getMediaUrl(srv.imageUrl) : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} className="w-full h-full object-cover" alt={srv.title} />
+                               <img src={srv.imageUrl ? getMediaUrl(srv.imageUrl) : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} className="w-full h-full object-cover" alt={srv.title} onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                             </div>
                             <div className="flex-1 min-w-0">
                                <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed">"{srv.description || 'No description available.'}"</p>

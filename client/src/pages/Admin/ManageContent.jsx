@@ -449,7 +449,7 @@ export default function ManageContent() {
                           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} key={img._id} className="relative group aspect-[4/5] rounded-[24px] overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
                              {img.instagramUrl ? (
                                getInstaThumbnail(img.instagramUrl) ? (
-                                 <img src={getInstaThumbnail(img.instagramUrl)} alt={img.altText} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                 <img src={getInstaThumbnail(img.instagramUrl)} alt={img.altText} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                                ) : (
                                  <div className="w-full h-full bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-600 flex flex-col items-center justify-center text-white p-6 text-center">
                                     <FaInstagram size={24} className="mb-2" />
@@ -457,7 +457,7 @@ export default function ManageContent() {
                                  </div>
                                )
                              ) : (
-                               <img src={getMediaUrl(img.imageUrl)} alt={img.altText} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                               <img src={getMediaUrl(img.imageUrl)} alt={img.altText} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                              )}
                              
                              <div className="absolute inset-0 bg-[#0A1128]/60 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center p-6 gap-3">

@@ -4,6 +4,7 @@ import { getMediaUrl } from '../utils/url';
 
 export default function RefundReceipt({ refund, order, onClose }) {
    const { settings } = useSettings();
+   const [logoError, setLogoError] = React.useState(false);
 
    const handlePrint = () => {
       const printContent = document.getElementById('refund-content-inner').innerHTML;
@@ -89,8 +90,8 @@ export default function RefundReceipt({ refund, order, onClose }) {
 
             <div className="grid grid-cols-12 border-b-[1.5px] border-slate-900 relative z-10">
                <div className="col-span-4 p-6 border-r-[1.5px] border-slate-900 bg-white">
-                  {settings?.logoUrl ? (
-                     <img src={getMediaUrl(settings.logoUrl)} alt="Logo" className="h-12 object-contain mb-4" />
+                  {settings?.logoUrl && !logoError ? (
+                     <img src={getMediaUrl(settings.logoUrl)} alt="Logo" className="h-12 object-contain mb-4" onError={() => setLogoError(true)} />
                   ) : (
                      <h1 className="text-2xl font-black uppercase italic mb-4">{settings?.brandName || 'SHYAM BHOG'}</h1>
                   )}

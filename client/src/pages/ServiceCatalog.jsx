@@ -67,9 +67,10 @@ export default function ServiceCatalog() {
               {/* Image Section */}
               <div className="relative aspect-[4/3] rounded-[32px] overflow-hidden mb-8 border border-slate-100">
                 <img
-                  src={getMediaUrl(srv.imageUrl) || 'https://via.placeholder.com/400x300'}
+                  src={getMediaUrl(srv.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'}
                   alt={srv.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
                 />
                 <div className="absolute top-4 left-4 flex gap-2">
                   {srv.paymentMode === 'recurring' && (

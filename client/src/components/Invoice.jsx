@@ -4,6 +4,7 @@ import { getMediaUrl } from '../utils/url';
 
 export default function Invoice({ order }) {
   const { settings } = useSettings();
+  const [logoError, setLogoError] = React.useState(false);
 
   const handlePrint = () => {
     const printContent = document.getElementById('invoice-content-inner').innerHTML;
@@ -94,8 +95,8 @@ export default function Invoice({ order }) {
       <div id="invoice-content-inner" className="border-[1.5px] border-slate-900 overflow-hidden">
         <div className="flex flex-col md:grid md:grid-cols-12 border-b-[1.5px] border-slate-900">
           <div className="md:col-span-4 p-6 border-b-[1.5px] md:border-b-0 md:border-r-[1.5px] border-slate-900">
-            {settings?.logoUrl ? (
-              <img src={getMediaUrl(settings.logoUrl)} alt="Logo" className="h-10 md:h-12 object-contain mb-4" />
+            {settings?.logoUrl && !logoError ? (
+              <img src={getMediaUrl(settings.logoUrl)} alt="Logo" className="h-10 md:h-12 object-contain mb-4" onError={() => setLogoError(true)} />
             ) : (
               <h1 className="text-2xl font-black uppercase italic mb-4">{settings?.brandName || 'SHYAM BHOG'}</h1>
             )}

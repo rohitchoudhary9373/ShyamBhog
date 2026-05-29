@@ -15,6 +15,7 @@ import { getBaseURL, getMediaUrl } from "../../utils/url";
 export default function AdminLayout() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const [logoError, setLogoError] = useState(false);
   const { settings } = useSettings();
   const [adminSettings, setAdminSettings] = useState(null);
   const [wallet, setWallet] = useState(0);
@@ -149,11 +150,12 @@ export default function AdminLayout() {
         <div className="h-20 flex items-center px-8 border-b border-slate-100 bg-white sticky top-0 z-10">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-[#0A1128] rounded-xl flex items-center justify-center text-white shadow-xl shadow-slate-200 group-hover:scale-105 transition-transform duration-300">
-              {adminSettings?.logoUrl ? (
+              {adminSettings?.logoUrl && !logoError ? (
                 <img
                   src={getMediaUrl(adminSettings?.logoUrl)}
                   alt="Logo"
                   className="w-full h-full object-cover rounded-xl"
+                  onError={() => setLogoError(true)}
                 />
               ) : (
                 <FaShieldAlt size={20} className="text-orange-500" />
