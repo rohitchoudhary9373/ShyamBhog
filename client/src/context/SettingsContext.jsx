@@ -58,11 +58,12 @@ export const SettingsProvider = ({ children }) => {
     refreshSettings();
   }, []);
 
+  const primaryColor = settings?.primaryColor;
   useEffect(() => {
-    if (settings?.primaryColor) {
-      document.documentElement.style.setProperty('--primary', settings.primaryColor);
+    if (primaryColor) {
+      document.documentElement.style.setProperty('--primary', primaryColor);
     }
-  }, [settings?.primaryColor]);
+  }, [primaryColor]);
 
   return (
     <SettingsContext.Provider value={{ settings, refreshSettings }}>

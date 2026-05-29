@@ -79,13 +79,14 @@ export default function ServiceDetail() {
       fetchService();
    }, [serviceId, user?._id]);
 
+   const serviceCategory = service?.category;
    useEffect(() => {
-      if (service?.category) {
-         API.get('/faq', { params: { category: service.category } }).then(res => {
+      if (serviceCategory) {
+         API.get('/faq', { params: { category: serviceCategory } }).then(res => {
             if (res.data.success) setFaqs(res.data.data || []);
          }).catch(err => console.error("FAQ Fetch Error:", err));
       }
-   }, [service?.category]);
+   }, [serviceCategory]);
 
    useEffect(() => {
       if (user) {

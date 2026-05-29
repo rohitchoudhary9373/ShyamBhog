@@ -117,11 +117,12 @@ export default function AdminLayout() {
     (user?.role === 'agent' && item.permission !== 'all' && user?.permissions?.includes(item.permission))
   );
 
+  const userRole = user?.role;
   useEffect(() => {
-    if (user?.role === 'agent' && location.pathname === '/admin' && menu.length > 0) {
+    if (userRole === 'agent' && location.pathname === '/admin' && menu.length > 0) {
       window.location.href = menu[0].path;
     }
-  }, [location.pathname, user?.role, menu]);
+  }, [location.pathname, userRole, menu]);
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC] text-slate-800 font-sans selection:bg-orange-100 selection:text-orange-900" style={isImpersonating ? { paddingTop: '44px' } : {}}>
