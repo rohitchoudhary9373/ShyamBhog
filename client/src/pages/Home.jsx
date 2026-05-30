@@ -141,7 +141,10 @@ export default function Home() {
             { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
             { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
             { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
-            { to: "/hotel-stay", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: 'Stay Guide' }
+            // { to: "/hotel-stay", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: 'Stay Guide' }
+            { 
+              to: "/hotel-stay", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: "Coming Soon"
+            }
           ].map((item, idx) => (
             <Link key={idx} to={item.to} className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner">

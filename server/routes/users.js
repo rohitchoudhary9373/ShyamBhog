@@ -1,5 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
+const HotelUser = require("../models/HotelUser");
+const HotelOwner = require("../models/HotelOwner");
 const TeamActivityLog = require("../models/TeamActivityLog");
 const { protect, admin, superAdmin } = require("../middleware/authMiddleware");
 
@@ -351,6 +353,74 @@ router.put("/permissions/:id", protect, superAdmin, async (req, res) => {
     await user.save();
     
     res.json({ success: true, message: "Permissions updated", data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ==============================
+// 🏨 GET HOTEL CUSTOMERS (ADMIN)
+// ==============================
+router.get("/hotel-customers", protect, admin, async (req, res) => {
+  try {
+    const users = await HotelUser.find({}).select("-password").sort({ createdAt: -1 });
+    res.json({ success: true, count: users.length, data: users });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ==============================
+// 🏨 TOGGLE HOTEL CUSTOMER STATUS (ADMIN)
+// ==============================
+router.put("/hotel-customers/:id/toggle-status", protect, admin, async (req, res) => {
+  try {
+    const user = await HotelUser.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "Hotel customer not found" });
+    user.status = user.status === 'blocked' ? 'active' : 'blocked';
+    await user.save();
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ==============================
+// 🏨 DELETE HOTEL CUSTOMER (ADMIN)
+// ==============================
+router.delete("/hotel-customers/:id", protect, admin, async (req, res) => {
+  try {
+    const user = await HotelUser.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "Hotel customer not found" });
+    await user.deleteOne();
+    res.json({ success: true, message: "Hotel customer deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ==============================
+// 🏢 GET HOTEL VENDORS/OWNERS (ADMIN)
+// ==============================
+router.get("/hotel-vendors", protect, admin, async (req, res) => {
+  try {
+    const owners = await HotelOwner.find({}).select("-password").sort({ createdAt: -1 });
+    res.json({ success: true, count: owners.length, data: owners });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ==============================
+// 🏢 TOGGLE HOTEL VENDOR STATUS (ADMIN)
+// ==============================
+router.put("/hotel-vendors/:id/toggle-status", protect, admin, async (req, res) => {
+  try {
+    const owner = await HotelOwner.findById(req.params.id);
+    if (!owner) return res.status(404).json({ message: "Hotel vendor not found" });
+    owner.status = owner.status === 'blocked' ? 'active' : 'blocked';
+    await owner.save();
+    res.json({ success: true, data: owner });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

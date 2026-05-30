@@ -3,28 +3,24 @@ import API from '../../services/api';
 import { useSettings } from '../../context/SettingsContext';
 import Invoice from '../../components/Invoice';
 import { getMediaUrl } from '../../utils/url';
+import BRAND from '../../config/brand';
 import { 
   FaPalette, FaGlobe, FaBalanceScale, FaPhoneAlt, 
   FaFileInvoice, FaShareAlt, FaOm, FaCreditCard, 
-  FaLock, FaCheckCircle, FaRocket, FaEye, FaUpload,
-  FaMapMarkerAlt, FaEnvelope, FaFingerprint, FaShieldAlt
+  FaLock, FaCheckCircle, FaRocket, FaEye, FaShieldAlt,
+  FaMapMarkerAlt, FaEnvelope, FaFingerprint, FaLayerGroup
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Settings() {
   const { refreshSettings } = useSettings();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [saving, setSaving]     = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
-  const [logoError, setLogoError] = useState(false);
 
 
   const [form, setForm] = useState({
-    brandName: '',
-    primaryColor: '#f97316',
     footerText: '',
     copyrightText: '',
     aboutText: '',
@@ -35,7 +31,6 @@ export default function Settings() {
     youtubeUrl: '',
     razorpayKeyId: '',
     razorpayKeySecret: '',
-    logoUrl: '',
     gstNumber: '',
     companyAddress: '',
     termsContent: '',
@@ -50,9 +45,6 @@ export default function Settings() {
     taxRate: 18,
   });
 
-  useEffect(() => {
-    setLogoError(false);
-  }, [logoPreview, form.logoUrl]);
 
   useEffect(() => {
     const load = async () => {
@@ -72,26 +64,19 @@ export default function Settings() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setLogoFile(file);
-    setLogoPreview(URL.createObjectURL(file));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-
     try {
       const fd = new FormData();
-      const skip = ['_id', '__v', 'adminId', 'createdAt', 'updatedAt'];
+      // Locked brand fields — never submitted
+      const skip = ['_id', '__v', 'adminId', 'createdAt', 'updatedAt',
+                    'brandName', 'primaryColor', 'logoUrl'];
       Object.entries(form).forEach(([key, val]) => {
         if (!skip.includes(key) && val !== null && val !== undefined) {
           fd.append(key, val);
         }
       });
-      if (logoFile) fd.append('logo', logoFile);
       fd.append('adminPassword', adminPassword);
 
       const res = await API.put('/settings', fd, {
@@ -99,7 +84,6 @@ export default function Settings() {
       });
 
       if (res.data) setForm(prev => ({ ...prev, ...res.data }));
-      setLogoFile(null);
       await refreshSettings();
       setAdminPassword('');
     } catch (err) {
@@ -109,7 +93,7 @@ export default function Settings() {
     }
   };
 
-  const logoSrc = logoPreview || getMediaUrl(form.logoUrl) || null;
+  const logoSrc = getMediaUrl(form.logoUrl) || null;
 
   if (loading) return (
     <div className="py-40 text-center flex flex-col items-center justify-center gap-4">
@@ -151,54 +135,92 @@ export default function Settings() {
           {/* ── CORE IDENTITY (LEFT) ── */}
           <div className="xl:col-span-8 space-y-10">
             
-            {/* Visual Design System */}
-            <section className="bg-white rounded-2xl border border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] p-6 space-y-8 relative overflow-hidden">
-               <div className="flex items-center gap-4 border-b border-slate-100 pb-6">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
-                     <FaPalette size={18} />
+            {/* ── LOCKED BRAND IDENTITY ── */}
+            <section className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.05)]">
+              {/* Header stripe */}
+              <div className="bg-slate-900 px-6 py-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+                    <FaLayerGroup className="text-white" size={15} />
                   </div>
                   <div>
-                     <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Visual <span className="text-orange-600 not-italic">Identity</span></h3>
-                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Brand Aesthetics & Color Theory</p>
+                    <h3 className="text-sm font-black text-white uppercase tracking-widest">Visual Identity</h3>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Brand Aesthetics &amp; Core Identity</p>
                   </div>
-               </div>
+                </div>
+                {/* Locked badge */}
+                <div className="flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 px-3 py-1.5 rounded-full">
+                  <FaLock className="text-orange-400" size={9} />
+                  <span className="text-[9px] font-black text-orange-400 uppercase tracking-widest">Protected · Source Config</span>
+                </div>
+              </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Brand Nominal Identity</label>
-                    <input type="text" name="brandName" value={form.brandName} onChange={handleChange} className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-[22px] outline-none focus:border-orange-500 font-bold text-[13px] text-slate-900 transition-all" />
-                  </div>
+              {/* Brand showcase */}
+              <div className="bg-white p-6 space-y-5">
 
-                  <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Primary Aesthetic Tone</label>
-                    <div className="flex gap-4">
-                      <div className="relative">
-                         <input type="color" name="primaryColor" value={form.primaryColor} onChange={handleChange} className="w-14 h-14 rounded-[22px] cursor-pointer border-4 border-white shadow-lg overflow-hidden" />
+                {/* Info banner */}
+                <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+                  <FaShieldAlt className="text-amber-500 mt-0.5 flex-shrink-0" size={13} />
+                  <p className="text-[10px] font-bold text-amber-700 leading-relaxed">
+                    Brand identity is immutably configured in the frontend source at{' '}
+                    <code className="bg-amber-100 px-1.5 py-0.5 rounded text-[9px] font-mono">src/config/brand.js</code>.{' '}
+                    Changes require a code deployment.
+                  </p>
+                </div>
+
+                {/* Identity cards grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                  {/* Logo card */}
+                  <div className="col-span-1 flex flex-col items-center justify-center p-6 bg-slate-50 border border-slate-100 rounded-2xl gap-4">
+                    <div className="w-20 h-20 rounded-[22px] bg-white flex items-center justify-center border-2 border-orange-100 shadow-md overflow-hidden">
+                      {BRAND.logoPath ? (
+                        <img src={BRAND.logoPath} alt={BRAND.name} className="w-full h-full object-contain p-2" />
+                      ) : (
+                        <span className="text-3xl font-black text-primary italic">{BRAND.letterMark}</span>
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Platform Logo</p>
+                      <div className="flex items-center gap-1 justify-center mt-1">
+                        <FaLock size={8} className="text-slate-300" />
+                        <p className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">Locked</p>
                       </div>
-                      <input type="text" value={form.primaryColor} readOnly className="flex-1 px-6 bg-slate-50 border border-slate-100 rounded-[22px] font-mono font-bold text-xs text-slate-400 text-center uppercase tracking-widest" />
                     </div>
                   </div>
 
-                  <div className="space-y-3 md:col-span-2">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Global Platform Logo</label>
-                    <label className="flex items-center gap-6 p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:bg-orange-50/30 hover:border-orange-500 transition-all group">
-                      {logoSrc && !logoError ? (
-                        <div className="w-16 h-16 rounded-2xl bg-white p-2 shadow-xl border border-slate-100">
-                           <img src={logoSrc} alt="Logo" className="w-full h-full object-contain" onError={() => setLogoError(true)} />
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-300">
-                           <FaUpload size={20} />
-                        </div>
-                      )}
-                      <div className="flex-1">
-                         <p className="text-xs font-bold text-slate-900 uppercase tracking-widest group-hover:text-orange-600 transition-colors">Upload High-Res Vector</p>
-                         <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mt-1">PNG, JPG or SVG • Recommended 512x512</p>
-                      </div>
-                      <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
-                    </label>
+                  {/* Brand name + tagline */}
+                  <div className="flex flex-col justify-center p-6 bg-slate-50 border border-slate-100 rounded-2xl gap-3">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Brand Name</p>
+                    <p className="text-2xl font-black text-slate-900 tracking-tighter">{BRAND.name}</p>
+                    <p className="text-xs font-bold text-slate-500 italic">{BRAND.tagline}</p>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <FaCheckCircle size={9} className="text-green-500" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-green-600">Verified Identity</span>
+                    </div>
                   </div>
-               </div>
+
+                  {/* Primary colour */}
+                  <div className="flex flex-col justify-center p-6 bg-slate-50 border border-slate-100 rounded-2xl gap-3">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Primary Colour</p>
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-14 h-14 rounded-2xl shadow-lg border-4 border-white flex-shrink-0"
+                        style={{ backgroundColor: BRAND.primaryColor }}
+                      />
+                      <div>
+                        <p className="font-mono font-black text-slate-900 text-sm uppercase tracking-widest">{BRAND.primaryColor}</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Accent · CTA · Hover</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <FaLock size={9} className="text-slate-300" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-300">Non-editable</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </section>
 
             {/* Corporate Manifesto */}
