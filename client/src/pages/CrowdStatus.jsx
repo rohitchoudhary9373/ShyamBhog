@@ -157,7 +157,7 @@ export default function CrowdStatus() {
   };
 
   if (loading) return (
-    <div className="min-h-[100dvh] bg-[#FFFBF5] flex flex-col items-center justify-center p-10 gap-6">
+    <div className="min-h-[100dvh] bg-[#FDF8F1] flex flex-col items-center justify-center p-10 gap-6">
        <div className="relative w-16 h-16">
           <div className="absolute inset-0 border-[2px] border-orange-100 rounded-full"></div>
           <div className="absolute inset-0 border-[2px] border-t-orange-600 rounded-full animate-spin"></div>
@@ -167,7 +167,7 @@ export default function CrowdStatus() {
   );
 
   return (
-    <div className={`min-h-[100dvh] bg-[#FFFBF5] pb-16 font-sans selection:bg-orange-100 transition-colors duration-1000 relative overflow-hidden`}>
+    <div className={`min-h-[100dvh] bg-[#FDF8F1] pb-16 font-sans selection:bg-orange-100 transition-colors duration-1000 relative overflow-hidden`}>
       
       {/* 🔮 AMBIENCE 🔮 */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-orange-50/40 to-transparent pointer-events-none -z-10"></div>

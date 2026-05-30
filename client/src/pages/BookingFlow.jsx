@@ -177,7 +177,7 @@ export default function BookingFlow() {
   if (loading) return <div className="p-20 text-center text-slate-300 font-bold uppercase tracking-widest text-[10px]">Loading...</div>;
 
   return (
-    <div className="min-h-[100dvh] bg-[#FDFCFB] pb-20">
+    <div className="min-h-[100dvh] bg-[#FDF8F1] pb-20">
       <div className="max-w-6xl mx-auto px-6 pt-6">
 
         {/* BACK ACTION */}
