@@ -74,16 +74,6 @@ export default function Profile() {
       }
    };
 
-   const handleImageUpload = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-         if (file.size > 2 * 1024 * 1024) return alert("File too large (Max 2MB)");
-         const reader = new FileReader();
-         reader.onloadend = () => setEditForm({ ...editForm, profilePic: reader.result });
-         reader.readAsDataURL(file);
-      }
-   };
-
    const getLifecycleStage = (status) => {
       const stages = ['Pending', 'Payment_Verified', 'Approved', 'Invoice_Generated', 'Completed'];
       const currentIdx = stages.indexOf(status);
@@ -462,10 +452,6 @@ export default function Profile() {
                                  <option value="Female">Female</option>
                                  <option value="Other">Other</option>
                               </select>
-                           </div>
-                           <div>
-                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Profile Photo (Max 2MB)</label>
-                              <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-[14px] text-sm font-bold outline-none focus:border-primary transition-all shadow-inner file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-slate-900 file:text-white hover:file:bg-primary" />
                            </div>
                         </div>
                         <div>
