@@ -509,7 +509,7 @@ function App() {
             <Route path="manage-crowd" element={<ManageCrowd />} />
             <Route path="manage-parking" element={<ManageParkingDetailed />} />
             <Route path="manage-hotels" element={<ManageHotelsDetailed />} />
-            <Route path="devotees" element={<ManageDevotees />} />
+            <Route path="users" element={<ManageDevotees />} />
             <Route path="wallet" element={<AdminWallet />} />
           </Route>
         </Route>

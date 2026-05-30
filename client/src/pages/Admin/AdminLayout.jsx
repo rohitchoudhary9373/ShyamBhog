@@ -104,7 +104,7 @@ export default function AdminLayout() {
     { name: "Crowd Status", path: "/admin/manage-crowd", icon: <FaUsers />, permission: 'manage_content' },
     { name: "Parking", path: "/admin/manage-parking", icon: <FaParking />, permission: 'manage_parking' },
     { name: "Luxury Stays", path: "/admin/manage-hotels", icon: <FaBed />, permission: 'manage_hotels' },
-    { name: "Devotees", path: "/admin/devotees", icon: <FaUsers />, permission: 'manage_devotees' },
+    { name: "Users", path: "/admin/users", icon: <FaUsers />, permission: 'manage_devotees' },
     { name: "Team", path: "/admin/agents", icon: <FaUsers />, permission: 'admin_only' },
     { name: "Security Log", path: "/admin/security", icon: <FaHistory />, permission: 'admin_only' },
     { name: "Financials", path: "/admin/wallet", icon: <FaWallet />, permission: 'manage_wallet' },

@@ -103,7 +103,7 @@ export default function ManageDevotees() {
   };
 
   const exportToCSV = () => {
-    const headers = ["Devotee Name", "Contact Number", "Email", "Status", "Role", "Balance"];
+    const headers = ["User Name", "Contact Number", "Email", "Status", "Role", "Balance"];
     const rows = filteredDevotees.map(d => [
       d.name,
       d.mobile,
@@ -120,7 +120,7 @@ export default function ManageDevotees() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `Devotees_Registry_${new Date().toLocaleDateString()}.csv`);
+    link.setAttribute("download", `Users_Registry_${new Date().toLocaleDateString()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -190,7 +190,7 @@ export default function ManageDevotees() {
   if (loading) return (
     <div className="py-40 text-center flex flex-col items-center justify-center gap-4">
        <div className="w-12 h-12 border-4 border-slate-100 border-t-orange-500 rounded-full animate-spin"></div>
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing Devotee Database...</p>
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing User Database...</p>
     </div>
   );
 
@@ -302,7 +302,7 @@ export default function ManageDevotees() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[35%]">Devotee Profile / Identity</th>
+                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[35%]">User Profile / Identity</th>
                 <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[25%]">Contact & Location</th>
                 <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[20%]">Wallet & Balances</th>
                 <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[20%]">Operational Controls</th>
@@ -479,14 +479,14 @@ export default function ManageDevotees() {
                                 ? 'bg-emerald-50 border-emerald-200 text-emerald-600 hover:bg-emerald-600 hover:text-white' 
                                 : 'bg-slate-900 border-slate-900 text-white hover:bg-slate-800'
                             }`}
-                            title={d.status === 'blocked' ? 'Unblock User' : 'Suspend Devotee'}
+                            title={d.status === 'blocked' ? 'Unblock User' : 'Suspend User'}
                           >
                             {d.status === 'blocked' ? <FaUnlock size={11} /> : <FaLock size={11} />}
                           </button>
                           <button 
                             onClick={() => handleForceDelete(d)}
                             className="w-9 h-9 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-100/50 hover:border-red-500 transition-all shadow-sm flex items-center justify-center"
-                            title="Delete Devotee Node"
+                            title="Delete User Node"
                           >
                             <FaTrash size={11} />
                           </button>
@@ -513,7 +513,7 @@ export default function ManageDevotees() {
           <div className="py-32 text-center flex flex-col items-center justify-center gap-4 bg-slate-50/20">
             <FaUserCircle className="text-4xl text-slate-200" />
             <div>
-              <p className="text-sm font-black text-slate-800 uppercase tracking-tighter italic">No devotees match criteria</p>
+              <p className="text-sm font-black text-slate-800 uppercase tracking-tighter italic">No users match criteria</p>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Refine your filters or search keywords</p>
             </div>
           </div>
