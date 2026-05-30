@@ -34,6 +34,8 @@ import LoginHistory from "./pages/Admin/LoginHistory";
 import Settings from "./pages/Admin/Settings";
 import AdminWallet from "./pages/Admin/Wallet";
 import ManageDevotees from "./pages/Admin/ManageDevotees";
+import HotelVendors from "./pages/Admin/HotelVendors";
+import HotelBookingsAdmin from "./pages/Admin/HotelBookingsAdmin";
 
 import ManageArjee from "./pages/Admin/ManageArjee";
 import ManageCrowd from "./pages/Admin/ManageCrowd";
@@ -43,9 +45,17 @@ import WatchArjee from "./pages/WatchArjee";
 import HotelStayPage from "./pages/HotelStayPage";
 import ParkingGuidePage from "./pages/ParkingGuidePage";
 import CrowdStatus from "./pages/CrowdStatus";
+import HotelDetailsPage from "./pages/HotelDetailsPage";
+import HotelCheckoutPage from "./pages/HotelCheckoutPage";
 import { useSettings } from "./context/SettingsContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./pages/Cart";
+import VendorLayout from "./pages/Vendor/VendorLayout";
+import VendorDashboard from "./pages/Vendor/Dashboard";
+import VendorHotels from "./pages/Vendor/Hotels";
+import VendorRooms from "./pages/Vendor/Rooms";
+import VendorBookings from "./pages/Vendor/Bookings";
+import VendorPayouts from "./pages/Vendor/Payouts";
 import { FaWhatsapp, FaInstagram, FaFacebook, FaYoutube, FaEnvelope, FaInfoCircle, FaPhoneAlt, FaMapMarkerAlt, FaGlobe } from "react-icons/fa";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -480,6 +490,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/wallet" element={<MyWallet />} />
           <Route path="/hotel-stay" element={<HotelStayPage />} />
+          <Route path="/hotels/detail/:id" element={<HotelDetailsPage />} />
+          <Route path="/hotels/checkout/:roomId" element={
+             <ProtectedRoute>
+                <HotelCheckoutPage />
+             </ProtectedRoute>
+          } />
           <Route path="/parking-guide" element={<ParkingGuidePage />} />
           <Route path="/crowd-status" element={<CrowdStatus />} />
           <Route path="/policy/:type" element={<PolicyPage />} />
@@ -495,7 +511,11 @@ function App() {
 
         {/* 🧑‍💼 ADMIN PROTECTED */}
         <Route element={<ProtectedRoute allowedRoles={["admin", "admin", "agent"]} />}>
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin/*" element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }>
             <Route index element={<Dashboard />} />
             <Route path="services" element={<ManageServices />} />
             <Route path="content" element={<ManageContent />} />
@@ -509,9 +529,25 @@ function App() {
             <Route path="manage-crowd" element={<ManageCrowd />} />
             <Route path="manage-parking" element={<ManageParkingDetailed />} />
             <Route path="manage-hotels" element={<ManageHotelsDetailed />} />
+            <Route path="hotel-vendors" element={<HotelVendors />} />
+            <Route path="hotel-revenue" element={<HotelBookingsAdmin />} />
             <Route path="users" element={<ManageDevotees />} />
             <Route path="wallet" element={<AdminWallet />} />
           </Route>
+        </Route>
+
+        {/* 🏢 VENDOR PROTECTED */}
+        <Route path="/vendor/*" element={
+          <ProtectedRoute allowedRoles={["hotel_owner", "admin"]}>
+            <VendorLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<VendorDashboard />} />
+          <Route path="dashboard" element={<VendorDashboard />} />
+          <Route path="hotels" element={<VendorHotels />} />
+          <Route path="rooms" element={<VendorRooms />} />
+          <Route path="bookings" element={<VendorBookings />} />
+          <Route path="payouts" element={<VendorPayouts />} />
         </Route>
 
         {/* ❌ 404 */}

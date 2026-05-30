@@ -23,6 +23,31 @@ const HotelSchema = new mongoose.Schema({
     default: 3
   },
   features: [String], // e.g. ["Free WiFi", "AC", "Breakfast", "Near Temple"]
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'suspended'],
+    default: 'approved'
+  },
+  commissionRate: {
+    type: Number, // Percentage, e.g. 15 for 15%
+    default: null // If null, falls back to global setting
+  },
+  gallery: [String],
+  policies: {
+    cancellation: String,
+    checkInTime: String,
+    checkOutTime: String,
+    houseRules: [String]
+  },
+  faqs: [{
+    question: String,
+    answer: String
+  }],
   isActive: {
     type: Boolean,
     default: true

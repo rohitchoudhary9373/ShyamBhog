@@ -77,7 +77,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin', 'admin', 'agent'],
+    enum: ['user', 'admin', 'agent', 'hotel_owner'],
     default: 'user'
   },
   status: {
@@ -146,6 +146,13 @@ const UserSchema = new mongoose.Schema({
     gstDoc: String, // URL/Path
     aadharDoc: String,
     udyamDoc: String
+  },
+  ownerProfile: {
+    bankName: String,
+    accountNumber: String,
+    ifscCode: String,
+    upiId: String,
+    businessName: String
   }
 }, { timestamps: true });
 

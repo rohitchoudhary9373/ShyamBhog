@@ -194,6 +194,8 @@ app.use("/api/crowd-status",  generalLimiter, require("./routes/crowdStatus"));
 app.use("/api/parking",       generalLimiter, require("./routes/parking"));
 app.use("/api/hotel-stay",    generalLimiter, require("./routes/hotelStay"));
 app.use("/api/hotels",        generalLimiter, require("./routes/hotels"));
+app.use("/api/hotel-vendor",  generalLimiter, require("./routes/hotelVendor"));
+app.use("/api/hotel-booking", generalLimiter, require("./routes/hotelBooking"));
 
 // ──────────────────────────────────────
 // PRODUCTION STATIC SERVING

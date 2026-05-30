@@ -71,7 +71,7 @@ const superAdmin = (req, res, next) => {
 
 // 🔐 ADMIN CHECK (Allows Resellers, Super Admins, and Agents)
 const admin = (req, res, next) => {
-  if (req.user && (req.user.role === "admin" || req.user.role === "admin" || req.user.role === "agent")) {
+  if (req.user && (req.user.role === "admin" || req.user.role === "agent")) {
     next();
   } else {
     return res.status(403).json({
@@ -81,6 +81,17 @@ const admin = (req, res, next) => {
   }
 };
 
+// 🔐 HOTEL OWNER CHECK
+const hotelOwner = (req, res, next) => {
+  if (req.user && req.user.role === "hotel_owner") {
+    next();
+  } else {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied (Hotel Owner only)",
+    });
+  }
+};
 
 // 🔐 OPTIONAL: ROLE BASED ACCESS (ADVANCED)
 const authorizeRoles = (...roles) => {
@@ -99,5 +110,6 @@ module.exports = {
   protect,
   admin,
   superAdmin,
+  hotelOwner,
   authorizeRoles, // optional
 };

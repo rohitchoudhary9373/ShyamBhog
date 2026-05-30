@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-export default function ProtectedRoute({ allowedRoles }) {
+export default function ProtectedRoute({ allowedRoles, children }) {
   const location = useLocation();
 
   const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -13,5 +13,5 @@ export default function ProtectedRoute({ allowedRoles }) {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return children ? children : <Outlet />;
 }

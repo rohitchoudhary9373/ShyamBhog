@@ -150,12 +150,12 @@ export default function HotelStayPage() {
                            </div>
 
                            <div className="flex gap-3">
-                              <a 
-                                 href={`tel:${hotel.contactNumber || hotel.phone}`} 
+                              <button 
+                                 onClick={() => navigate(`/hotels/detail/${hotel._id}`)} 
                                  className="flex-1 bg-slate-900 text-white py-4 rounded-[20px] flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all shadow-xl active:scale-95"
                               >
-                                 <FaPhoneAlt size={12}/> {t('hotel.call') || 'Call'}
-                              </a>
+                                 <FaBed size={12}/> {t('hotel.book_room') || 'Book Room'}
+                              </button>
                               <button 
                                   onClick={(e) => {
                                      e.preventDefault();
