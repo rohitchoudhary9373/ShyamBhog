@@ -24,6 +24,36 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  alternateContact: {
+    type: String,
+    default: ''
+  },
+  whatsappNumber: {
+    type: String,
+    default: ''
+  },
+  country: {
+    type: String,
+    default: 'India'
+  },
+  dob: {
+    type: Date,
+    default: null
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other', ''],
+    default: ''
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now
+  },
   pincode: {
     type: String,
     default: ''

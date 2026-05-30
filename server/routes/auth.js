@@ -129,11 +129,18 @@ router.post("/google", async (req, res) => {
         googleId,
         profilePic,
         role: 'user', // Default role
+        authProvider: 'google',
+        lastLogin: Date.now()
       });
     } else {
-      // Update existing user with google info if not present
-      if (!user.googleId) user.googleId = googleId;
-      if (!user.profilePic) user.profilePic = profilePic;
+      // Update existing user with google info and sync latest
+      user.googleId = googleId;
+      user.profilePic = profilePic;
+      user.name = name; // Sync latest name
+      user.lastLogin = Date.now();
+      if (user.authProvider !== 'google') {
+        user.authProvider = 'google'; // Mark as google if they didn't have it
+      }
       await user.save();
     }
 

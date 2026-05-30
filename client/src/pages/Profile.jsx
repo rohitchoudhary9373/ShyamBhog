@@ -60,12 +60,27 @@ export default function Profile() {
       try {
          await API.put('/auth/profile', editForm);
          setUserData(editForm);
+         
+         // Update localStorage userInfo so header/other parts sync immediately
+         const currentUser = JSON.parse(localStorage.getItem("userInfo") || "{}");
+         localStorage.setItem("userInfo", JSON.stringify({ ...currentUser, ...editForm }));
+
          setIsEditing(false);
          alert(i18n.language === 'en' ? "Profile updated!" : "प्रोफ़ाइल अपडेट हो गई!");
       } catch (err) {
          alert("Update failed");
       } finally {
          setSaving(false);
+      }
+   };
+
+   const handleImageUpload = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+         if (file.size > 2 * 1024 * 1024) return alert("File too large (Max 2MB)");
+         const reader = new FileReader();
+         reader.onloadend = () => setEditForm({ ...editForm, profilePic: reader.result });
+         reader.readAsDataURL(file);
       }
    };
 
@@ -124,8 +139,8 @@ export default function Profile() {
                <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-50 rounded-full blur-3xl opacity-50"></div>
 
                <div className="relative z-10 flex flex-col items-center text-center">
-                  <div className="w-24 h-24 rounded-[32px] bg-slate-900 text-white flex items-center justify-center text-3xl font-black mb-6 shadow-xl border-4 border-white">
-                     {userData.name?.charAt(0)}
+                  <div className="w-24 h-24 rounded-[32px] bg-slate-900 text-white flex items-center justify-center text-3xl font-black mb-6 shadow-xl border-4 border-white overflow-hidden relative group/pic">
+                     {userData.profilePic ? <img src={userData.profilePic} alt="profile" className="w-full h-full object-cover" /> : userData.name?.charAt(0)}
                   </div>
 
                   <h1 className="text-3xl font-black text-slate-900 tracking-tighter italic uppercase mb-2">
@@ -420,23 +435,60 @@ export default function Profile() {
                               <input type="text" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
                            </div>
                            <div>
-                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.email')}</label>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.email') || 'Email'}</label>
                               <input type="email" value={editForm.email} onChange={e => setEditForm({ ...editForm, email: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                           </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Mobile Number</label>
+                              <input type="text" value={editForm.mobile || ''} onChange={e => setEditForm({ ...editForm, mobile: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" disabled={userData.authProvider !== 'google' && !!userData.mobile} />
+                           </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">WhatsApp Number</label>
+                              <input type="text" value={editForm.whatsappNumber || ''} onChange={e => setEditForm({ ...editForm, whatsappNumber: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                           </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Alternate Contact</label>
+                              <input type="text" value={editForm.alternateContact || ''} onChange={e => setEditForm({ ...editForm, alternateContact: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                           </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Date of Birth</label>
+                              <input type="date" value={editForm.dob ? new Date(editForm.dob).toISOString().split('T')[0] : ''} onChange={e => setEditForm({ ...editForm, dob: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                           </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Gender</label>
+                              <select value={editForm.gender || ''} onChange={e => setEditForm({ ...editForm, gender: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner">
+                                 <option value="">Select Gender</option>
+                                 <option value="Male">Male</option>
+                                 <option value="Female">Female</option>
+                                 <option value="Other">Other</option>
+                              </select>
+                           </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Profile Photo (Max 2MB)</label>
+                              <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-[14px] text-sm font-bold outline-none focus:border-primary transition-all shadow-inner file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-slate-900 file:text-white hover:file:bg-primary" />
                            </div>
                         </div>
                         <div>
-                           <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.complete_address')}</label>
-                           <textarea value={editForm.address} onChange={e => setEditForm({ ...editForm, address: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all h-28 resize-none shadow-inner" />
+                           <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.complete_address') || 'Address'}</label>
+                           <textarea value={editForm.address || ''} onChange={e => setEditForm({ ...editForm, address: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all h-28 resize-none shadow-inner" />
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                            <div>
-                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.district')}</label>
-                              <input type="text" value={editForm.district} onChange={e => setEditForm({ ...editForm, district: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.district') || 'City/District'}</label>
+                              <input type="text" value={editForm.district || ''} onChange={e => setEditForm({ ...editForm, district: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
                            </div>
                            <div>
-                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.state')}</label>
-                              <input type="text" value={editForm.state} onChange={e => setEditForm({ ...editForm, state: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">{t('profile.state') || 'State'}</label>
+                              <input type="text" value={editForm.state || ''} onChange={e => setEditForm({ ...editForm, state: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
                            </div>
+                           <div>
+                              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Pincode</label>
+                              <input type="text" value={editForm.pincode || ''} onChange={e => setEditForm({ ...editForm, pincode: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                           </div>
+                        </div>
+                        <div>
+                           <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block">Country</label>
+                           <input type="text" value={editForm.country || 'India'} onChange={e => setEditForm({ ...editForm, country: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-[24px] px-6 py-5 text-sm font-bold outline-none focus:border-primary transition-all shadow-inner" />
                         </div>
                         <button disabled={saving} className="w-full bg-slate-900 text-white py-5 rounded-[28px] font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:bg-primary transition-all active:scale-95 mt-4">
                            {saving ? 'Processing...' : t('common.save')}
