@@ -6,9 +6,9 @@ import { FaUserCircle, FaRegUserCircle, FaShoppingCart, FaWallet, FaGlobe } from
 import { useSettings } from "../context/SettingsContext";
 import { useCart } from "../context/CartContext";
 import { useTranslation } from "react-i18next";
+import { getFullUrl } from "../utils/url";
 import { AnimatePresence, motion } from "framer-motion";
 import AboutUsModal from "./AboutUsModal";
-import BRAND from "../config/brand";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -83,20 +83,20 @@ export default function Navbar() {
 
           {/* ── LOGO ── */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center overflow-hidden border border-orange-100/50 shadow-inner flex-shrink-0">
-              {BRAND.logoPath && !logoError ? (
+            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center overflow-hidden border border-orange-100/50 shadow-inner">
+              {settings?.logoUrl && !logoError ? (
                 <img
-                  src={BRAND.logoPath}
-                  alt={BRAND.name}
+                  src={getFullUrl(settings?.logoUrl)}
+                  alt={settings?.brandName}
                   className="w-full h-full object-contain transition-transform group-hover:scale-110"
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <span className="text-primary font-black text-xl italic">{BRAND.letterMark}</span>
+                <span className="text-primary font-black text-xl italic">{settings?.brandName?.charAt(0) || 'S'}</span>
               )}
             </div>
             <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter group-hover:text-primary transition-colors">
-              {BRAND.name}
+              {settings?.brandName || 'Shyam Bhog'}
             </span>
           </Link>
 
