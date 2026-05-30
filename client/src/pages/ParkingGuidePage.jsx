@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 import MapActionSheet from '../components/MapActionSheet';
+import { getMediaUrl } from '../utils/url';
 
 export default function ParkingGuidePage() {
    const { t } = useTranslation();
@@ -113,7 +114,7 @@ export default function ParkingGuidePage() {
                         {p.imageUrl && (
                            <div className="w-full h-48 rounded-[20px] overflow-hidden mb-6 bg-slate-50">
                               <img 
-                                 src={p.imageUrl.startsWith('http') ? p.imageUrl : `https://shyambhog.onrender.com${p.imageUrl}`} 
+                                 src={getMediaUrl(p.imageUrl)} 
                                  alt={p.name} 
                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                                  onError={(e) => { e.target.style.display = 'none'; }}
@@ -129,7 +130,7 @@ export default function ParkingGuidePage() {
                               <h3 className="text-xl font-black text-[#0A1128] uppercase tracking-tighter mt-1">{p.name}</h3>
                            </div>
                            <div className="text-right flex flex-col items-end">
-                              <span className="text-xl font-black text-orange-600 tracking-tighter leading-none">{p.distance || '1km'}</span>
+                              <span className="text-xl font-black text-orange-600 tracking-tighter leading-none">{p.distanceFromTemple || p.distance || '1km'}</span>
                               <p className="text-[7px] font-black text-slate-300 uppercase tracking-widest mt-0.5">away</p>
                            </div>
                         </div>
@@ -148,7 +149,7 @@ export default function ParkingGuidePage() {
                                   e.preventDefault();
                                   setActiveMap({
                                      locationName: p.name,
-                                     mapUrl: p.mapUrl
+                                     mapUrl: p.googleMapsUrl || p.mapUrl
                                   });
                                }}
                                className="flex items-center gap-2.5 bg-[#0A1128] text-white px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg active:scale-95"
