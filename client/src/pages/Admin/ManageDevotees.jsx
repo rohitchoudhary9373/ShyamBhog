@@ -205,7 +205,7 @@ export default function ManageDevotees() {
               <FaUsers size={20} />
             </div>
             <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">
-              Devotee <span className="text-orange-600 not-italic">CRM</span>
+              User <span className="text-orange-600 not-italic">CRM</span>
             </h1>
           </div>
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] ml-1 mt-1">
@@ -227,7 +227,7 @@ export default function ManageDevotees() {
       {/* ── METRICS DASHBOARD ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Devotees</p>
+          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Users</p>
           <div className="flex items-baseline gap-2 mt-2">
             <span className="text-3xl font-black text-slate-900">{totalCount}</span>
             <span className="text-[9px] font-bold text-slate-400 uppercase">Registered</span>
