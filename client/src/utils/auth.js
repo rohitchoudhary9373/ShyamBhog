@@ -21,7 +21,17 @@ export const getToken = () => {
     return !!(user && token);
   };
   
+  import { auth } from "../firebase";
+
   export const logout = () => {
+    // Clear Firebase session if exists
+    if (auth) {
+      try {
+        auth.signOut();
+      } catch (err) {
+        console.error("Firebase signout error", err);
+      }
+    }
     // Clear all authentication states
     localStorage.removeItem("userInfo");
     localStorage.removeItem("token");

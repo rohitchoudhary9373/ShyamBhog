@@ -4,7 +4,6 @@ import App from "./App.jsx";
 import "./index.css";
 import { SettingsProvider } from "./context/SettingsContext";
 import { CartProvider } from "./context/CartContext";
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import "./i18n";
 
 class ErrorBoundary extends React.Component {
@@ -33,12 +32,10 @@ class ErrorBoundary extends React.Component {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ErrorBoundary>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "PROVIDE_GOOGLE_CLIENT_ID"}>
       <SettingsProvider>
         <CartProvider>
           <App />
         </CartProvider>
       </SettingsProvider>
-    </GoogleOAuthProvider>
   </ErrorBoundary>
 );

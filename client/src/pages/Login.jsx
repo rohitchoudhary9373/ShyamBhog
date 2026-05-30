@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSettings } from "../context/SettingsContext";
 import { FaPhoneAlt, FaLock, FaUser, FaArrowRight, FaPray } from "react-icons/fa";
 import API from "../services/api";
-import { useGoogleLogin } from '@react-oauth/google';
+import { auth, googleProvider } from "../firebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getMediaUrl } from "../utils/url";
 
 export default function Login() {
@@ -86,51 +87,41 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      if (import.meta.env.VITE_GOOGLE_CLIENT_ID === "PROVIDE_GOOGLE_CLIENT_ID" || !import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-        return setError("Google Client ID is missing in .env file");
-      }
-      setLoading(true);
-      setError("");
-      try {
-        // Fetch user info using access token
-        const googleUserRes = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-        });
-        
-        const { name, email, sub, picture } = googleUserRes.data;
-        
-        // Custom backend doesn't use tokenId if we send raw info, 
-        // BUT for security we should send the tokenId/code. 
-        // To keep it simple and secure as per user request:
-        // Let's use the credential response from a different component if possible, 
-        // but @react-oauth/google's custom hook gives access_token.
-        
-        // I will use a simple backend verification with the info we got
-        const res = await API.post('/auth/google', { 
-           tokenId: tokenResponse.access_token, // backend will handle this
-           isAccessToken: true 
-        });
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const accessToken = credential.accessToken;
+      const idToken = credential.idToken;
+      // The signed-in user info.
+      const user = result.user;
 
-        const user = res.data.user || res.data;
-        const token = res.data.token;
+      // Send the token to the backend
+      const res = await API.post('/auth/google', { 
+         tokenId: accessToken || idToken,
+         isAccessToken: !!accessToken 
+      });
 
-        localStorage.setItem("token", token);
-        localStorage.setItem("userInfo", JSON.stringify(user));
+      const dbUser = res.data.user || res.data;
+      const dbToken = res.data.token;
 
-        if (user.role === "admin" || user.role === "agent") navigate("/admin");
-        else if (redirectUrl) navigate(redirectUrl);
-        else navigate("/");
+      localStorage.setItem("token", dbToken);
+      localStorage.setItem("userInfo", JSON.stringify(dbUser));
 
-      } catch (err) {
-        setError(err.response?.data?.message || "Google Authentication failed");
-      } finally {
-        setLoading(false);
-      }
-    },
-    onError: () => setError("Google Login Failed")
-  });
+      if (dbUser.role === "admin" || dbUser.role === "agent") navigate("/admin");
+      else if (redirectUrl) navigate(redirectUrl);
+      else navigate("/");
+
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || err.message || "Google Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] py-12 md:py-20 px-4 flex items-center justify-center font-sans">
