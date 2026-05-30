@@ -139,7 +139,7 @@ export default function CrowdStatus() {
           <div className="absolute inset-0 border-[2px] border-orange-100 rounded-full"></div>
           <div className="absolute inset-0 border-[2px] border-t-orange-600 rounded-full animate-spin"></div>
        </div>
-       <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing Intel...</p>
+       <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest animate-pulse">Syncing Intel...</p>
     </div>
   );
 
@@ -152,7 +152,7 @@ export default function CrowdStatus() {
       {/* 🚨 EMERGENCY ALERTS 🚨 */}
       <AnimatePresence>
          {crowd?.emergencyBanner && (
-           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="bg-[#B91C1C] text-white px-6 py-3 text-[10px] font-black uppercase tracking-widest text-center relative z-[110] shadow-xl">
+           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="bg-[#B91C1C] text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-center relative z-[110] shadow-xl">
               <span>{crowd.emergencyBanner}</span>
            </motion.div>
          )}
@@ -166,8 +166,8 @@ export default function CrowdStatus() {
          >
             <FaChevronLeft size={14}/>
          </button>
-         <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">Bheed <span className="text-orange-600 underline decoration-orange-200">Bhad</span></h1>
-         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
+         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Bheed <span className="text-orange-600 underline decoration-orange-200">Bhad</span></h1>
+         <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest flex items-center gap-2">
             <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>
             Live Density Intel
          </p>
@@ -182,14 +182,14 @@ export default function CrowdStatus() {
            <motion.div 
              initial={{ opacity: 0, y: 20 }} 
              animate={{ opacity: 1, y: 0 }}
-             className={`bg-white/95 backdrop-blur-3xl rounded-[26px] border border-white/60 p-7 shadow-xl ${config.glow} relative overflow-hidden group`}
+             className={`bg-white/95 backdrop-blur-3xl rounded-2xl border border-white/60 p-7 shadow-xl ${config.glow} relative overflow-hidden group`}
            >
               {/* ── INLINE SHARE ── */}
               {crowd?.shareConfig?.enableSharing && (
                 <div className="absolute top-6 right-6 z-20">
                    <button 
                      onClick={() => setShowSharePopup(!showSharePopup)}
-                     className="w-8 h-8 rounded-full bg-white border border-orange-100/40 flex items-center justify-center text-[#0A1128] shadow-sm hover:shadow-md hover:scale-105 transition-all"
+                     className="w-8 h-8 rounded-full bg-white border border-orange-100/40 flex items-center justify-center text-slate-900 shadow-sm hover:shadow-md hover:scale-105 transition-all"
                    >
                       <FaShareAlt size={12} />
                    </button>
@@ -201,27 +201,27 @@ export default function CrowdStatus() {
                           initial={{ opacity: 0, scale: 0.95, y: 5 }}
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95, y: 5 }}
-                          className="absolute top-10 right-0 w-48 bg-white/98 backdrop-blur-xl rounded-[22px] border border-orange-100/20 shadow-2xl p-4 space-y-4 z-[100] origin-top-right"
+                          className="absolute top-10 right-0 w-48 bg-white/98 backdrop-blur-xl rounded-xl border border-orange-100/20 shadow-2xl p-4 space-y-4 z-[100] origin-top-right"
                         >
-                           <span className="text-[9px] font-black text-[#0A1128] uppercase tracking-[0.2em] block border-b border-orange-50 pb-2">Share Status</span>
+                           <span className="text-[9px] font-bold text-slate-900 uppercase tracking-[0.2em] block border-b border-orange-50 pb-2">Share Status</span>
                            <div className="grid grid-cols-2 gap-2">
                               {crowd?.shareConfig?.platforms?.whatsapp && (
                                 <button onClick={shareWhatsApp} className="flex flex-col items-center gap-1.5 p-2.5 bg-emerald-50 rounded-xl hover:bg-emerald-500 hover:text-white transition-all group">
                                    <FaWhatsapp size={14} />
-                                   <span className="text-[7px] font-black uppercase">WhatsApp</span>
+                                   <span className="text-[7px] font-bold uppercase">WhatsApp</span>
                                 </button>
                               )}
                               <button onClick={() => downloadSnapshot('instagram')} className="flex flex-col items-center gap-1.5 p-2.5 bg-pink-50 rounded-xl hover:bg-pink-500 hover:text-white transition-all group">
                                  <FaInstagram size={14} />
-                                 <span className="text-[7px] font-black uppercase">IG Story</span>
+                                 <span className="text-[7px] font-bold uppercase">IG Story</span>
                               </button>
-                              <button onClick={copyLink} className="flex flex-col items-center gap-1.5 p-2.5 bg-slate-50 rounded-xl hover:bg-[#0A1128] hover:text-white transition-all group">
+                              <button onClick={copyLink} className="flex flex-col items-center gap-1.5 p-2.5 bg-slate-50 rounded-xl hover:bg-slate-900 hover:text-white transition-all group">
                                  {copying ? <FaCheck size={14} className="text-emerald-500" /> : <FaCopy size={14} />}
-                                 <span className="text-[7px] font-black uppercase">{copying ? 'Copied' : 'Link'}</span>
+                                 <span className="text-[7px] font-bold uppercase">{copying ? 'Copied' : 'Link'}</span>
                               </button>
                               <button onClick={() => downloadSnapshot('download')} className="flex flex-col items-center gap-1.5 p-2.5 bg-orange-50 rounded-xl hover:bg-orange-600 hover:text-white transition-all group">
                                  <FaDownload size={14} />
-                                 <span className="text-[7px] font-black uppercase">Card</span>
+                                 <span className="text-[7px] font-bold uppercase">Card</span>
                               </button>
                            </div>
                         </motion.div>
@@ -233,34 +233,34 @@ export default function CrowdStatus() {
               <div className="relative z-10 flex flex-col items-center text-center space-y-8">
                  {/* MINI ICON */}
                  <div className="relative">
-                    <div className={`w-16 h-16 rounded-[22px] ${config.bg} ${config.color} flex items-center justify-center text-3xl shadow-sm transition-transform duration-500 hover:scale-105`}>
+                    <div className={`w-16 h-16 rounded-xl ${config.bg} ${config.color} flex items-center justify-center text-3xl shadow-sm transition-transform duration-500 hover:scale-105`}>
                        <FaUsers />
                     </div>
-                    <div className={`absolute -inset-3 rounded-[26px] border border-dashed ${config.border} opacity-20 animate-spin-slow`}></div>
+                    <div className={`absolute -inset-3 rounded-2xl border border-dashed ${config.border} opacity-20 animate-spin-slow`}></div>
                  </div>
 
                  <div className="space-y-1">
-                    <motion.h2 key={crowd?.status} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`text-4xl font-black ${config.color} tracking-tight uppercase`}>
+                    <motion.h2 key={crowd?.status} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`text-4xl font-bold ${config.color} tracking-tight uppercase`}>
                        {crowd?.status || 'Active Intel'}
                     </motion.h2>
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">Intensity Index</p>
+                    <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-1">Intensity Index</p>
                  </div>
 
                  {/* COMPACT STAT GRID */}
                  <div className="w-full grid grid-cols-2 gap-4">
-                    <div className="bg-slate-50/50 rounded-[20px] p-4 border border-slate-100 group/stat transition-all">
+                    <div className="bg-slate-50/50 rounded-xl p-4 border border-slate-100 group/stat transition-all">
                        <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center mx-auto mb-2 group-hover/stat:bg-orange-500 group-hover/stat:text-white transition-colors">
                           <FaClock size={14} />
                        </div>
-                       <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">Wait Est.</p>
-                       <p className="text-lg font-black text-[#0A1128] tracking-tight">{crowd?.waitingTime || '-- Mins'}</p>
+                       <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-1 opacity-60">Wait Est.</p>
+                       <p className="text-lg font-bold text-slate-900 tracking-tight">{crowd?.waitingTime || '-- Mins'}</p>
                     </div>
-                    <div className="bg-slate-50/50 rounded-[20px] p-4 border border-slate-100 group/stat transition-all">
+                    <div className="bg-slate-50/50 rounded-xl p-4 border border-slate-100 group/stat transition-all">
                        <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-2 group-hover/stat:bg-amber-500 group-hover/stat:text-white transition-colors">
                           <FaBolt size={14} />
                        </div>
-                       <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">Prime</p>
-                       <p className="text-sm font-black text-[#0A1128] tracking-tight">{crowd?.bestSlot || 'N/A'}</p>
+                       <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-1 opacity-60">Prime</p>
+                       <p className="text-sm font-bold text-slate-900 tracking-tight">{crowd?.bestSlot || 'N/A'}</p>
                     </div>
                  </div>
 
@@ -269,16 +269,16 @@ export default function CrowdStatus() {
                     <div className="flex justify-between items-end px-1">
                        <div className="flex items-center gap-1.5">
                           <FaStar className="text-orange-500" size={10} />
-                          <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">Density Index</span>
+                          <span className="text-[10px] font-medium text-slate-900 uppercase tracking-widest">Density Index</span>
                        </div>
-                       <span className={`text-[10px] font-black ${config.color} uppercase`}>{crowd?.percentage || 0}%</span>
+                       <span className={`text-[10px] font-bold ${config.color} uppercase`}>{crowd?.percentage || 0}%</span>
                     </div>
                     <div className="h-3 w-full bg-slate-100/50 rounded-full overflow-hidden p-0.5 border border-slate-100">
                        <motion.div initial={{ width: 0 }} animate={{ width: `${crowd?.percentage || 0}%` }} transition={{ duration: 1.5 }} className={`h-full rounded-full bg-gradient-to-r ${config.bar}`} />
                     </div>
                  </div>
 
-                 <div className="w-full p-5 bg-[#0A1128]/5 rounded-[22px] border border-[#0A1128]/5">
+                 <div className="w-full p-5 bg-slate-900/5 rounded-xl border border-[#0A1128]/5">
                     <p className="text-[12px] font-bold text-slate-700 italic leading-snug line-clamp-2">
                        "{crowd?.description || 'System online and monitoring current flow parameters.'}"
                     </p>
@@ -289,10 +289,10 @@ export default function CrowdStatus() {
 
         {/* ── COMPACT TOGGLE ── */}
         <section className="space-y-6">
-           <div className="flex p-1 bg-white rounded-[20px] border border-orange-100/60 shadow-sm w-fit mx-auto">
+           <div className="flex p-1 bg-white rounded-xl border border-orange-100/60 shadow-sm w-fit mx-auto">
               {['today', 'weekly'].map(mode => (
-                <button key={mode} onClick={() => setViewMode(mode)} className={`px-8 py-3 rounded-[16px] text-[10px] font-black uppercase tracking-widest transition-all relative ${viewMode === mode ? 'text-white' : 'text-slate-400'}`}>
-                   {viewMode === mode && ( <motion.div layoutId="miniPill" className="absolute inset-0 bg-[#0A1128] rounded-[16px]" /> )}
+                <button key={mode} onClick={() => setViewMode(mode)} className={`px-8 py-3 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all relative ${viewMode === mode ? 'text-white' : 'text-slate-400'}`}>
+                   {viewMode === mode && ( <motion.div layoutId="miniPill" className="absolute inset-0 bg-slate-900 rounded-lg" /> )}
                    <span className="relative z-10">{mode}</span>
                 </button>
               ))}
@@ -302,17 +302,17 @@ export default function CrowdStatus() {
              {viewMode === 'today' ? (
                <motion.div key="today" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="grid gap-3">
                   {(crowd?.slots && crowd.slots.length > 0 ? crowd.slots : []).map((slot, i) => (
-                    <div key={i} className="bg-white p-4 rounded-[22px] border border-orange-50 shadow-sm flex items-center justify-between group transition-all hover:border-orange-200">
+                    <div key={i} className="bg-white p-4 rounded-xl border border-orange-50 shadow-sm flex items-center justify-between group transition-all hover:border-orange-200">
                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-[#0A1128] group-hover:text-white transition-all"><FaClock size={16} /></div>
-                          <div><h4 className="text-[13px] font-black text-[#0A1128] leading-none mb-1 uppercase italic">{slot.title}</h4><span className="text-[9px] font-bold text-slate-400 italic">{slot.startTime} - {slot.endTime}</span></div>
+                          <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-all"><FaClock size={16} /></div>
+                          <div><h4 className="text-[13px] font-bold text-slate-900 leading-none mb-1 uppercase italic">{slot.title}</h4><span className="text-[9px] font-bold text-slate-400 italic">{slot.startTime} - {slot.endTime}</span></div>
                        </div>
-                       <span className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase border ${slot.level === 'Low' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>{slot.level}</span>
+                       <span className={`px-3 py-1 rounded-lg text-[10px] font-semibold uppercase border ${slot.level === 'Low' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>{slot.level}</span>
                     </div>
                   ))}
                </motion.div>
              ) : (
-               <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white p-8 rounded-[32px] border border-orange-50 shadow-lg">
+               <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white p-8 rounded-2xl border border-orange-50 shadow-lg">
                   <div className="flex items-end justify-between h-40 gap-4">
                      {(crowd?.weekly || [
                        { day: 'Mon', intensity: 15 },
@@ -325,7 +325,7 @@ export default function CrowdStatus() {
                      ]).map((d, i) => (
                        <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
                           <div className="w-full flex-grow relative flex flex-col justify-end"><motion.div initial={{ height: 0 }} animate={{ height: `${d.intensity}%` }} className={`w-full rounded-t-xl bg-orange-500/80 group-hover:bg-orange-500 transition-colors`} /></div>
-                          <span className="text-[9px] font-black text-[#0A1128] uppercase opacity-40 group-hover:opacity-100">{d.day}</span>
+                          <span className="text-[9px] font-bold text-slate-900 uppercase opacity-40 group-hover:opacity-100">{d.day}</span>
                        </div>
                      ))}
                   </div>
@@ -336,17 +336,17 @@ export default function CrowdStatus() {
 
         {/* ── SLIM ADVISORY ── */}
         <section className="space-y-5 pt-4">
-           <div className="flex items-center gap-3 px-1"><FaShieldAlt className="text-orange-600" size={14} /><h3 className="text-[11px] font-black text-[#0A1128] uppercase tracking-widest">Safety Protocol</h3></div>
+           <div className="flex items-center gap-3 px-1"><FaShieldAlt className="text-orange-600" size={14} /><h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Safety Protocol</h3></div>
            <div className="grid gap-3">
               {crowd?.advisories?.length > 0 ? crowd.advisories.map((adv, i) => (
-                <div key={i} className="bg-white p-5 rounded-[22px] border border-orange-50 shadow-sm flex gap-4 group">
-                   <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 font-black text-sm">{i+1}</div>
+                <div key={i} className="bg-white p-5 rounded-xl border border-orange-50 shadow-sm flex gap-4 group">
+                   <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 font-bold text-sm">{i+1}</div>
                    <p className="text-[12px] font-bold text-slate-700 italic opacity-90 pt-1.5">{adv.text}</p>
                 </div>
               )) : (
-                <div className="bg-emerald-50/30 p-8 rounded-[32px] border border-emerald-100/30 text-center space-y-3">
+                <div className="bg-emerald-50/30 p-8 rounded-2xl border border-emerald-100/30 text-center space-y-3">
                    <FaLeaf size={20} className="text-emerald-500 mx-auto animate-pulse" />
-                   <h4 className="text-[11px] font-black text-emerald-900 uppercase">Status: Optimal</h4>
+                   <h4 className="text-xs font-bold text-emerald-900 uppercase">Status: Optimal</h4>
                 </div>
               )}
            </div>
@@ -359,8 +359,60 @@ export default function CrowdStatus() {
 
       </div>
 
-      {/* ── HIDDEN SNAPSHOT ── */}
-      <div className="absolute -left-[9999px]"><div ref={shareRef} className="bg-[#FFFBF5] p-10 rounded-[40px] border border-orange-100 shadow-sm space-y-8"><div className="flex justify-between items-start"><div><h4 className="text-3xl font-black text-[#0A1128] tracking-tighter">{settings?.brandName || 'Khatu Shyam Ji'}</h4><p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mt-1">{crowd?.shareConfig?.template?.title}</p></div><div className="w-12 h-12 bg-[#0A1128] rounded-2xl flex items-center justify-center text-white"><FaUsers size={20} /></div></div><div className={`p-8 rounded-[32px] bg-white border ${config.border} flex flex-col items-center text-center gap-4`}><h2 className={`text-5xl font-black ${config.color} uppercase tracking-tighter`}>{crowd?.status}</h2><div className="grid grid-cols-2 gap-4 w-full"><div className="p-5 bg-slate-50 rounded-2xl"><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Wait Time</p><p className="text-xl font-black text-slate-900">{crowd?.waitingTime}</p></div><div className="p-5 bg-slate-50 rounded-2xl"><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Intensity</p><p className="text-xl font-black text-slate-900">{crowd?.percentage}%</p></div></div></div></div></div>
+      {/* ── HIDDEN SNAPSHOT (INSTAGRAM READY) ── */}
+      <div className="absolute -left-[9999px]">
+         <div ref={shareRef} className="w-[1080px] h-[1920px] bg-[#020617] relative flex flex-col justify-between overflow-hidden p-16">
+            {/* Cinematic Backgrounds */}
+            <div className={`absolute top-0 right-0 w-[800px] h-[800px] ${config.pulse} rounded-full blur-[150px] opacity-20 -mr-40 -mt-40`}></div>
+            <div className="absolute bottom-0 left-0 w-[1000px] h-[1000px] bg-slate-800 rounded-full blur-[200px] opacity-40 -ml-60 -mb-60"></div>
+            
+            {/* Overlay Grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+            {/* Header Content */}
+            <div className="relative z-10 flex justify-between items-start mt-24">
+               <div>
+                  <h4 className="text-6xl font-extrabold text-white tracking-tighter mb-4">{settings?.brandName || 'Shyam Bhog'}</h4>
+                  <p className="text-2xl font-semibold text-slate-400 uppercase tracking-[0.3em]">{crowd?.shareConfig?.template?.title || 'Live Intel'}</p>
+               </div>
+               <div className="w-24 h-24 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-3xl flex items-center justify-center text-white shadow-2xl">
+                  <FaUsers size={40} />
+               </div>
+            </div>
+
+            {/* Main Status Centerpiece */}
+            <div className="relative z-10 w-full flex flex-col items-center justify-center my-auto">
+               <div className="relative">
+                  <div className={`absolute -inset-10 ${config.bg} opacity-20 blur-[60px] rounded-full`}></div>
+                  <div className={`w-48 h-48 rounded-[40px] bg-white/10 backdrop-blur-3xl border-2 ${config.border} flex items-center justify-center text-[80px] shadow-2xl mb-16 mx-auto ${config.color}`}>
+                     <FaUsers />
+                  </div>
+               </div>
+               <h2 className={`text-[120px] font-extrabold text-white tracking-tighter uppercase leading-none drop-shadow-2xl text-center`}>{crowd?.status}</h2>
+               <div className="mt-8 flex items-center gap-6 px-10 py-5 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full">
+                  <span className={`w-4 h-4 rounded-full ${config.pulse} animate-pulse`}></span>
+                  <span className="text-3xl font-semibold text-slate-300 uppercase tracking-widest">Live Sync Active</span>
+               </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="relative z-10 grid grid-cols-2 gap-8 mb-24">
+               <div className="p-12 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[40px]">
+                  <p className="text-2xl font-semibold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-4"><FaClock /> Wait Time</p>
+                  <p className="text-7xl font-extrabold text-white">{crowd?.waitingTime}</p>
+               </div>
+               <div className="p-12 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[40px]">
+                  <p className="text-2xl font-semibold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-4"><FaBolt /> Prime Slot</p>
+                  <p className="text-5xl font-extrabold text-white mt-4">{crowd?.bestSlot || 'N/A'}</p>
+               </div>
+            </div>
+
+            {/* Footer */}
+            <div className="relative z-10 text-center border-t border-white/10 pt-12 pb-12">
+               <p className="text-3xl font-bold text-slate-500 tracking-widest uppercase">Verified via Official App</p>
+            </div>
+         </div>
+      </div>
 
     </div>
   );

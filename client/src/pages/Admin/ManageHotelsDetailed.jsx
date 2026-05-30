@@ -128,7 +128,7 @@ export default function ManageHotelsDetailed() {
   if (loading) return (
     <div className="py-40 text-center flex flex-col items-center justify-center gap-4">
        <div className="w-12 h-12 border-4 border-slate-100 border-t-orange-500 rounded-full animate-spin"></div>
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Loading Stays...</p>
+       <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest animate-pulse">Loading Stays...</p>
     </div>
   );
 
@@ -136,43 +136,43 @@ export default function ManageHotelsDetailed() {
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-12">
       
       {/* 🏨 PAGE HEADER */}
-      <header className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-[32px] p-8 md:p-10 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+      <header className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 md:p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
-            <span className="bg-orange-500/20 text-orange-400 text-[10px] font-black tracking-widest px-3 py-1 rounded-full uppercase border border-orange-500/30">
+            <span className="bg-orange-500/20 text-orange-400 text-[10px] font-bold tracking-widest px-3 py-1 rounded-full uppercase border border-orange-500/30">
               Luxury Stays
             </span>
-            <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-black tracking-widest px-3 py-1 rounded-full uppercase border border-emerald-500/30 flex items-center gap-1.5">
+            <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold tracking-widest px-3 py-1 rounded-full uppercase border border-emerald-500/30 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
               Active
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase italic">Stay Operations</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter uppercase italic">Stay Operations</h1>
           <p className="text-slate-400 text-sm mt-1 font-medium">Luxury stay management.</p>
         </div>
         
         {/* Header stats */}
         <div className="flex gap-4 shrink-0">
           <div className="bg-white/5 border border-white/10 px-5 py-3 rounded-2xl text-center backdrop-blur-sm">
-            <p className="text-2xl font-black text-orange-500">{hotels.length}</p>
+            <p className="text-2xl font-bold text-orange-500">{hotels.length}</p>
             <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Stays</p>
           </div>
           <div className="bg-white/5 border border-white/10 px-5 py-3 rounded-2xl text-center backdrop-blur-sm">
-            <p className="text-2xl font-black text-emerald-400">{hotels.filter(h => h.stars >= 4).length}</p>
+            <p className="text-2xl font-bold text-emerald-400">{hotels.filter(h => h.stars >= 4).length}</p>
             <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Luxury Suites</p>
           </div>
         </div>
       </header>
 
       {/* 🏨 HOTELS MANAGEMENT SECTION */}
-      <section className="grid grid-cols-1 xl:grid-cols-3 gap-10">
+      <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
         {/* Form Column */}
         <div className="xl:col-span-1">
-          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl space-y-6 sticky top-28">
+          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl space-y-6 sticky top-28">
             <div className="border-b border-slate-100 pb-4 mb-2 flex justify-between items-center">
-              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 {editingId ? <><FaEdit className="text-blue-500" /> Edit stay</> : <><FaPlus className="text-orange-500" /> Add Premium Stay</>}
               </h2>
               {editingId && (
@@ -183,7 +183,7 @@ export default function ManageHotelsDetailed() {
             </div>
             
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Hotel Name</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Hotel Name</label>
               <input 
                 type="text" 
                 required 
@@ -196,7 +196,7 @@ export default function ManageHotelsDetailed() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Stars</label>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Stars</label>
                 <select 
                   value={form.stars} 
                   onChange={e => setForm({...form, stars: Number(e.target.value)})} 
@@ -206,7 +206,7 @@ export default function ManageHotelsDetailed() {
                 </select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Starting Price (₹)</label>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Starting Price (₹)</label>
                 <input 
                   type="text" 
                   placeholder="1500" 
@@ -219,7 +219,7 @@ export default function ManageHotelsDetailed() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Contact No.</label>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Contact No.</label>
                 <input 
                   type="text" 
                   required 
@@ -230,7 +230,7 @@ export default function ManageHotelsDetailed() {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Dist. from Temple</label>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Dist. from Temple</label>
                 <input 
                   type="text" 
                   placeholder="e.g. 300m" 
@@ -242,7 +242,7 @@ export default function ManageHotelsDetailed() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Full Address</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Full Address</label>
               <input 
                 type="text" 
                 required 
@@ -254,7 +254,7 @@ export default function ManageHotelsDetailed() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Google Maps Link</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Google Maps Link</label>
               <input 
                 type="url" 
                 placeholder="https://maps.google.com/..." 
@@ -265,7 +265,7 @@ export default function ManageHotelsDetailed() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Hotel Image (Upload)</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Hotel Image (Upload)</label>
               <div className="relative group">
                 <input 
                   type="file" 
@@ -275,7 +275,7 @@ export default function ManageHotelsDetailed() {
                 />
                 <div className="w-full p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center gap-2 text-slate-400 group-hover:border-orange-500 group-hover:text-orange-500 transition-all">
                   <FaUpload className="text-lg" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-center">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-center">
                     {imageFile ? imageFile.name : 'Drag & Drop or Choose Image'}
                   </span>
                 </div>
@@ -294,7 +294,7 @@ export default function ManageHotelsDetailed() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Features (comma separated)</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Features (comma separated)</label>
               <input 
                 type="text" 
                 placeholder="e.g. AC, WiFi, Room Service, Dining" 
@@ -309,7 +309,7 @@ export default function ManageHotelsDetailed() {
                 <button 
                   type="button" 
                   onClick={cancelEdit} 
-                  className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
+                  className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
                 >
                   Cancel
                 </button>
@@ -317,7 +317,7 @@ export default function ManageHotelsDetailed() {
               <button 
                 type="submit" 
                 disabled={saving} 
-                className={`flex-[2] py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95 ${
+                className={`flex-[2] py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95 ${
                   editingId 
                     ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100' 
                     : 'bg-orange-600 text-white hover:bg-orange-700 shadow-orange-100'
@@ -332,7 +332,7 @@ export default function ManageHotelsDetailed() {
         {/* List Column */}
         <div className="xl:col-span-2 space-y-6">
           <div className="flex justify-between items-center mb-2 px-1">
-            <h2 className="text-lg font-black text-slate-900 uppercase italic tracking-tight">Active Recommendations ({hotels.length})</h2>
+            <h2 className="text-lg font-bold text-slate-900 uppercase italic tracking-tight">Active Recommendations ({hotels.length})</h2>
             <div className="w-10 h-1 bg-orange-500 rounded-full"></div>
           </div>
 
@@ -342,7 +342,7 @@ export default function ManageHotelsDetailed() {
               return (
                 <div 
                   key={hotel._id} 
-                  className={`bg-white rounded-[32px] overflow-hidden border-2 shadow-sm flex flex-col justify-between transition-all group ${
+                  className={`bg-white rounded-2xl overflow-hidden border-2 shadow-sm flex flex-col justify-between transition-all group ${
                     editingId === hotel._id ? 'border-blue-500 scale-[1.02]' : 'border-slate-100 hover:shadow-md'
                   }`}
                 >
@@ -355,11 +355,11 @@ export default function ManageHotelsDetailed() {
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'; }}
                     />
                     <div className="absolute top-4 left-4 flex gap-1.5">
-                      <span className="bg-slate-900/80 backdrop-blur-sm text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                      <span className="bg-slate-900/80 backdrop-blur-sm text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
                         <FaStar className="text-yellow-400" />
                         {hotel.stars} Stars
                       </span>
-                      <span className="bg-orange-600/90 backdrop-blur-sm text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                      <span className="bg-orange-600/90 backdrop-blur-sm text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
                         <FaWalking />
                         {hotel.distanceFromTemple || 'Near Temple'}
                       </span>
@@ -376,7 +376,7 @@ export default function ManageHotelsDetailed() {
                   {/* Body Content */}
                   <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
                     <div>
-                      <h3 className="text-lg font-black text-slate-900 uppercase tracking-tighter line-clamp-1">{hotel.name}</h3>
+                      <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tighter line-clamp-1">{hotel.name}</h3>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 flex items-start gap-1">
                         <FaMapMarkerAlt className="text-orange-500 flex-shrink-0 mt-0.5" />
                         <span className="line-clamp-1">{hotel.address}</span>
@@ -385,7 +385,7 @@ export default function ManageHotelsDetailed() {
                       {/* Features Badges */}
                       <div className="flex flex-wrap gap-1.5 mt-4">
                         {featureList.map((feat, idx) => (
-                          <span key={idx} className="bg-slate-50 text-slate-600 border border-slate-200/50 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg shadow-sm">
+                          <span key={idx} className="bg-slate-50 text-slate-600 border border-slate-200/50 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-lg shadow-sm">
                             {feat}
                           </span>
                         ))}
@@ -399,12 +399,12 @@ export default function ManageHotelsDetailed() {
                     <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
                       <div>
                         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Starting Price</p>
-                        <p className="text-xl font-black text-emerald-600">₹{hotel.priceRange || 'N/A'}<span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">/day</span></p>
+                        <p className="text-xl font-bold text-emerald-600">₹{hotel.priceRange || 'N/A'}<span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">/day</span></p>
                       </div>
 
                       <div className="text-right">
                         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Contact Phone</p>
-                        <a href={`tel:${hotel.contactNumber}`} className="text-xs font-black text-slate-800 hover:text-orange-600 transition-colors flex items-center justify-end gap-1">
+                        <a href={`tel:${hotel.contactNumber}`} className="text-xs font-bold text-slate-800 hover:text-orange-600 transition-colors flex items-center justify-end gap-1">
                           <FaPhoneAlt size={10} className="text-orange-500" />
                           {hotel.contactNumber}
                         </a>
@@ -420,7 +420,7 @@ export default function ManageHotelsDetailed() {
                           href={hotel.googleLocationUrl} 
                           target="_blank" 
                           rel="noreferrer" 
-                          className="flex-1 py-2.5 bg-white border border-slate-200 hover:border-orange-500 hover:text-orange-500 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-600 text-center transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                          className="flex-1 py-2.5 bg-white border border-slate-200 hover:border-orange-500 hover:text-orange-500 rounded-xl text-[10px] font-semibold uppercase tracking-widest text-slate-500 text-slate-600 text-center transition-all flex items-center justify-center gap-1.5 shadow-sm"
                         >
                           <FaLink size={10} />
                           Map Link
@@ -428,7 +428,7 @@ export default function ManageHotelsDetailed() {
                       )}
                       <button 
                         onClick={() => handleEdit(hotel)} 
-                        className={`flex-1 py-2.5 border rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-1.5 shadow-sm ${
+                        className={`flex-1 py-2.5 border rounded-xl text-[10px] font-semibold uppercase tracking-widest text-slate-500 transition-all flex items-center justify-center gap-1.5 shadow-sm ${
                           editingId === hotel._id 
                             ? 'bg-blue-600 text-white border-blue-600' 
                             : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900'
@@ -451,9 +451,9 @@ export default function ManageHotelsDetailed() {
             })}
             
             {hotels.length === 0 && (
-              <div className="col-span-2 py-20 text-center bg-white rounded-[32px] border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-4">
+              <div className="col-span-2 py-20 text-center bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-4">
                 <FaHotel className="text-4xl text-slate-200" />
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">No hotel recommendations found</p>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest italic">No hotel recommendations found</p>
               </div>
             )}
           </div>
@@ -463,16 +463,16 @@ export default function ManageHotelsDetailed() {
       {/* ❓ HOTEL FAQS SECTION */}
       <section className="mt-16 pt-12 border-t border-slate-100 space-y-8">
         <header className="text-center max-w-xl mx-auto space-y-2">
-          <span className="bg-orange-100 text-orange-600 text-[9px] font-black tracking-widest px-3 py-1 rounded-full uppercase border border-orange-200">
+          <span className="bg-orange-100 text-orange-600 text-[9px] font-bold tracking-widest px-3 py-1 rounded-full uppercase border border-orange-200">
             FAQ Governance
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tighter uppercase italic">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tighter uppercase italic">
             Stay FAQs
           </h2>
           <p className="text-slate-400 text-xs font-medium">Frequently Asked Questions.</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* FAQ Add Form */}
           <div className="lg:col-span-1">
             <form 
@@ -485,14 +485,14 @@ export default function ManageHotelsDetailed() {
                   alert("✅ FAQ added!");
                 } catch (err) { alert("Error adding FAQ"); }
               }} 
-              className="bg-slate-900 p-8 rounded-[32px] shadow-xl text-white space-y-5"
+              className="bg-slate-900 p-6 rounded-2xl shadow-xl text-white space-y-5"
             >
-              <h3 className="text-lg font-black uppercase tracking-widest italic border-b border-white/10 pb-3 flex items-center gap-2">
+              <h3 className="text-lg font-bold uppercase tracking-widest italic border-b border-white/10 pb-3 flex items-center gap-2">
                 <FaQuestionCircle className="text-orange-500" />
                 Add Hotel FAQ
               </h3>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-widest px-1">Question</label>
+                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-1">Question</label>
                 <input 
                   type="text" 
                   required 
@@ -503,7 +503,7 @@ export default function ManageHotelsDetailed() {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-widest px-1">Answer</label>
+                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-1">Answer</label>
                 <textarea 
                   required 
                   placeholder="e.g. Yes, all recommended stays feature 24-hour hot water supplies..."
@@ -515,7 +515,7 @@ export default function ManageHotelsDetailed() {
               </div>
               <button 
                 type="submit" 
-                className="w-full py-4 bg-orange-600 text-white hover:bg-white hover:text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95"
+                className="w-full py-4 bg-orange-600 text-white hover:bg-white hover:text-slate-950 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95"
               >
                 Publish FAQ
               </button>
@@ -525,7 +525,7 @@ export default function ManageHotelsDetailed() {
           {/* FAQ Display Area */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex justify-between items-center mb-2 px-1">
-              <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">Active Hospitality FAQs ({faqs.length})</h3>
+              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Active Hospitality FAQs ({faqs.length})</h3>
               <div className="w-8 h-1 bg-slate-900 rounded-full"></div>
             </div>
 
@@ -533,13 +533,13 @@ export default function ManageHotelsDetailed() {
               {faqs.map(faq => (
                 <div 
                   key={faq._id} 
-                  className="bg-white p-6 rounded-[24px] border border-slate-100 shadow-sm flex items-start gap-4 group hover:shadow-md transition-all"
+                  className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex items-start gap-4 group hover:shadow-md transition-all"
                 >
-                  <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 font-black text-sm border border-orange-100">
+                  <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 font-bold text-sm border border-orange-100">
                     ?
                   </div>
                   <div className="flex-grow">
-                    <h4 className="font-black text-slate-900 text-sm mb-1 leading-snug">{faq.question}</h4>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1 leading-snug">{faq.question}</h4>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium">{faq.answer}</p>
                   </div>
                   <button 
@@ -557,9 +557,9 @@ export default function ManageHotelsDetailed() {
               ))}
 
               {faqs.length === 0 && (
-                <div className="py-20 text-center bg-white rounded-[24px] border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-4">
+                <div className="py-20 text-center bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-4">
                   <FaQuestionCircle className="text-3xl text-slate-200" />
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">No hospitality FAQs posted</p>
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest italic">No hospitality FAQs posted</p>
                 </div>
               )}
             </div>

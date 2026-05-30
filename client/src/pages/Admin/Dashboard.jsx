@@ -114,46 +114,46 @@ export default function Dashboard() {
   if (loading) return <Loader text="Syncing Command Center..." />;
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen animate-in fade-in duration-1000 pb-20">
+    <div className="bg-slate-50/50 min-h-screen animate-in fade-in duration-1000 pb-20 p-6 md:p-10">
 
       {/* 🚀 ELITE COMMAND HEADER */}
-      <div className="flex flex-col xl:flex-row justify-between mb-12 items-start xl:items-center gap-8">
+      <div className="flex flex-col xl:flex-row justify-between mb-10 items-start xl:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-             <div className="w-12 h-12 rounded-[20px] bg-[#0A1128] text-orange-500 flex items-center justify-center shadow-2xl shadow-slate-200">
-                <FaUserShield size={24} />
+             <div className="w-10 h-10 rounded-xl bg-white text-slate-900 border border-slate-200 flex items-center justify-center shadow-sm">
+                <FaUserShield size={18} />
              </div>
-             <h1 className="text-4xl font-black text-[#0A1128] tracking-tighter uppercase italic">
-               Platform <span className="text-orange-600 not-italic">Overview</span>
+             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+               Platform Overview
              </h1>
           </div>
-          <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.4em] ml-1">Secure Digital Ecosystem Management</p>
+          <p className="text-slate-500 font-medium text-xs tracking-widest uppercase ml-14">System Metrics & Controls</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
            {/* Real-time Status Badge */}
-           <div className="flex items-center gap-4 bg-white px-6 py-3.5 rounded-[28px] border border-slate-200 shadow-sm">
+           <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-xl border border-slate-200 shadow-sm">
               <div className="relative flex items-center justify-center">
                  <div className={`w-2.5 h-2.5 rounded-full ${crowd === 'High' ? 'bg-red-500' : 'bg-emerald-500'}`}></div>
-                 <div className={`absolute w-full h-full rounded-full animate-ping ${crowd === 'High' ? 'bg-red-500' : 'bg-emerald-500'}`}></div>
+                 <div className={`absolute w-full h-full rounded-full animate-ping opacity-50 ${crowd === 'High' ? 'bg-red-500' : 'bg-emerald-500'}`}></div>
               </div>
               <div className="flex flex-col">
-                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Temple Traffic</span>
-                 <span className={`text-[11px] font-black uppercase tracking-tight ${crowd === 'High' ? 'text-red-600' : 'text-emerald-600'}`}>{crowd || 'Stable'}</span>
+                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5">Temple Traffic</span>
+                 <span className={`text-xs font-bold ${crowd === 'High' ? 'text-red-600' : 'text-emerald-600'}`}>{crowd || 'Stable'}</span>
               </div>
            </div>
 
            <button 
              onClick={handleExportWalletFloat} 
              disabled={exporting} 
-             className="flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 text-[#0A1128] rounded-[28px] font-black text-[10px] uppercase tracking-widest shadow-sm hover:border-orange-500 transition-all group active:scale-95 disabled:opacity-50"
+             className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs shadow-sm hover:border-slate-300 transition-all active:scale-95 disabled:opacity-50"
            >
-              <FaDownload className={`group-hover:text-orange-500 transition-colors ${exporting ? 'animate-bounce' : ''}`} />
-              {exporting ? 'Generating...' : 'Export Financials'}
+              <FaDownload className={`${exporting ? 'animate-bounce text-slate-500' : 'text-slate-400'}`} />
+              {exporting ? 'Generating...' : 'Export'}
            </button>
 
-           <button onClick={fetchData} className="flex items-center gap-3 px-8 py-4 bg-[#0A1128] text-white rounded-[28px] font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-slate-300 hover:bg-orange-600 transition-all active:scale-95">
-              <FaSyncAlt className="animate-spin-slow" />
+           <button onClick={fetchData} className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-slate-800 transition-all active:scale-95">
+              <FaSyncAlt className="animate-spin-slow text-slate-400" />
               Sync Data
            </button>
         </div>
@@ -168,60 +168,59 @@ export default function Dashboard() {
         <KPICard title="Treasury" value={`₹${stats.adminBalance.toLocaleString()}`} icon={<FaWallet />} color="from-emerald-600 to-emerald-800" link="/admin/wallet" trend="Stable" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* 🕹️ MODULE ARCHITECTURE */}
-        <div className="lg:col-span-8 space-y-10">
-           <div className="bg-white p-10 rounded-[48px] border border-slate-200/60 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.03)] group">
-              <div className="flex justify-between items-center mb-10">
+        <div className="lg:col-span-8 space-y-8">
+           <div className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm group">
+              <div className="flex justify-between items-center mb-8">
                  <div>
-                    <h3 className="text-xl font-black text-[#0A1128] tracking-tighter uppercase italic">Control <span className="text-orange-600 not-italic">Center</span></h3>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Platform-wide Module Access</p>
+                    <h3 className="text-lg font-bold text-slate-900 tracking-tight">Modules</h3>
+                    <p className="text-xs font-medium text-slate-500 mt-1">Platform-wide Access</p>
                  </div>
-                 <span className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest">Active System</span>
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                  <ModuleCard title="Ritual Requests" path="/admin/manage-arjee" icon={<FaVideo />} color="text-red-500" bg="bg-red-50" />
                  <ModuleCard title="Crowd Status" path="/admin/manage-crowd" icon={<FaUsers />} color="text-blue-500" bg="bg-blue-50" />
-                 <ModuleCard title="Parking" path="/admin/manage-parking" icon={<FaParking />} color="text-green-500" bg="bg-green-50" />
+                 <ModuleCard title="Parking" path="/admin/manage-parking" icon={<FaParking />} color="text-emerald-500" bg="bg-emerald-50" />
                  <ModuleCard title="Hotel & Stay" path="/admin/manage-hotels" icon={<FaBed />} color="text-purple-500" bg="bg-purple-50" />
                  <ModuleCard title="Catalog" path="/admin/services" icon={<FaBoxOpen />} color="text-orange-500" bg="bg-orange-50" />
                  <ModuleCard title="CMS Visuals" path="/admin/content" icon={<FaImage />} color="text-indigo-500" bg="bg-indigo-50" />
-                 <ModuleCard title="Team" path="/admin/agents" icon={<FaUsers />} color="text-emerald-500" bg="bg-emerald-50" />
+                 <ModuleCard title="Team" path="/admin/agents" icon={<FaUsers />} color="text-slate-600" bg="bg-slate-100" />
                  <ModuleCard title="Security Log" path="/admin/security" icon={<FaHistory />} color="text-slate-500" bg="bg-slate-50" />
               </div>
            </div>
 
            {/* 📈 GROWTH ANALYTICS */}
-           <div className="bg-[#0A1128] p-10 rounded-[48px] shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
-              <div className="flex justify-between items-center mb-10 relative z-10">
+           <div className="bg-slate-950 p-8 rounded-2xl shadow-xl border border-slate-800 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-slate-800/50 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+              <div className="flex justify-between items-center mb-8 relative z-10">
                  <div>
-                    <h2 className="text-xl font-black text-white tracking-tighter uppercase italic">Growth <span className="text-orange-500 not-italic">Analytics</span></h2>
-                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Rolling 7-Day Performance Metric</p>
+                    <h2 className="text-lg font-bold text-white tracking-tight">Growth Analytics</h2>
+                    <p className="text-xs font-medium text-slate-400 mt-1">Rolling 7-Day Performance</p>
                  </div>
-                 <Link to="/admin/wallet" className="text-[10px] font-black text-white px-5 py-2.5 bg-white/10 rounded-2xl flex items-center gap-3 hover:bg-orange-600 transition-all group">
-                    Financials <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+                 <Link to="/admin/wallet" className="text-xs font-bold text-white px-4 py-2 bg-white/10 rounded-lg flex items-center gap-2 hover:bg-white/20 transition-all">
+                    Financials <FaArrowRight />
                  </Link>
               </div>
 
-              <div className="h-[320px] w-full relative z-10">
+              <div className="h-[280px] w-full relative z-10">
                  <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData}>
                        <defs>
                           <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                             <stop offset="5%" stopColor="#F97316" stopOpacity={0.4}/>
-                             <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
+                             <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
+                             <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
                           </linearGradient>
                        </defs>
-                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 9, fontWeight: 900, fill: '#64748B'}} />
-                       <YAxis axisLine={false} tickLine={false} tick={{fontSize: 9, fontWeight: 900, fill: '#64748B'}} />
+                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 500, fill: '#64748b'}} />
+                       <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 500, fill: '#64748b'}} />
                        <Tooltip 
-                         contentStyle={{ backgroundColor: '#0A1128', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)' }}
-                         itemStyle={{ fontSize: '11px', fontWeight: 'black', color: '#F97316', textTransform: 'uppercase' }}
+                         contentStyle={{ backgroundColor: '#020617', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}
+                         itemStyle={{ fontSize: '12px', fontWeight: 'bold', color: '#f97316' }}
                        />
-                       <Area type="monotone" dataKey="revenue" stroke="#F97316" strokeWidth={5} fillOpacity={1} fill="url(#colorRev)" />
+                       <Area type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
                     </AreaChart>
                  </ResponsiveContainer>
               </div>
@@ -230,24 +229,24 @@ export default function Dashboard() {
 
         {/* 🕒 REAL-TIME ACTIVITY (SIDEBAR) */}
         <div className="lg:col-span-4 space-y-8">
-           <div className="bg-white p-10 rounded-[48px] border border-slate-200/60 shadow-xl relative overflow-hidden group h-full flex flex-col">
-              <div className="flex justify-between items-center mb-8 relative z-10">
-                 <h3 className="text-lg font-black text-[#0A1128] tracking-tighter uppercase italic">Live <span className="text-orange-600 not-italic">Feed</span></h3>
-                 <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-600 rounded-full animate-pulse"></span>
-                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Queue</span>
+           <div className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm relative overflow-hidden h-full flex flex-col">
+              <div className="flex justify-between items-center mb-6 relative z-10">
+                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">Live Feed</h3>
+                 <div className="flex items-center gap-2 bg-red-50 text-red-600 px-3 py-1 rounded-md">
+                    <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                    <span className="text-[9px] font-bold uppercase tracking-widest">Live</span>
                  </div>
               </div>
               
-              <div className="flex-grow space-y-4 relative z-10 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="flex-grow space-y-3 relative z-10 overflow-y-auto pr-2 custom-scrollbar">
                  {recent.length === 0 ? (
-                    <div className="py-20 text-center flex flex-col items-center opacity-20">
-                       <FaHistory size={40} className="mb-4" />
-                       <p className="text-[10px] font-black uppercase tracking-widest">Awaiting Transactions...</p>
+                    <div className="py-20 text-center flex flex-col items-center opacity-40">
+                       <FaHistory size={24} className="mb-4 text-slate-300" />
+                       <p className="text-xs font-semibold text-slate-400">No activity yet</p>
                     </div>
                  ) : (
                     recent.map(booking => (
-                       <div key={booking._id} className="p-5 bg-slate-50/50 border border-slate-100 rounded-[32px] hover:border-orange-200 hover:bg-white transition-all duration-300 group/item relative overflow-hidden">
+                       <div key={booking._id} className="p-4 bg-slate-50 border border-slate-100 rounded-xl hover:bg-white transition-all shadow-sm group relative overflow-hidden flex justify-between items-start">
                           <div className="flex justify-between items-start mb-3 relative z-10">
                              <div>
                                 <h4 className="font-black text-[13px] text-[#0A1128] group-hover/item:text-orange-600 transition-colors">{booking.name}</h4>
@@ -279,65 +278,34 @@ export default function Dashboard() {
               <Link to="/admin/bookings" className="w-full text-center mt-8 py-4 bg-[#0A1128] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-xl shadow-slate-200">
                  View Global History
               </Link>
-           </div>
-
-           <div className="bg-orange-50 border border-orange-100 p-8 rounded-[40px] relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-orange-200/30 rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700"></div>
-              <h4 className="text-[10px] font-black text-orange-800 uppercase tracking-[0.2em] mb-4 relative z-10">System Intelligence</h4>
-              <p className="text-xs font-bold text-orange-600/80 leading-relaxed relative z-10">
-                All platform nodes are operational. Real-time synchronization is active for all service categories.
-              </p>
-           </div>
-        </div>
-
-      </div>
-
-    </div>
-  );
-}
-
-// 🎴 ELITE KPI CARD COMPONENT
-function KPICard({ title, value, icon, color, trend, isAlert, link }) {
-  const CardContent = (
-    <div className={`bg-white p-8 rounded-[44px] border-2 ${isAlert ? 'border-red-100 bg-red-50/20' : 'border-slate-50'} shadow-sm hover:shadow-2xl transition-all relative overflow-hidden group ${link ? 'cursor-pointer hover:border-orange-500/20 hover:scale-[1.03]' : ''}`}>
-       <div className="flex justify-between items-center mb-8 relative z-10">
-          <div className={`w-14 h-14 rounded-[20px] bg-gradient-to-br ${color} text-white flex items-center justify-center text-2xl shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-6`}>
-             {icon}
-          </div>
-          {trend && (
-            <div className={`px-3 py-1.5 ${trend.includes('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'} rounded-xl text-[9px] font-black uppercase tracking-widest`}>
-              {trend}
             </div>
-          )}
-       </div>
-       <div className="flex flex-col relative z-10">
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{title}</span>
-          <span className={`text-3xl font-black text-[#0A1128] tracking-tighter ${isAlert ? 'text-red-600' : ''}`}>{value}</span>
-       </div>
-       <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-slate-50/50 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+         </div>
+      </div>
     </div>
   );
-
-  return link ? <Link to={link} className="block w-full">{CardContent}</Link> : CardContent;
 }
 
-// 🎛️ PREMIUM MODULE CARD
-function ModuleCard({ title, path, icon, color, bg }) {
+function KPICard({ title, value, icon, color, trend, link, isAlert }) {
   return (
-    <Link to={path} className="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-[36px] hover:shadow-2xl hover:shadow-slate-200/50 hover:border-orange-500/30 hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
-       <div className={`w-16 h-16 rounded-[22px] ${bg} ${color} flex items-center justify-center text-2xl mb-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-sm`}>
-          {icon}
-       </div>
-       <span className="text-[9px] font-black text-[#0A1128] uppercase tracking-[0.2em] text-center px-1 leading-tight">{title}</span>
-       <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <Link to={link} className={`p-6 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow flex flex-col`}>
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white bg-gradient-to-br ${color} mb-4 shadow-sm`}>
+        {icon}
+      </div>
+      <div>
+         <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">{title}</h4>
+         <p className="text-2xl font-extrabold text-slate-900">{value}</p>
+      </div>
     </Link>
   );
 }
 
-function FaWhatsapp() {
+function ModuleCard({ title, path, icon, color, bg }) {
   return (
-    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-      <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.1-3.2-5.5-.3-8.5 2.5-11.2 2.5-2.5 5.5-6.5 8.3-9.7 2.8-3.2 3.7-5.5 5.6-9.2 1.9-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.5 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
-    </svg>
+    <Link to={path} className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl hover:shadow-md hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden">
+       <div className={`w-12 h-12 rounded-xl ${bg} ${color} flex items-center justify-center text-xl mb-4 transition-all duration-500 group-hover:scale-110 shadow-sm`}>
+          {icon}
+       </div>
+       <span className="text-xs font-semibold text-slate-700 uppercase tracking-widest text-center">{title}</span>
+    </Link>
   );
 }

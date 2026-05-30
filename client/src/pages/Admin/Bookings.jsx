@@ -454,25 +454,25 @@ export default function Bookings() {
   const activeBookings = bookings.filter(b => ['Pending', 'Payment_Verified'].includes(b.status)).length;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 p-6 md:p-8">
       
       {/* ── HEADER ── */}
       <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6">
         <div>
            <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0A1128] to-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700">
-                 <FaBoxOpen size={20} />
+              <div className="w-10 h-10 rounded-xl bg-white text-slate-900 border border-slate-200 flex items-center justify-center shadow-sm">
+                 <FaBoxOpen size={18} />
               </div>
               <div>
-                <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase">Operations <span className="text-orange-600">Ledger</span></h1>
-                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.3em]">Universal Service Fulfillment & Billing</p>
+                <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Operations Ledger</h1>
+                <p className="text-slate-500 font-medium text-xs tracking-widest uppercase">Universal Service Fulfillment & Billing</p>
               </div>
            </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-           <button onClick={exportCSV} className="flex items-center gap-2 bg-white border border-slate-200 px-5 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:border-emerald-500 hover:text-emerald-600 transition-all shadow-sm active:scale-95 group">
-            <FaFileDownload size={14} className="group-hover:-translate-y-0.5 transition-transform" />
+           <button onClick={exportCSV} className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl text-xs font-bold hover:border-slate-300 hover:bg-slate-50 transition-all shadow-sm active:scale-95 group">
+            <FaFileDownload size={14} className="text-slate-400 group-hover:text-slate-700 transition-colors" />
             Export Ledger
            </button>
         </div>
@@ -480,36 +480,32 @@ export default function Bookings() {
 
       {/* ── ANALYTICS WIDGETS ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5 text-4xl"><FaChartLine /></div>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Revenue</p>
-          <p className="text-2xl font-black text-[#0A1128]">₹{totalRevenue.toLocaleString()}</p>
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Total Revenue</p>
+          <p className="text-2xl font-extrabold text-slate-900">₹{totalRevenue.toLocaleString()}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5 text-4xl"><FaClock /></div>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Active Bookings</p>
-          <p className="text-2xl font-black text-amber-600">{activeBookings}</p>
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Active Bookings</p>
+          <p className="text-2xl font-extrabold text-amber-600">{activeBookings}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5 text-4xl"><FaFileInvoice /></div>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Pending Invoices</p>
-          <p className="text-2xl font-black text-blue-600">{pendingInvoices}</p>
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Pending Invoices</p>
+          <p className="text-2xl font-extrabold text-blue-600">{pendingInvoices}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5 text-4xl"><FaShieldAlt /></div>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Refund Processing</p>
-          <p className="text-2xl font-black text-purple-600">{bookings.filter(b => ['Refund_Requested', 'Refund_Processing', 'Refunded', 'Cancelled'].includes(b.status)).length}</p>
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Refund Processing</p>
+          <p className="text-2xl font-extrabold text-purple-600">{bookings.filter(b => ['Refund_Requested', 'Refund_Processing', 'Refunded', 'Cancelled'].includes(b.status)).length}</p>
         </div>
       </div>
 
       {/* ── FILTERS ── */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center gap-4">
-        <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl flex-grow focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/10 transition-all w-full">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center gap-4">
+        <div className="flex items-center gap-3 px-4 py-2 bg-white border border-slate-200 rounded-lg flex-grow focus-within:border-slate-900 focus-within:ring-2 focus-within:ring-slate-900/10 transition-all w-full shadow-sm">
           <FaSearch className="text-slate-400" size={14} />
           <input
             type="text"
             placeholder="Search Devotee Name, Mobile, Order ID..."
-            className="bg-transparent border-none outline-none font-bold text-xs text-[#0A1128] placeholder:text-slate-400 w-full"
+            className="bg-transparent border-none outline-none font-medium text-sm text-slate-900 placeholder:text-slate-400 w-full"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -517,7 +513,7 @@ export default function Bookings() {
         
         <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto no-scrollbar pb-1 md:pb-0">
           <select
-            className="bg-slate-50 border border-slate-100 outline-none font-black text-[10px] text-[#0A1128] uppercase tracking-widest px-4 py-3 rounded-xl cursor-pointer hover:border-slate-300 transition-colors shrink-0"
+            className="bg-white border border-slate-200 outline-none font-semibold text-xs text-slate-700 px-4 py-2.5 rounded-lg cursor-pointer hover:border-slate-300 transition-colors shrink-0 shadow-sm"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -534,7 +530,7 @@ export default function Bookings() {
           </select>
 
           <select
-            className="bg-slate-50 border border-slate-100 outline-none font-black text-[10px] text-[#0A1128] uppercase tracking-widest px-4 py-3 rounded-xl cursor-pointer hover:border-slate-300 transition-colors shrink-0"
+            className="bg-white border border-slate-200 outline-none font-semibold text-xs text-slate-700 px-4 py-2.5 rounded-lg cursor-pointer hover:border-slate-300 transition-colors shrink-0 shadow-sm"
             value={serviceFilter}
             onChange={(e) => setServiceFilter(e.target.value)}
           >
@@ -568,23 +564,23 @@ export default function Bookings() {
                 {/* Top Row: Identity & Primary Info */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-5 border-b border-slate-100">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 flex items-center justify-center text-[#0A1128] font-black text-lg border border-slate-300 shadow-inner">
+                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-lg border border-slate-200">
                       {b.name?.charAt(0)}
                     </div>
                     <div>
-                      <h3 className="font-black text-[#0A1128] text-lg leading-none mb-1">{b.name}</h3>
-                      <p className="text-xs font-bold text-slate-500 flex items-center gap-2">
+                      <h3 className="font-bold text-slate-900 text-lg leading-none mb-1">{b.name}</h3>
+                      <p className="text-xs font-medium text-slate-500 flex items-center gap-2">
                         <FaUserCircle className="text-slate-400"/> {b.whatsapp}
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col items-start md:items-end gap-1">
-                    <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${statusStyle(b.status)}`}>
+                  <div className="flex flex-col items-start md:items-end gap-2">
+                    <span className={`px-3 py-1 rounded-md text-[10px] font-semibold border ${statusStyle(b.status)}`}>
                       {b.status.replace(/_/g, ' ')}
                     </span>
-                    <p className="text-[10px] font-black text-slate-400 tracking-wider">
-                      ID: <span className="text-[#0A1128]">{b._id}</span>
+                    <p className="text-[10px] font-medium text-slate-500">
+                      ID: <span className="text-slate-900 font-semibold">{b._id}</span>
                     </p>
                   </div>
                 </div>
@@ -593,39 +589,39 @@ export default function Bookings() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Items */}
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
                       <FaBoxOpen /> Ordered Items
                     </div>
-                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 space-y-2 max-h-32 overflow-y-auto custom-scrollbar">
+                    <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 space-y-2 max-h-32 overflow-y-auto custom-scrollbar">
                       {b.items && b.items.length > 0 ? (
                          b.items.map((item, idx) => (
-                           <div key={idx} className="flex justify-between items-center text-[11px]">
-                             <span className="font-bold text-slate-700 truncate pr-2">{item.quantity}x {item.title}</span>
-                             <span className="font-black text-[#0A1128]">₹{item.price * item.quantity}</span>
+                           <div key={idx} className="flex justify-between items-center text-xs">
+                             <span className="font-medium text-slate-700 truncate pr-2">{item.quantity}x {item.title}</span>
+                             <span className="font-bold text-slate-900">₹{item.price * item.quantity}</span>
                            </div>
                          ))
                       ) : (
-                         <div className="text-[11px] font-bold text-slate-500 italic">Standard {b.serviceType} Offering</div>
+                         <div className="text-xs font-medium text-slate-500 italic">Standard {b.serviceType} Offering</div>
                       )}
                     </div>
                   </div>
 
                   {/* Financials & Payment */}
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
                       <FaCreditCard /> Financials
                     </div>
                     <div className="space-y-1">
-                      <p className="text-2xl font-black text-[#0A1128]">₹{(b.totalPrice || b.price)?.toLocaleString()}</p>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                        Method: <span className="text-[#0A1128]">{b.paymentMethod || 'Razorpay'}</span>
+                      <p className="text-xl font-bold text-slate-900">₹{(b.totalPrice || b.price)?.toLocaleString()}</p>
+                      <p className="text-xs font-medium text-slate-500">
+                        Method: <span className="text-slate-900 font-semibold">{b.paymentMethod || 'Razorpay'}</span>
                       </p>
-                      <p className="text-[10px] font-bold text-slate-500 tracking-wider truncate">
-                        Txn ID: <span className="text-[#0A1128]">{b.paymentId || 'N/A'}</span>
+                      <p className="text-xs font-medium text-slate-500 truncate">
+                        Txn ID: <span className="text-slate-900 font-semibold">{b.paymentId || 'N/A'}</span>
                       </p>
                       {b.invoiceNumber && (
-                        <p className="text-[10px] font-bold text-slate-500 tracking-wider pt-1">
-                          Invoice: <span className="text-emerald-600 font-black">{b.invoiceNumber}</span>
+                        <p className="text-xs font-medium text-slate-500 pt-1">
+                          Invoice: <span className="text-emerald-600 font-semibold">{b.invoiceNumber}</span>
                         </p>
                       )}
                     </div>
@@ -633,11 +629,11 @@ export default function Bookings() {
 
                   {/* Lifecycle & Time */}
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
                       <FaClock /> Lifecycle
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[11px] font-bold text-slate-600">
+                      <p className="text-xs font-medium text-slate-600">
                         Booked: {new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                       </p>
                       
@@ -734,50 +730,50 @@ export default function Bookings() {
                 {/* Bottom Row: Admin Actions */}
                 <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-100">
                   {(b.status === 'Pending' || b.status === 'Payment_Verified') && (
-                    <button onClick={() => updateStatus(b._id, 'Approved')} className="bg-[#0A1128] text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 transition-colors shadow-md">
+                    <button onClick={() => updateStatus(b._id, 'Approved')} className="bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-slate-800 transition-colors shadow-sm">
                       Approve Booking / Accept Bhog
                     </button>
                   )}
                   
                   {b.status === 'Approved' && (
-                    <button onClick={() => updateStatus(b._id, 'Invoice_Generated')} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-colors shadow-md flex items-center gap-2">
+                    <button onClick={() => updateStatus(b._id, 'Invoice_Generated')} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-sm flex items-center gap-2">
                       <FaFileInvoice /> Generate Invoice
                     </button>
                   )}
 
                   {(b.status === 'Invoice_Generated' || b.status === 'Completed' || b.status === 'Refund_Receipt_Generated') && (
-                    <button onClick={() => navigate(`/premium-invoice/${b._id}`)} className="bg-white border border-slate-200 text-[#0A1128] px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors flex items-center gap-2">
+                    <button onClick={() => navigate(`/premium-invoice/${b._id}`)} className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
                       <FaFileInvoice className="text-slate-400" /> 
                       {b.status === 'Refund_Receipt_Generated' ? 'View Refund Receipt' : 'View Admin Invoice'}
                     </button>
                   )}
 
                   {b.status === 'Refund_Requested' && (
-                    <button onClick={() => updateStatus(b._id, 'Refund_Processing')} className="bg-orange-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-700 transition-colors shadow-md flex items-center gap-2">
+                    <button onClick={() => updateStatus(b._id, 'Refund_Processing')} className="bg-orange-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-orange-700 transition-colors shadow-sm flex items-center gap-2">
                       Start Refund Processing
                     </button>
                   )}
 
                   {b.status === 'Refund_Processing' && (
-                    <button onClick={() => updateStatus(b._id, 'Refunded')} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-colors shadow-md flex items-center gap-2">
+                    <button onClick={() => updateStatus(b._id, 'Refunded')} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-sm flex items-center gap-2">
                       <FaCheckCircle /> Mark Refunded
                     </button>
                   )}
 
                   {b.status === 'Refunded' && (
-                    <button onClick={() => updateStatus(b._id, 'Refund_Receipt_Generated')} className="bg-purple-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-700 transition-colors shadow-md flex items-center gap-2">
+                    <button onClick={() => updateStatus(b._id, 'Refund_Receipt_Generated')} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-purple-700 transition-colors shadow-sm flex items-center gap-2">
                       <FaFileInvoice /> Generate Refund Receipt
                     </button>
                   )}
                   
                   {['Pending', 'Payment_Verified', 'Approved'].includes(b.status) && (
-                    <button onClick={() => updateStatus(b._id, 'Refund_Requested')} className="bg-white border border-red-200 text-red-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-50 transition-colors ml-auto">
+                    <button onClick={() => updateStatus(b._id, 'Refund_Requested')} className="bg-white border border-red-200 text-red-600 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-red-50 transition-colors shadow-sm ml-auto">
                       Request Refund
                     </button>
                   )}
                   
                   {b.status === 'Invoice_Generated' && (
-                    <button onClick={() => updateStatus(b._id, 'Completed')} className="bg-white border border-emerald-200 text-emerald-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-50 transition-colors ml-auto flex items-center gap-2">
+                    <button onClick={() => updateStatus(b._id, 'Completed')} className="bg-white border border-emerald-200 text-emerald-600 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-emerald-50 transition-colors shadow-sm ml-auto flex items-center gap-2">
                       <FaCheckCircle /> Mark Completed
                     </button>
                   )}

@@ -142,55 +142,54 @@ export default function AdminLayout() {
         </div>
       )}
 
-      {/* ── SIDEBAR (Modern SaaS Style) ── */}
-      <aside className={`fixed md:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-200/60 flex flex-col z-50 transition-all duration-500 ease-in-out shadow-[10px_0_40px_-20px_rgba(0,0,0,0.02)]
+      {/* ── SIDEBAR (Modern SaaS Dark Style) ── */}
+      <aside className={`fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-950 text-slate-300 border-r border-white/5 flex flex-col z-50 transition-all duration-500 ease-in-out shadow-2xl
       ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       style={isImpersonating ? { top: '44px', height: 'calc(100vh - 44px)' } : {}}>
 
         {/* Brand Identity */}
-        <div className="h-20 flex items-center px-8 border-b border-slate-100 bg-white sticky top-0 z-10">
+        <div className="h-16 flex items-center px-6 border-b border-white/5 bg-slate-950/80 backdrop-blur-md sticky top-0 z-10">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-[#0A1128] rounded-xl flex items-center justify-center text-white shadow-xl shadow-slate-200 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-white shadow-md group-hover:bg-slate-700 transition-colors">
               {adminSettings?.logoUrl && !logoError ? (
                 <img
                   src={getMediaUrl(adminSettings?.logoUrl)}
                   alt="Logo"
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-cover rounded-lg"
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <FaShieldAlt size={20} className="text-orange-500" />
+                <FaShieldAlt size={16} className="text-orange-500" />
               )}
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-black text-[#0A1128] uppercase tracking-tighter leading-none">{adminSettings?.brandName || 'Admin'}</span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Control Center</span>
+              <span className="text-sm font-bold text-white tracking-tight leading-none">{adminSettings?.brandName || 'Admin'}</span>
             </div>
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-8 flex flex-col gap-1 overflow-y-auto px-6 no-scrollbar">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 px-2">Main Menu</p>
+        <nav className="flex-1 py-6 flex flex-col gap-1 overflow-y-auto px-4 no-scrollbar">
+          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 px-3">Overview</p>
           {menu.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               end
               className={({ isActive }) =>
-                `flex items-center justify-between px-4 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all duration-300 group ${isActive
-                  ? "bg-[#0A1128] text-white shadow-2xl shadow-slate-300 translate-x-1"
-                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
+                `flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 group ${isActive
+                  ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
+                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
                 }`
               }
               onClick={() => setOpen(false)}
             >
-              <div className="flex items-center gap-4">
-                <span className="text-base group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-sm">{item.icon}</span>
                 {item.name}
               </div>
               {item.name === "Refunds" && refundCount > 0 && (
-                 <span className="bg-orange-600 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+                 <span className="bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {refundCount}
                  </span>
               )}
@@ -199,12 +198,11 @@ export default function AdminLayout() {
         </nav>
 
         {/* Footer Support */}
-        <div className="p-6 mt-auto border-t border-slate-50">
-          <div className="bg-[#0A1128] rounded-[24px] p-5 text-center relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <p className="text-white font-black text-[10px] uppercase tracking-widest mb-1 relative z-10">Need Help?</p>
-            <p className="text-slate-400 text-[8px] mb-3 relative z-10">24/7 Priority Support</p>
-            <button className="w-full bg-white text-[#0A1128] py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all relative z-10">Contact Admin</button>
+        <div className="p-4 mt-auto border-t border-white/5">
+          <div className="bg-slate-900 rounded-xl p-4 text-center border border-white/5 group">
+            <p className="text-white font-bold text-xs mb-1 z-10">Need Help?</p>
+            <p className="text-slate-400 text-[10px] mb-3 z-10">24/7 Priority Support</p>
+            <button className="w-full bg-slate-800 text-white py-2 rounded-lg text-xs font-medium hover:bg-slate-700 transition-colors z-10">Contact Admin</button>
           </div>
         </div>
       </aside>
@@ -213,31 +211,31 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
 
         {/* Header (Glassmorphism Navbar) */}
-        <header className="flex justify-between items-center bg-white/70 backdrop-blur-xl px-10 py-5 border-b border-slate-200/50 sticky top-0 z-40"
+        <header className="flex justify-between items-center bg-white/70 backdrop-blur-xl px-6 md:px-10 py-4 border-b border-slate-200/60 sticky top-0 z-40"
         style={isImpersonating ? { top: '44px' } : {}}>
 
           <div className="flex items-center gap-6">
-            <button className="md:hidden p-3 bg-white border border-slate-100 rounded-xl shadow-sm text-slate-600" onClick={() => setOpen(true)}>
-              <FaBars size={16} />
+            <button className="md:hidden p-2 bg-white border border-slate-200 rounded-lg shadow-sm text-slate-600" onClick={() => setOpen(true)}>
+              <FaBars size={14} />
             </button>
             
-            <div className="hidden lg:flex items-center gap-3 bg-slate-50 border border-slate-100 px-5 py-2.5 rounded-2xl focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+            <div className="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-lg focus-within:ring-2 focus-within:ring-slate-900/10 transition-all">
               <FaSearch className="text-slate-400" size={14} />
-              <input type="text" placeholder="Global search..." className="bg-transparent border-none outline-none text-[11px] font-bold text-slate-900 placeholder:text-slate-300 w-48" />
+              <input type="text" placeholder="Search..." className="bg-transparent border-none outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400 w-48" />
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             {/* Financial Status (Premium Design) */}
             {user?.role !== 'agent' && (
-              <div className="hidden sm:flex items-center gap-2 bg-white border border-slate-100 pl-4 pr-1.5 py-1.5 rounded-[24px] shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex flex-col pr-4 border-r border-slate-50">
-                  <span className="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Treasury</span>
-                  <span className="text-xs font-black text-[#0A1128]">₹{totalFloat.toLocaleString()}</span>
+              <div className="hidden sm:flex items-center gap-4 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
+                <div className="flex flex-col pr-4 border-r border-slate-100">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5">Treasury</span>
+                  <span className="text-sm font-bold text-slate-900">₹{totalFloat.toLocaleString()}</span>
                 </div>
-                <div className="bg-[#0A1128] px-4 py-2 rounded-[18px] flex items-center gap-2">
-                  <FaWallet className="text-orange-500 text-[10px]" />
-                  <span className="text-[11px] font-black text-white">₹{wallet.toLocaleString()}</span>
+                <div className="flex items-center gap-2">
+                  <FaWallet className="text-slate-400 text-xs" />
+                  <span className="text-sm font-bold text-slate-900">₹{wallet.toLocaleString()}</span>
                 </div>
               </div>
             )}

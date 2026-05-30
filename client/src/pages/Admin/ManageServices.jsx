@@ -331,7 +331,7 @@ export default function ManageServices() {
 
       {/* ── MODERN TABS ── */}
       <section className="max-w-7xl mx-auto px-6 border-b border-slate-100 mb-10">
-         <div className="flex gap-8">
+         <div className="flex gap-6">
             {['Arjee', 'Bhog', 'Swamani'].map(tab => (
               <button 
                 key={tab}
@@ -351,7 +351,7 @@ export default function ManageServices() {
          
          {/* ── COMPACT MODERN FORM ── */}
          <aside className="lg:col-span-4">
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 sticky top-8 space-y-8 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 sticky top-6 space-y-8 shadow-sm">
                <div className="space-y-1">
                   <h2 className="text-lg font-bold text-slate-900">{editMode ? 'Edit' : 'Create'} Offering</h2>
                   <p className="text-xs text-slate-500">Configure ritual attributes & pricing</p>
@@ -462,7 +462,7 @@ export default function ManageServices() {
                             <div className="flex flex-col gap-1">
                                <div className="flex items-center gap-2">
                                   <div className={`w-1.5 h-1.5 rounded-full ${srv.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-                                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{srv.isActive ? 'Active' : 'Draft'}</span>
+                                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">{srv.isActive ? 'Active' : 'Draft'}</span>
                                </div>
                                <h4 className="text-base font-bold text-slate-900 leading-tight">{srv.title}</h4>
                             </div>

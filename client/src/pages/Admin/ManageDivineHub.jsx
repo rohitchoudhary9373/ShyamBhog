@@ -44,16 +44,16 @@ export default function ManageDivineHub() {
   return (
     <div className="max-w-4xl animate-fade-in">
       <header className="mb-10">
-        <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Divine Hub Management</h1>
+        <h1 className="text-4xl font-bold text-slate-900 tracking-tighter">Divine Hub Management</h1>
         <p className="text-slate-500 font-medium mt-1">Control live ritual links and real-time crowd status.</p>
       </header>
 
-      <form onSubmit={handleSubmit} className="bg-white p-10 rounded-[48px] border border-slate-100 shadow-sm space-y-8">
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-8">
          
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <div className="space-y-2">
-               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Arjee Video URL</label>
+               <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Arjee Video URL</label>
                <div className="relative">
                   <FaVideo className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
                   <input 
@@ -67,7 +67,7 @@ export default function ManageDivineHub() {
             </div>
 
             <div className="space-y-2">
-               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Crowd Status Alert</label>
+               <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Crowd Status Alert</label>
                <div className="relative">
                   <FaUsers className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
                   <select 
@@ -83,7 +83,7 @@ export default function ManageDivineHub() {
             </div>
 
             <div className="space-y-2">
-               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Parking Guide URL</label>
+               <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Parking Guide URL</label>
                <div className="relative">
                   <FaParking className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
                   <input 
@@ -97,7 +97,7 @@ export default function ManageDivineHub() {
             </div>
 
             <div className="space-y-2">
-               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Hotel & Stay URL</label>
+               <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">Hotel & Stay URL</label>
                <div className="relative">
                   <FaParking className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
                   <input 
@@ -115,13 +115,13 @@ export default function ManageDivineHub() {
          <button 
            type="submit" 
            disabled={saving} 
-           className="w-full py-5 bg-primary text-white rounded-3xl font-black text-sm uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-orange-100 flex items-center justify-center gap-3"
+           className="w-full py-5 bg-primary text-white rounded-3xl font-bold text-sm uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-orange-100 flex items-center justify-center gap-3"
          >
             <FaSave /> {saving ? 'Updating Hub...' : 'Publish Divine Updates'}
          </button>
       </form>
 
-      <div className="mt-10 p-8 bg-blue-50 rounded-[40px] border border-blue-100 flex items-start gap-4">
+      <div className="mt-10 p-6 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-4">
          <span className="text-2xl">💡</span>
          <p className="text-blue-700 text-sm font-medium leading-relaxed">
             These updates are pushed **instantly** to the Home Page and all User Profiles. 

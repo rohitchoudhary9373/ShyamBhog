@@ -126,7 +126,7 @@ export default function AdminWallet() {
    if (loading) return (
     <div className="py-40 text-center flex flex-col items-center justify-center gap-4">
        <div className="w-12 h-12 border-4 border-slate-100 border-t-orange-500 rounded-full animate-spin"></div>
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing Financial Ledger...</p>
+       <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest animate-pulse">Syncing Financial Ledger...</p>
     </div>
    );
 
@@ -134,27 +134,27 @@ export default function AdminWallet() {
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       
       {/* ── FINANCIAL HEADER ── */}
-      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-8">
+      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6">
         <div>
            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-[#0A1128] text-white flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-lg">
                  <FaFileInvoiceDollar size={20} />
               </div>
-              <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">Financial <span className="text-orange-600 not-italic">Center</span></h1>
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Financial <span className="text-orange-600 not-italic">Center</span></h1>
            </div>
            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.4em] ml-1">Universal Treasury & Liability Governance</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-6">
-           <div className="flex items-center gap-4 bg-white px-8 py-6 rounded-[32px] border border-slate-200 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.02)] group relative overflow-hidden">
+           <div className="flex items-center gap-4 bg-white px-8 py-6 rounded-2xl border border-slate-200 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.02)] group relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-[0.03] text-6xl group-hover:scale-125 transition-transform duration-700"><FaShieldAlt /></div>
               <div className="relative z-10">
-                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-2 leading-none">Administrative Balance</p>
+                 <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2 leading-none">Administrative Balance</p>
                  <div className="flex items-center gap-6">
-                    <h2 className="text-3xl font-black tracking-tighter text-[#0A1128]">₹{adminBalance.toLocaleString()}</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter text-slate-900">₹{adminBalance.toLocaleString()}</h2>
                     <button 
                       onClick={() => { setIsSelfTopup(true); setSelectedUser({ name: 'Platform Authority' }); }}
-                      className="bg-[#0A1128] text-white px-6 py-2.5 rounded-2xl text-[9px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-xl shadow-slate-100 active:scale-95"
+                      className="bg-slate-900 text-white px-6 py-2.5 rounded-2xl text-[10px] font-semibold uppercase tracking-widest text-slate-500 hover:bg-orange-600 transition-all shadow-xl shadow-slate-100 active:scale-95"
                     >
                        Adjust
                     </button>
@@ -162,17 +162,17 @@ export default function AdminWallet() {
               </div>
            </div>
 
-           <div className="flex items-center gap-4 bg-[#0A1128] px-8 py-6 rounded-[32px] shadow-2xl relative overflow-hidden group">
+           <div className="flex items-center gap-4 bg-slate-900 px-8 py-6 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-125 transition-transform duration-700"><FaWallet /></div>
               <div className="relative z-10">
-                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-2 leading-none">Net Platform Liability</p>
-                 <h2 className="text-3xl font-black tracking-tighter text-white">₹{totalRevenue.toLocaleString()}</h2>
+                 <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2 leading-none">Net Platform Liability</p>
+                 <h2 className="text-3xl font-bold tracking-tighter text-white">₹{totalRevenue.toLocaleString()}</h2>
               </div>
            </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
 
         {/* ── DEVOTEE WALLET LEDGER (LEFT) ── */}
         <div className="xl:col-span-8 space-y-8">
@@ -181,10 +181,10 @@ export default function AdminWallet() {
                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
                     <FaUsers size={14} />
                  </div>
-                 <h3 className="text-xl font-black text-[#0A1128] tracking-tighter uppercase italic">Wallet <span className="text-orange-600 not-italic">Ledger</span></h3>
+                 <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Wallet <span className="text-orange-600 not-italic">Ledger</span></h3>
               </div>
               <div className="flex flex-wrap items-center gap-4">
-                 <button onClick={exportWalletCSV} className="flex items-center gap-2.5 bg-white border border-slate-200 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest hover:border-emerald-500 hover:text-emerald-600 transition-all group">
+                 <button onClick={exportWalletCSV} className="flex items-center gap-2.5 bg-white border border-slate-200 px-6 py-3 rounded-2xl text-[10px] font-semibold uppercase tracking-widest text-slate-500 hover:border-emerald-500 hover:text-emerald-600 transition-all group">
                     <FaFileExport size={12} className="group-hover:scale-110 transition-transform" />
                     Export Audit
                  </button>
@@ -194,14 +194,14 @@ export default function AdminWallet() {
                        placeholder="Filter Devotees..."
                        value={searchQuery}
                        onChange={(e) => setSearchQuery(e.target.value)}
-                       className="bg-white border border-slate-200 pl-12 pr-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] outline-none focus:border-orange-500 transition-all w-full md:w-64 shadow-sm"
+                       className="bg-white border border-slate-200 pl-12 pr-6 py-3 rounded-2xl text-xs font-semibold uppercase tracking-widest text-slate-500 outline-none focus:border-orange-500 transition-all w-full md:w-64 shadow-sm"
                     />
                     <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={10} />
                  </div>
               </div>
            </div>
 
-           <div className="bg-white rounded-[48px] border border-slate-200/60 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] overflow-hidden">
+           <div className="bg-white rounded-2xl border border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] overflow-hidden">
               <div className="divide-y divide-slate-50 max-h-[650px] overflow-y-auto custom-scrollbar">
                  <AnimatePresence>
                  {filteredUsers.length > 0 ? (
@@ -211,21 +211,21 @@ export default function AdminWallet() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.05 }}
                           key={user._id} 
-                          className="p-8 hover:bg-slate-50/40 transition-all duration-300 group flex flex-col md:flex-row items-center justify-between gap-6"
+                          className="p-6 hover:bg-slate-50/40 transition-all duration-300 group flex flex-col md:flex-row items-center justify-between gap-6"
                        >
                           <div className="flex items-center gap-6 flex-1">
-                             <div className="w-14 h-14 rounded-[22px] bg-[#0A1128] text-white flex items-center justify-center font-black text-xl shadow-xl shadow-slate-100 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+                             <div className="w-14 h-14 rounded-[22px] bg-slate-900 text-white flex items-center justify-center font-bold text-xl shadow-xl shadow-slate-100 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
                                 <span>{user.name.charAt(0)}</span>
                                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent"></div>
                              </div>
                              <div className="min-w-0">
-                                <p className="font-black text-[#0A1128] text-[15px] tracking-tighter truncate group-hover:text-orange-600 transition-colors">{user.name}</p>
+                                <p className="font-bold text-slate-900 text-[15px] tracking-tighter truncate group-hover:text-orange-600 transition-colors">{user.name}</p>
                                 <div className="flex items-center gap-3 mt-1">
                                    <p className="text-[10px] font-bold text-slate-400">{user.mobile}</p>
                                    <span className="w-1 h-1 rounded-full bg-slate-200"></span>
-                                   <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">SB-{user._id.slice(-6).toUpperCase()}</span>
+                                   <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">SB-{user._id.slice(-6).toUpperCase()}</span>
                                    {user.walletFrozen && (
-                                      <span className="bg-red-100 text-red-600 text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">Frozen</span>
+                                      <span className="bg-red-100 text-red-600 text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">Frozen</span>
                                    )}
                                 </div>
                              </div>
@@ -233,8 +233,8 @@ export default function AdminWallet() {
 
                           <div className="flex items-center gap-4 w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
                              <div className="text-right mr-4">
-                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Devotee Balance</p>
-                                <p className="text-2xl font-black text-[#0A1128] tracking-tighter group-hover:scale-105 transition-transform origin-right">₹{user.walletBalance?.toLocaleString() || 0}</p>
+                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none mb-2">Devotee Balance</p>
+                                <p className="text-2xl font-bold text-slate-900 tracking-tighter group-hover:scale-105 transition-transform origin-right">₹{user.walletBalance?.toLocaleString() || 0}</p>
                              </div>
                              <button
                                 onClick={async () => {
@@ -247,7 +247,7 @@ export default function AdminWallet() {
                                       alert(err.response?.data?.message || "Action failed");
                                    }
                                 }}
-                                className={`px-6 py-4 rounded-[22px] text-[10px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 flex items-center gap-2 ${user.walletFrozen ? 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-200' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
+                                className={`px-6 py-4 rounded-[22px] text-xs font-semibold uppercase tracking-widest text-slate-500 transition-all active:scale-95 flex items-center gap-2 ${user.walletFrozen ? 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-200' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
                              >
                                 <FaLock size={10} className={user.walletFrozen ? "animate-pulse" : ""} />
                                 {user.walletFrozen ? "Unfreeze" : "Freeze"}
@@ -258,7 +258,7 @@ export default function AdminWallet() {
                  ) : (
                     <div className="py-40 text-center flex flex-col items-center justify-center gap-6 opacity-20">
                        <FaChartBar size={48} />
-                       <p className="text-[11px] font-black uppercase tracking-[0.4em]">Database query returned null results</p>
+                       <p className="text-xs font-bold uppercase tracking-[0.4em]">Database query returned null results</p>
                     </div>
                  )}
                  </AnimatePresence>
@@ -272,10 +272,10 @@ export default function AdminWallet() {
               <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                  <FaHistory size={14} />
               </div>
-              <h3 className="text-xl font-black text-[#0A1128] tracking-tighter uppercase italic">Transfer <span className="text-orange-600 not-italic">Intel</span></h3>
+              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Transfer <span className="text-orange-600 not-italic">Intel</span></h3>
            </div>
            
-           <div className="bg-[#0A1128] rounded-[48px] shadow-2xl p-2 overflow-hidden border border-white/5">
+           <div className="bg-slate-900 rounded-2xl shadow-sm border border-slate-200 p-2 overflow-hidden border border-white/5">
               <div className="divide-y divide-white/5 max-h-[650px] overflow-y-auto custom-scrollbar">
                  <AnimatePresence>
                  {history.length > 0 ? (
@@ -285,30 +285,30 @@ export default function AdminWallet() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
                           key={tx._id} 
-                          className="p-8 hover:bg-white/5 transition-all group border-l-4 border-transparent hover:border-orange-500"
+                          className="p-6 hover:bg-white/5 transition-all group border-l-4 border-transparent hover:border-orange-500"
                        >
                           <div className="flex justify-between items-start mb-4">
                              <div className="space-y-1">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
                                    {tx.type === 'credit' ? 'Registry Injection' : 'Registry Deduction'}
                                 </p>
-                                <p className="text-[13px] font-black text-white tracking-tighter uppercase italic group-hover:text-orange-500 transition-colors">
+                                <p className="text-[13px] font-bold text-white tracking-tighter uppercase italic group-hover:text-orange-500 transition-colors">
                                    {tx.userId?.role === 'user' ? tx.userId?.name : tx.targetUserId?.name}
                                 </p>
                              </div>
-                             <div className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-tighter ${tx.type === 'credit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+                             <div className={`px-4 py-2 rounded-xl text-[10px] font-bold tracking-tighter ${tx.type === 'credit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
                                 {tx.type === 'credit' ? '+' : '-'}₹{tx.amount.toLocaleString()}
                              </div>
                           </div>
                           <p className="text-[11px] font-medium text-slate-400 mb-6 italic leading-relaxed">"{tx.description || 'System synchronized manifest adjustment.'}"</p>
                           <div className="flex justify-between items-center pt-5 border-t border-white/5">
                              <div className="flex flex-col">
-                                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Time Marker</span>
+                                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Time Marker</span>
                                 <span className="text-[10px] font-bold text-slate-400">{new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                              </div>
                              <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/5">
                                 <FaShieldAlt size={8} className="text-orange-500" />
-                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Master Node</span>
+                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Master Node</span>
                              </div>
                           </div>
                        </motion.div>
@@ -316,7 +316,7 @@ export default function AdminWallet() {
                  ) : (
                     <div className="py-40 text-center flex flex-col items-center justify-center gap-4 opacity-10">
                        <FaSyncAlt size={40} />
-                       <p className="text-[10px] font-black uppercase tracking-[0.4em]">Waiting for manifest sync...</p>
+                       <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Waiting for manifest sync...</p>
                     </div>
                  )}
                  </AnimatePresence>
@@ -335,69 +335,69 @@ export default function AdminWallet() {
                exit={{ opacity: 0 }}
                className="fixed inset-0 z-[100] flex items-center justify-center p-6"
             >
-               <div className="absolute inset-0 bg-[#0A1128]/40 backdrop-blur-md" onClick={() => { setSelectedUser(null); setIsSelfTopup(false); }}></div>
+               <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => { setSelectedUser(null); setIsSelfTopup(false); }}></div>
                <motion.div 
                   initial={{ scale: 0.9, y: 20 }}
                   animate={{ scale: 1, y: 0 }}
                   exit={{ scale: 0.9, y: 20 }}
-                  className="relative z-10 w-full max-w-xl bg-white rounded-[48px] shadow-2xl overflow-hidden"
+                  className="relative z-10 w-full max-w-xl bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
                >
                   <div className="p-12">
                      <div className="flex justify-between items-center mb-10">
                         <div>
-                           <h3 className="text-2xl font-black text-[#0A1128] tracking-tighter uppercase italic">Treasury <span className="text-orange-600 not-italic">Adjustment</span></h3>
-                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manual Balance Governance: <span className="text-orange-600 font-black">{selectedUser.name}</span></p>
+                           <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Treasury <span className="text-orange-600 not-italic">Adjustment</span></h3>
+                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manual Balance Governance: <span className="text-orange-600 font-bold">{selectedUser.name}</span></p>
                         </div>
-                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-black text-xl text-[#0A1128]">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-bold text-xl text-slate-900">
                            {selectedUser.name.charAt(0)}
                         </div>
                      </div>
 
                      <form onSubmit={handleAdjustment} className="space-y-8">
-                        <div className="flex p-2 bg-slate-100 rounded-[28px] gap-2">
+                        <div className="flex p-2 bg-slate-100 rounded-xl gap-2">
                            <button 
                              type="button"
                              onClick={() => setAdjType('credit')}
-                             className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[22px] text-[10px] font-black uppercase tracking-widest transition-all ${adjType === 'credit' ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-100' : 'text-slate-500 hover:bg-slate-200'}`}
+                             className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[22px] text-[10px] font-bold uppercase tracking-widest transition-all ${adjType === 'credit' ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-100' : 'text-slate-500 hover:bg-slate-200'}`}
                            >
                               <FaPlus /> Registry Injection
                            </button>
                            <button 
                              type="button"
                              onClick={() => setAdjType('debit')}
-                             className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[22px] text-[10px] font-black uppercase tracking-widest transition-all ${adjType === 'debit' ? 'bg-red-600 text-white shadow-xl shadow-red-100' : 'text-slate-500 hover:bg-slate-200'}`}
+                             className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[22px] text-[10px] font-bold uppercase tracking-widest transition-all ${adjType === 'debit' ? 'bg-red-600 text-white shadow-xl shadow-red-100' : 'text-slate-500 hover:bg-slate-200'}`}
                            >
                               <FaArrowDown /> Registry Deduction
                            </button>
                         </div>
 
                         <div className="space-y-3">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 flex items-center gap-2"><FaLock size={8} /> Adjustment Quantum (₹)</label>
+                           <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 flex items-center gap-2"><FaLock size={8} /> Adjustment Quantum (₹)</label>
                            <div className="relative">
-                              <span className="absolute left-8 top-1/2 -translate-y-1/2 text-3xl font-black text-slate-300 group-focus-within:text-orange-500 transition-colors">₹</span>
+                              <span className="absolute left-8 top-1/2 -translate-y-1/2 text-3xl font-bold text-slate-300 group-focus-within:text-orange-500 transition-colors">₹</span>
                               <input 
                                 type="number" 
                                 placeholder="0.00"
                                 value={adjAmount}
                                 onChange={(e) => setAdjAmount(e.target.value)}
-                                className="w-full pl-16 pr-8 py-8 bg-slate-50 border border-slate-100 rounded-[32px] outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 font-black text-4xl text-[#0A1128] transition-all text-center"
+                                className="w-full pl-16 pr-8 py-8 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 font-bold text-4xl text-slate-900 transition-all text-center"
                               />
                            </div>
                         </div>
 
                         <div className="space-y-3">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Operational Manifest Remark</label>
+                           <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Operational Manifest Remark</label>
                            <textarea 
                              placeholder="Internal documentation for this treasury change..."
                              value={adjReason}
                              onChange={(e) => setAdjReason(e.target.value)}
-                             className="w-full p-6 bg-slate-50 border border-slate-100 rounded-[28px] outline-none focus:border-orange-500 font-bold text-[12px] text-slate-600 min-h-[120px] resize-none transition-all italic"
+                             className="w-full p-6 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-orange-500 font-bold text-[12px] text-slate-600 min-h-[120px] resize-none transition-all italic"
                            />
                         </div>
 
                         <button 
                            disabled={isSubmitting}
-                           className={`w-full py-5 rounded-[28px] font-black uppercase tracking-[0.2em] text-[11px] transition-all shadow-2xl text-white ${
+                           className={`w-full py-5 rounded-xl font-bold uppercase tracking-[0.2em] text-[11px] transition-all shadow-sm border border-slate-200 text-white ${
                               adjType === 'credit' ? 'bg-emerald-600 shadow-emerald-100' : 'bg-red-600 shadow-red-100'
                            } ${isSubmitting ? 'opacity-50 cursor-wait' : 'active:scale-95'}`}
                         >

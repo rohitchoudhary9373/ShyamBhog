@@ -195,20 +195,20 @@ export default function ManageDevotees() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-8 animate-in fade-in duration-1000">
       
       {/* ── HEADER ── */}
       <header className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#0A1128] text-white flex items-center justify-center shadow-lg">
-              <FaUsers size={20} />
+            <div className="w-10 h-10 rounded-xl bg-white text-slate-900 border border-slate-200 flex items-center justify-center shadow-sm">
+              <FaUsers size={18} />
             </div>
-            <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">
-              User <span className="text-orange-600 not-italic">CRM</span>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              User CRM
             </h1>
           </div>
-          <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] ml-1 mt-1">
+          <p className="text-slate-500 font-medium text-xs tracking-widest uppercase mt-1 ml-14">
             Relationship Management & Wallet Governance
           </p>
         </div>
@@ -216,9 +216,9 @@ export default function ManageDevotees() {
         <div className="flex flex-wrap items-center gap-3">
           <button 
             onClick={exportToCSV} 
-            className="flex items-center gap-2 bg-white border border-slate-200 hover:border-emerald-500 hover:text-emerald-600 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm active:scale-95 transition-all group"
+            className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 px-5 py-2.5 rounded-xl font-bold text-xs shadow-sm active:scale-95 transition-all group"
           >
-            <FaFileExport size={12} className="group-hover:scale-110 transition-transform" />
+            <FaFileExport size={12} className="text-slate-400 group-hover:text-slate-700 transition-colors" />
             Export Registry
           </button>
         </div>
@@ -226,27 +226,27 @@ export default function ManageDevotees() {
 
       {/* ── METRICS DASHBOARD ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Total Users</p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-black text-slate-900">{totalCount}</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase">Registered</span>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+          <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">Total Users</p>
+          <div className="flex items-baseline gap-2 mt-4">
+            <span className="text-3xl font-extrabold text-slate-900">{totalCount}</span>
+            <span className="text-[10px] font-medium text-slate-400 uppercase">Registered</span>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Active & Operational</p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-black text-emerald-600">{activeCount}</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase">Users</span>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+          <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">Active & Operational</p>
+          <div className="flex items-baseline gap-2 mt-4">
+            <span className="text-3xl font-extrabold text-emerald-600">{activeCount}</span>
+            <span className="text-[10px] font-medium text-slate-400 uppercase">Users</span>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Active Wallet Users</p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-black text-orange-500">{activeWalletUsers}</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase">Accounts</span>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+          <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">Active Wallet Users</p>
+          <div className="flex items-baseline gap-2 mt-4">
+            <span className="text-3xl font-extrabold text-orange-500">{activeWalletUsers}</span>
+            <span className="text-[10px] font-medium text-slate-400 uppercase">Accounts</span>
           </div>
         </div>
 
@@ -260,36 +260,36 @@ export default function ManageDevotees() {
       </div>
 
       {/* ── FILTER & SEARCH PANEL ── */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
         {/* Filter Tabs */}
-        <div className="flex p-1 bg-slate-100 rounded-2xl gap-1 w-full md:w-auto">
+        <div className="flex p-1 bg-slate-50 rounded-lg gap-1 w-full md:w-auto border border-slate-200/60">
           {[
             { id: 'all', label: 'All', count: totalCount },
             { id: 'active', label: 'Active', count: activeCount },
             { id: 'suspended', label: 'Suspended', count: suspendedCount },
-            { id: 'staff', label: 'Staff/Admin', count: staffCount }
+            { id: 'staff', label: 'Staff', count: staffCount }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setFilterStatus(tab.id)}
-              className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`flex-1 md:flex-initial px-4 py-2 rounded-md text-xs font-semibold transition-all ${
                 filterStatus === tab.id 
-                  ? 'bg-slate-900 text-white shadow-sm' 
-                  : 'text-slate-500 hover:bg-slate-200/50'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200' 
+                  : 'text-slate-500 hover:bg-slate-100'
               }`}
             >
-              {tab.label} ({tab.count})
+              {tab.label} <span className="text-slate-400 font-medium ml-1">({tab.count})</span>
             </button>
           ))}
         </div>
 
         {/* Search Input */}
-        <div className="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-200 focus-within:ring-2 focus-within:ring-orange-500/10 focus-within:border-orange-500 transition-all w-full md:w-80">
-          <FaSearch className="text-slate-300 flex-shrink-0" size={12} />
+        <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-slate-200 focus-within:ring-2 focus-within:ring-slate-900/10 focus-within:border-slate-900 transition-all w-full md:w-80 shadow-sm">
+          <FaSearch className="text-slate-400 flex-shrink-0" size={14} />
           <input
             type="text"
             placeholder="Search by ID, Name, Phone..."
-            className="bg-transparent border-none outline-none font-bold text-[11px] text-[#0A1128] placeholder:text-slate-300 w-full"
+            className="bg-transparent border-none outline-none font-medium text-sm text-slate-900 placeholder:text-slate-400 w-full"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -297,15 +297,15 @@ export default function ManageDevotees() {
       </div>
 
       {/* ── DEVOTEES LIST ── */}
-      <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-lg overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[35%]">User Profile / Identity</th>
-                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[25%]">Contact & Location</th>
-                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[20%]">Wallet & Balances</th>
-                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[20%]">Operational Controls</th>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-[35%]">User Profile</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-[25%]">Contact Info</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-[20%]">Wallet</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-[20%]">Controls</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -322,46 +322,39 @@ export default function ManageDevotees() {
                       className={`hover:bg-slate-50/50 transition-all duration-200 group ${d.status === 'blocked' ? 'bg-slate-50/20' : ''}`}
                     >
                       {/* Identity Column */}
-                      <td className="p-6">
+                      <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          {/* Avatar Circle with initials */}
-                          <div className={`w-12 h-12 rounded-2xl text-white flex items-center justify-center font-black text-lg shadow-sm relative overflow-hidden group-hover:scale-105 transition-transform duration-300 flex-shrink-0 ${
-                            isStaff ? 'bg-purple-600' : 'bg-slate-900'
+                          {/* Avatar Circle */}
+                          <div className={`w-10 h-10 rounded-full text-white flex items-center justify-center font-bold text-sm shadow-sm relative overflow-hidden flex-shrink-0 ${
+                            isStaff ? 'bg-indigo-600' : 'bg-slate-900'
                           }`}>
                             <span className="relative z-10">{d.name?.charAt(0).toUpperCase()}</span>
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
                           </div>
 
                           <div className="space-y-1 min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <p className="font-black text-[#0A1128] text-sm tracking-tight truncate max-w-[150px]">{d.name}</p>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="font-bold text-slate-900 text-sm truncate max-w-[150px]">{d.name}</p>
                               
                               {isStaff && (
-                                <span className="bg-purple-50 text-purple-600 text-[8px] font-black px-1.5 py-0.5 rounded border border-purple-100 uppercase tracking-widest">
+                                <span className="bg-indigo-50 text-indigo-700 text-[10px] font-semibold px-2 py-0.5 rounded border border-indigo-100">
                                   Staff
                                 </span>
                               )}
                               {isVip && (
-                                <span className="bg-amber-50 text-amber-600 text-[8px] font-black px-1.5 py-0.5 rounded border border-amber-100 uppercase tracking-widest flex items-center gap-0.5">
-                                  <FaCrown size={8} /> VIP
+                                <span className="bg-amber-50 text-amber-600 text-[10px] font-semibold px-2 py-0.5 rounded border border-amber-100 flex items-center gap-1">
+                                  <FaCrown size={10} /> VIP
                                 </span>
                               )}
                             </div>
                             
-                            <div className="flex flex-wrap items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1">
-                              <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-mono">
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-1">
+                              <span className="font-mono bg-slate-50 border border-slate-200 px-1.5 rounded text-[10px]">
                                 SB-{d._id.slice(-6).toUpperCase()}
                               </span>
                               <span>•</span>
                               <span>Reg: {new Date(d.createdAt).toLocaleDateString('en-GB')}</span>
-                              {d.lastLogin && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-blue-500">Last: {new Date(d.lastLogin).toLocaleDateString('en-GB')}</span>
-                                </>
-                              )}
                               {d.authProvider === 'google' && (
-                                <span className="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 ml-1">
+                                <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 ml-1 text-[10px]">
                                   Google
                                 </span>
                               )}
@@ -371,134 +364,107 @@ export default function ManageDevotees() {
                       </td>
 
                       {/* Contact Column */}
-                      <td className="p-6">
-                        <div className="flex flex-col gap-1.5 text-xs text-slate-700 font-medium">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1.5 text-xs text-slate-600 font-medium">
                           <div className="flex flex-wrap items-center gap-2">
-                            <a href={`tel:${d.mobile}`} className="flex items-center gap-1.5 hover:text-orange-500 transition-colors bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md text-[11px]">
-                              <FaPhoneAlt size={9} className="text-slate-400" />
+                            <a href={`tel:${d.mobile}`} className="flex items-center gap-1.5 hover:text-slate-900 transition-colors">
+                              <FaPhoneAlt size={10} className="text-slate-400" />
                               {d.mobile || 'N/A'}
                             </a>
                             {d.whatsappNumber && (
-                              <a href={`https://wa.me/${d.whatsappNumber}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-green-600 transition-colors bg-green-50 text-green-700 border border-green-100 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">
-                                WA: {d.whatsappNumber}
+                              <a href={`https://wa.me/${d.whatsappNumber}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 bg-green-50 text-green-700 border border-green-200 px-1.5 rounded text-[10px] font-semibold">
+                                WA
                               </a>
                             )}
                           </div>
-                          
-                          {d.alternateContact && (
-                            <div className="flex items-center gap-2 text-slate-500 text-[10px]">
-                              <span className="uppercase tracking-widest font-black text-[8px] bg-slate-100 px-1.5 py-0.5 rounded">Alt</span>
-                              {d.alternateContact}
-                            </div>
-                          )}
 
-                          <div className="flex items-center gap-2 text-slate-500 text-[11px] truncate max-w-[200px]">
-                            <FaEnvelope size={9} className="text-slate-300 flex-shrink-0" />
-                            {d.email || <span className="text-slate-300 italic">No email</span>}
+                          <div className="flex items-center gap-2 truncate max-w-[200px]">
+                            <FaEnvelope size={10} className="text-slate-400 flex-shrink-0" />
+                            {d.email || <span className="text-slate-400 italic">No email</span>}
                           </div>
                           
                           {(d.address || d.district || d.state) ? (
-                            <div className="flex items-start gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-tight leading-tight mt-1">
-                              <FaMapMarkerAlt size={9} className="text-orange-500/50 flex-shrink-0 mt-0.5" />
+                            <div className="flex items-start gap-2 text-slate-500 mt-1">
+                              <FaMapMarkerAlt size={10} className="text-slate-400 flex-shrink-0 mt-0.5" />
                               <span className="truncate whitespace-normal max-w-[220px]">
-                                {d.address ? `${d.address}, ` : ''}{d.district || 'Khatu'}, {d.state || 'RJ'} {d.pincode && `- ${d.pincode}`} {d.country && `(${d.country})`}
+                                {d.address ? `${d.address}, ` : ''}{d.district || 'Khatu'}, {d.state || 'RJ'}
                               </span>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2 text-slate-300 text-[10px] italic mt-1">
-                              <FaMapMarkerAlt size={9} className="text-slate-200" />
+                            <div className="flex items-center gap-2 text-slate-400 italic mt-1">
+                              <FaMapMarkerAlt size={10} className="text-slate-300" />
                               Location unset
                             </div>
                           )}
-                          
-                          <div className="flex flex-wrap gap-1 mt-1">
-                             {d.dob && (
-                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded">
-                                 DOB: {new Date(d.dob).toLocaleDateString('en-GB')}
-                               </span>
-                             )}
-                             {d.gender && (
-                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded">
-                                 Gen: {d.gender}
-                               </span>
-                             )}
-                          </div>
                         </div>
                       </td>
 
                       {/* Wallet Balance Column */}
-                      <td className="p-6">
-                        <div className="flex flex-col gap-1.5">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-3">
-                            <span className="text-xl font-black text-slate-900 tracking-tighter">
+                            <span className="text-xl font-bold text-slate-900">
                               ₹{d.walletBalance?.toLocaleString() || 0}
                             </span>
                             <button 
                               onClick={() => fetchUserHistory(d)} 
-                              className="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 transition-all flex items-center justify-center border border-slate-100 shadow-sm"
-                              title="Transaction History Ledger"
+                              className="w-8 h-8 rounded-lg bg-slate-50 text-slate-500 hover:bg-slate-100 transition-all flex items-center justify-center border border-slate-200 shadow-sm"
+                              title="Transaction History"
                             >
-                              <FaHistory size={11} />
+                              <FaHistory size={12} />
                             </button>
                           </div>
                           
                           {/* Wallet Adjustment Quick Buttons */}
-                          <div className="flex gap-1.5 max-w-[140px]">
+                          <div className="flex gap-2 max-w-[150px]">
                             <button 
                               onClick={() => { setAdjustingUser(d); setAdjType('credit'); }}
-                              className="flex-1 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-[8px] font-black uppercase tracking-wider border border-emerald-100/50 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                              className="flex-1 py-1.5 bg-emerald-50 text-emerald-700 rounded-md text-[10px] font-semibold border border-emerald-200 hover:bg-emerald-100 transition-colors"
                               title="Add Funds"
                             >
-                              + Add
+                              + ADD
                             </button>
                             <button 
                               onClick={() => { setAdjustingUser(d); setAdjType('debit'); }}
-                              className="flex-1 py-1.5 bg-red-50 text-red-600 rounded-lg text-[8px] font-black uppercase tracking-wider border border-red-100/50 hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                              className="flex-1 py-1.5 bg-rose-50 text-rose-700 rounded-md text-[10px] font-semibold border border-rose-200 hover:bg-rose-100 transition-colors"
                               title="Deduct Funds"
                             >
-                              - Deduct
+                              - DEDUCT
                             </button>
                           </div>
                         </div>
                       </td>
 
-                      {/* Operational Actions Column */}
-                      <td className="p-6">
-                        <div className="flex items-center gap-2.5">
+                      {/* Operational Controls Column */}
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap items-center gap-2">
                           <button 
                             onClick={() => handleImpersonate(d)}
-                            className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white transition-all shadow-sm flex items-center justify-center"
-                            title="Login As User"
+                            className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 hover:bg-indigo-100 transition-colors flex items-center justify-center"
+                            title="Login as User"
                           >
-                            <FaArrowRight size={11} />
+                            <FaIdBadge size={14} />
                           </button>
+
                           <button 
                             onClick={() => handleToggleStatus(d)}
-                            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border shadow-sm ${
+                            className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-colors ${
                               d.status === 'blocked' 
-                                ? 'bg-emerald-50 border-emerald-200 text-emerald-600 hover:bg-emerald-600 hover:text-white' 
-                                : 'bg-slate-900 border-slate-900 text-white hover:bg-slate-800'
+                                ? 'bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100'
+                                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                             }`}
-                            title={d.status === 'blocked' ? 'Unblock User' : 'Suspend User'}
+                            title={d.status === 'blocked' ? 'Unblock User' : 'Block User'}
                           >
-                            {d.status === 'blocked' ? <FaUnlock size={11} /> : <FaLock size={11} />}
+                            {d.status === 'blocked' ? <FaUnlock size={14} /> : <FaLock size={14} />}
                           </button>
+
                           <button 
                             onClick={() => handleForceDelete(d)}
-                            className="w-9 h-9 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-100/50 hover:border-red-500 transition-all shadow-sm flex items-center justify-center"
-                            title="Delete User Node"
+                            className="w-8 h-8 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors flex items-center justify-center ml-2"
+                            title="Delete User"
                           >
-                            <FaTrash size={11} />
+                            <FaTrash size={14} />
                           </button>
-                          <div className="h-8 w-[1px] bg-slate-200/50 mx-1"></div>
-                          <span className={`px-2.5 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-wider border flex items-center gap-1 ${
-                            d.status === 'blocked' 
-                              ? 'bg-red-50 text-red-600 border-red-100' 
-                              : 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                          }`}>
-                            <span className={`w-1 h-1 rounded-full ${d.status === 'blocked' ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
-                            {d.status === 'blocked' ? 'SUSPENDED' : 'ACTIVE'}
-                          </span>
                         </div>
                       </td>
                     </motion.tr>
