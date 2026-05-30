@@ -166,7 +166,10 @@ export default function ManageDevotees() {
     const matchesSearch = name.includes(s) || 
                           mobile.includes(s) ||
                           email.includes(s) ||
-                          devoteeId.toLowerCase().includes(s);
+                          devoteeId.toLowerCase().includes(s) ||
+                          (d.whatsappNumber && d.whatsappNumber.includes(s)) ||
+                          (d.alternateContact && d.alternateContact.includes(s)) ||
+                          (d.district && d.district.toLowerCase().includes(s));
 
     if (!matchesSearch) return false;
 
@@ -345,12 +348,23 @@ export default function ManageDevotees() {
                               )}
                             </div>
                             
-                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                            <div className="flex flex-wrap items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1">
                               <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-mono">
                                 SB-{d._id.slice(-6).toUpperCase()}
                               </span>
                               <span>•</span>
-                              <span>Reg: {new Date(d.createdAt).toLocaleDateString()}</span>
+                              <span>Reg: {new Date(d.createdAt).toLocaleDateString('en-GB')}</span>
+                              {d.lastLogin && (
+                                <>
+                                  <span>•</span>
+                                  <span className="text-blue-500">Last: {new Date(d.lastLogin).toLocaleDateString('en-GB')}</span>
+                                </>
+                              )}
+                              {d.authProvider === 'google' && (
+                                <span className="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 ml-1">
+                                  Google
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -359,25 +373,56 @@ export default function ManageDevotees() {
                       {/* Contact Column */}
                       <td className="p-6">
                         <div className="flex flex-col gap-1.5 text-xs text-slate-700 font-medium">
-                          <a href={`tel:${d.mobile}`} className="flex items-center gap-2 hover:text-orange-500 transition-colors">
-                            <FaPhoneAlt size={9} className="text-slate-300" />
-                            {d.mobile}
-                          </a>
-                          <div className="flex items-center gap-2 text-slate-500 text-[11px] truncate max-w-[180px]">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <a href={`tel:${d.mobile}`} className="flex items-center gap-1.5 hover:text-orange-500 transition-colors bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md text-[11px]">
+                              <FaPhoneAlt size={9} className="text-slate-400" />
+                              {d.mobile || 'N/A'}
+                            </a>
+                            {d.whatsappNumber && (
+                              <a href={`https://wa.me/${d.whatsappNumber}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-green-600 transition-colors bg-green-50 text-green-700 border border-green-100 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">
+                                WA: {d.whatsappNumber}
+                              </a>
+                            )}
+                          </div>
+                          
+                          {d.alternateContact && (
+                            <div className="flex items-center gap-2 text-slate-500 text-[10px]">
+                              <span className="uppercase tracking-widest font-black text-[8px] bg-slate-100 px-1.5 py-0.5 rounded">Alt</span>
+                              {d.alternateContact}
+                            </div>
+                          )}
+
+                          <div className="flex items-center gap-2 text-slate-500 text-[11px] truncate max-w-[200px]">
                             <FaEnvelope size={9} className="text-slate-300 flex-shrink-0" />
                             {d.email || <span className="text-slate-300 italic">No email</span>}
                           </div>
-                          {(d.district || d.state) ? (
-                            <div className="flex items-center gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-tight">
-                              <FaMapMarkerAlt size={9} className="text-orange-500/50 flex-shrink-0" />
-                              <span className="truncate">{d.district || 'Khatu'}, {d.state || 'RJ'}</span>
+                          
+                          {(d.address || d.district || d.state) ? (
+                            <div className="flex items-start gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-tight leading-tight mt-1">
+                              <FaMapMarkerAlt size={9} className="text-orange-500/50 flex-shrink-0 mt-0.5" />
+                              <span className="truncate whitespace-normal max-w-[220px]">
+                                {d.address ? `${d.address}, ` : ''}{d.district || 'Khatu'}, {d.state || 'RJ'} {d.pincode && `- ${d.pincode}`} {d.country && `(${d.country})`}
+                              </span>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2 text-slate-300 text-[10px] italic">
+                            <div className="flex items-center gap-2 text-slate-300 text-[10px] italic mt-1">
                               <FaMapMarkerAlt size={9} className="text-slate-200" />
                               Location unset
                             </div>
                           )}
+                          
+                          <div className="flex flex-wrap gap-1 mt-1">
+                             {d.dob && (
+                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded">
+                                 DOB: {new Date(d.dob).toLocaleDateString('en-GB')}
+                               </span>
+                             )}
+                             {d.gender && (
+                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded">
+                                 Gen: {d.gender}
+                               </span>
+                             )}
+                          </div>
                         </div>
                       </td>
 
