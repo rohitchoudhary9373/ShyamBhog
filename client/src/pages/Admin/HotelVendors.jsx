@@ -8,8 +8,8 @@ export default function AdminHotelVendors() {
 
   const fetchVendors = async () => {
     try {
-      const res = await API.get('/users?role=hotel_owner');
-      setVendors(res.data.data || res.data);
+      const res = await API.get('/admin/hotel-vendors');
+      setVendors(res.data);
     } catch (err) {
       console.error(err);
     } finally {

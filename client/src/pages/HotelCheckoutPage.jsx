@@ -19,7 +19,21 @@ export default function HotelCheckoutPage() {
   });
   const [loading, setLoading] = useState(false);
 
+  const hotelUser = JSON.parse(localStorage.getItem('hotelUserInfo') || 'null');
+
   if (!hotel || !room) return <div className="p-10 text-center font-bold text-slate-400">Invalid Booking Session. Please restart.</div>;
+
+  if (!hotelUser) {
+    return (
+      <div className="min-h-screen bg-[#FDF8F1] flex items-center justify-center p-6">
+        <div className="bg-white p-8 rounded-[32px] text-center shadow-xl max-w-sm">
+          <h2 className="text-xl font-black uppercase text-slate-900 mb-2">Login Required</h2>
+          <p className="text-sm font-bold text-slate-400 mb-6">You must be logged in as a Hotel Customer to complete this booking.</p>
+          <button onClick={() => navigate('/hotel-login', { state: { from: location.pathname } })} className="bg-orange-600 text-white w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-900 transition-all">Go to Login</button>
+        </div>
+      </div>
+    );
+  }
 
   const handleBook = async (e) => {
     e.preventDefault();
@@ -38,6 +52,8 @@ export default function HotelCheckoutPage() {
           email: form.guestEmail,
           phone: form.guestPhone
         }
+      }, {
+        headers: { Authorization: `Bearer ${hotelUser.token}` }
       });
 
       const options = {
@@ -54,6 +70,8 @@ export default function HotelCheckoutPage() {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
               bookingId: res.data.booking._id
+            }, {
+              headers: { Authorization: `Bearer ${hotelUser.token}` }
             });
             alert("Booking Confirmed!");
             navigate('/profile');

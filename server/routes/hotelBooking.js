@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { hotelCustomerProtect } = require('../middleware/hotelAuthMiddleware');
 const Hotel = require('../models/Hotel');
 const HotelRoom = require('../models/HotelRoom');
 const HotelBooking = require('../models/HotelBooking');
@@ -36,7 +36,7 @@ router.get('/hotels/:id', async (req, res) => {
 
 // @route   POST /api/hotel-booking/book
 // @desc    Create a hotel booking and Razorpay order
-router.post('/book', protect, async (req, res) => {
+router.post('/book', hotelCustomerProtect, async (req, res) => {
   try {
     const { hotelId, roomId, checkInDate, checkOutDate, numberOfGuests, guestDetails } = req.body;
 
@@ -62,7 +62,7 @@ router.post('/book', protect, async (req, res) => {
     const vendorEarnings = totalAmount - commissionAmount;
 
     const booking = new HotelBooking({
-      userId: req.user._id,
+      userId: req.hotelUser._id,
       ownerId: hotel.ownerId,
       hotelId,
       roomId,
@@ -106,7 +106,7 @@ router.post('/book', protect, async (req, res) => {
 
 // @route   POST /api/hotel-booking/verify
 // @desc    Verify Razorpay payment
-router.post('/verify', protect, async (req, res) => {
+router.post('/verify', hotelCustomerProtect, async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bookingId } = req.body;
 
@@ -137,9 +137,9 @@ router.post('/verify', protect, async (req, res) => {
 
 // @route   GET /api/hotel-booking/my-bookings
 // @desc    Get logged in user's bookings
-router.get('/my-bookings', protect, async (req, res) => {
+router.get('/my-bookings', hotelCustomerProtect, async (req, res) => {
   try {
-    const bookings = await HotelBooking.find({ userId: req.user._id })
+    const bookings = await HotelBooking.find({ userId: req.hotelUser._id })
       .populate('hotelId', 'name imageUrl address contactNumber')
       .populate('roomId', 'name category')
       .sort({ createdAt: -1 });

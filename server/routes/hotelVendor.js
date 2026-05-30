@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, hotelOwner } = require('../middleware/authMiddleware');
+const { hotelVendorProtect } = require('../middleware/hotelAuthMiddleware');
 const Hotel = require('../models/Hotel');
 const HotelRoom = require('../models/HotelRoom');
 const HotelBooking = require('../models/HotelBooking');
@@ -8,9 +9,9 @@ const HotelPayout = require('../models/HotelPayout');
 
 // @route   GET /api/vendor/dashboard
 // @desc    Get vendor dashboard analytics
-router.get('/dashboard', protect, hotelOwner, async (req, res) => {
+router.get('/dashboard', hotelVendorProtect, async (req, res) => {
   try {
-    const hotels = await Hotel.find({ ownerId: req.user._id });
+    const hotels = await Hotel.find({ ownerId: req.hotelOwner._id });
     const hotelIds = hotels.map(h => h._id);
 
     const bookings = await HotelBooking.find({ hotelId: { $in: hotelIds } });
@@ -32,9 +33,9 @@ router.get('/dashboard', protect, hotelOwner, async (req, res) => {
 
 // @route   GET /api/vendor/hotels
 // @desc    Get vendor's hotels
-router.get('/hotels', protect, hotelOwner, async (req, res) => {
+router.get('/hotels', hotelVendorProtect, async (req, res) => {
   try {
-    const hotels = await Hotel.find({ ownerId: req.user._id });
+    const hotels = await Hotel.find({ ownerId: req.hotelOwner._id });
     res.json(hotels);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -43,11 +44,11 @@ router.get('/hotels', protect, hotelOwner, async (req, res) => {
 
 // @route   POST /api/vendor/hotels
 // @desc    Create a new hotel (pending approval)
-router.post('/hotels', protect, hotelOwner, async (req, res) => {
+router.post('/hotels', hotelVendorProtect, async (req, res) => {
   try {
     const hotel = new Hotel({
       ...req.body,
-      ownerId: req.user._id,
+      ownerId: req.hotelOwner._id,
       status: 'pending' // Admin must approve
     });
     await hotel.save();
@@ -59,7 +60,7 @@ router.post('/hotels', protect, hotelOwner, async (req, res) => {
 
 // @route   GET /api/vendor/hotels/:hotelId/rooms
 // @desc    Get rooms for a hotel
-router.get('/hotels/:hotelId/rooms', protect, hotelOwner, async (req, res) => {
+router.get('/hotels/:hotelId/rooms', hotelVendorProtect, async (req, res) => {
   try {
     const rooms = await HotelRoom.find({ hotelId: req.params.hotelId });
     res.json(rooms);
@@ -70,10 +71,10 @@ router.get('/hotels/:hotelId/rooms', protect, hotelOwner, async (req, res) => {
 
 // @route   POST /api/vendor/hotels/:hotelId/rooms
 // @desc    Add a room to hotel
-router.post('/hotels/:hotelId/rooms', protect, hotelOwner, async (req, res) => {
+router.post('/hotels/:hotelId/rooms', hotelVendorProtect, async (req, res) => {
   try {
     // Verify ownership
-    const hotel = await Hotel.findOne({ _id: req.params.hotelId, ownerId: req.user._id });
+    const hotel = await Hotel.findOne({ _id: req.params.hotelId, ownerId: req.hotelOwner._id });
     if (!hotel) return res.status(404).json({ message: 'Hotel not found or unauthorized' });
 
     const room = new HotelRoom({
@@ -89,9 +90,9 @@ router.post('/hotels/:hotelId/rooms', protect, hotelOwner, async (req, res) => {
 
 // @route   GET /api/vendor/bookings
 // @desc    Get bookings for vendor
-router.get('/bookings', protect, hotelOwner, async (req, res) => {
+router.get('/bookings', hotelVendorProtect, async (req, res) => {
   try {
-    const bookings = await HotelBooking.find({ ownerId: req.user._id })
+    const bookings = await HotelBooking.find({ ownerId: req.hotelOwner._id })
       .populate('roomId', 'name category')
       .populate('userId', 'name email mobile')
       .sort({ createdAt: -1 });
@@ -103,10 +104,10 @@ router.get('/bookings', protect, hotelOwner, async (req, res) => {
 
 // @route   PUT /api/vendor/bookings/:id/status
 // @desc    Update booking status
-router.put('/bookings/:id/status', protect, hotelOwner, async (req, res) => {
+router.put('/bookings/:id/status', hotelVendorProtect, async (req, res) => {
   try {
     const { status } = req.body;
-    const booking = await HotelBooking.findOne({ _id: req.params.id, ownerId: req.user._id });
+    const booking = await HotelBooking.findOne({ _id: req.params.id, ownerId: req.hotelOwner._id });
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
     booking.bookingStatus = status;

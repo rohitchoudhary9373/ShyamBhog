@@ -7,12 +7,12 @@ const HotelBookingSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'HotelUser',
     required: true
   },
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'HotelOwner',
     required: true
   },
   hotelId: {

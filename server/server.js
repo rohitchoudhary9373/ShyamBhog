@@ -196,6 +196,18 @@ app.use("/api/hotel-stay",    generalLimiter, require("./routes/hotelStay"));
 app.use("/api/hotels",        generalLimiter, require("./routes/hotels"));
 app.use("/api/hotel-vendor",  generalLimiter, require("./routes/hotelVendor"));
 app.use("/api/hotel-booking", generalLimiter, require("./routes/hotelBooking"));
+app.use("/api/hotel-auth",    generalLimiter, require("./routes/hotelAuth"));
+
+// Quick admin endpoint for isolated hotel vendors
+const HotelOwner = require("./models/HotelOwner");
+app.get('/api/admin/hotel-vendors', async (req, res) => {
+  try {
+    const vendors = await HotelOwner.find({});
+    res.json(vendors);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // ──────────────────────────────────────
 // PRODUCTION STATIC SERVING

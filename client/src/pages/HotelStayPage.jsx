@@ -71,6 +71,10 @@ export default function HotelStayPage() {
                <span className="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse"></span>
                Sacred Rest in Khatu Dham
             </p>
+            <div className="flex gap-4 mt-4">
+              <button onClick={() => navigate('/hotel-login')} className="px-6 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg hover:bg-orange-600 transition-colors">Customer Login</button>
+              <button onClick={() => navigate('/vendor-login')} className="px-6 py-2 bg-white text-slate-900 border border-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm hover:border-slate-900 transition-colors">Partner Portal</button>
+            </div>
          </nav>
 
          {/* 🏷️ FILTER TABS */}

@@ -9,11 +9,11 @@ export default function VendorLayout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("userInfo") || "{}");
+  const user = JSON.parse(localStorage.getItem("hotelVendorInfo") || "{}");
 
   useEffect(() => {
     if (user?.role !== 'hotel_owner') {
-      navigate('/login');
+      navigate('/vendor-login');
     }
   }, [user, navigate]);
 
@@ -26,8 +26,8 @@ export default function VendorLayout() {
   ];
 
   const handleLogout = () => {
-    logout();
-    navigate("/login");
+    localStorage.removeItem("hotelVendorInfo");
+    navigate("/vendor-login");
   };
 
   return (

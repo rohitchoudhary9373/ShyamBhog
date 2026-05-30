@@ -25,7 +25,7 @@ const HotelSchema = new mongoose.Schema({
   features: [String], // e.g. ["Free WiFi", "AC", "Breakfast", "Near Temple"]
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'HotelOwner',
     default: null
   },
   status: {

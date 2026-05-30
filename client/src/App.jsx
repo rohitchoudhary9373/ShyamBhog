@@ -47,6 +47,8 @@ import ParkingGuidePage from "./pages/ParkingGuidePage";
 import CrowdStatus from "./pages/CrowdStatus";
 import HotelDetailsPage from "./pages/HotelDetailsPage";
 import HotelCheckoutPage from "./pages/HotelCheckoutPage";
+import HotelCustomerLogin from "./pages/Hotel/HotelCustomerLogin";
+import HotelVendorLogin from "./pages/Hotel/HotelVendorLogin";
 import { useSettings } from "./context/SettingsContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./pages/Cart";
@@ -490,6 +492,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/wallet" element={<MyWallet />} />
           <Route path="/hotel-stay" element={<HotelStayPage />} />
+          <Route path="/hotel-login" element={<HotelCustomerLogin />} />
+          <Route path="/vendor-login" element={<HotelVendorLogin />} />
           <Route path="/hotels/detail/:id" element={<HotelDetailsPage />} />
           <Route path="/hotels/checkout/:roomId" element={
              <ProtectedRoute>
