@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { 
   FaHome, FaBox, FaUsers, FaCog, FaBars, FaHistory, 
   FaWallet, FaVideo, FaParking, FaBed, FaBell, FaSearch, 
-  FaArrowRight, FaChartLine, FaShieldAlt, FaSignOutAlt, FaDesktop
+  FaArrowRight, FaChartLine, FaShieldAlt, FaSignOutAlt, FaDesktop,
+  FaChevronDown, FaChevronUp
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUser, logout } from "../../utils/auth";
@@ -21,6 +22,16 @@ export default function AdminLayout() {
   const [wallet, setWallet] = useState(0);
   const [totalFloat, setTotalFloat] = useState(0);
   const [refundCount, setRefundCount] = useState(0);
+  const [hotelsOpen, setHotelsOpen] = useState(false);
+
+  // Auto-expand hotels menu if active path is inside hotels
+  useEffect(() => {
+    if (location.pathname.includes('/admin/manage-hotels') || 
+        location.pathname.includes('/admin/hotel-vendors') || 
+        location.pathname.includes('/admin/hotel-revenue')) {
+      setHotelsOpen(true);
+    }
+  }, [location.pathname]);
 
   const user = getUser();
   const isImpersonating = !!sessionStorage.getItem('adminToken');
@@ -103,9 +114,20 @@ export default function AdminLayout() {
     { name: "Refunds", path: "/admin/refunds", icon: <FaShieldAlt />, permission: 'manage_refunds' },
     { name: "Crowd Status", path: "/admin/manage-crowd", icon: <FaUsers />, permission: 'manage_content' },
     { name: "Parking", path: "/admin/manage-parking", icon: <FaParking />, permission: 'manage_parking' },
-    { name: "Luxury Stays", path: "/admin/manage-hotels", icon: <FaBed />, permission: 'manage_hotels' },
-    { name: "Hotel Vendors", path: "/admin/hotel-vendors", icon: <FaUsers />, permission: 'admin_only' },
-    { name: "Hotel Revenue", path: "/admin/hotel-revenue", icon: <FaWallet />, permission: 'admin_only' },
+    { 
+      name: "Hotels", 
+      isDropdown: true,
+      icon: <FaBed />, 
+      permission: 'manage_hotels',
+      subItems: [
+        { name: "Overview", path: "/admin/manage-hotels" },
+        { name: "Hotel Vendors", path: "/admin/hotel-vendors" },
+        { name: "Hotel Revenue", path: "/admin/hotel-revenue" },
+        { name: "Bookings", path: "/admin/hotel-revenue" }, // Placeholder mapped to existing for now
+        { name: "Pricing & Commission", path: "/admin/hotel-revenue" }, // Placeholder
+        { name: "Payouts", path: "/admin/hotel-revenue" }, // Placeholder
+      ]
+    },
     { name: "Users", path: "/admin/users", icon: <FaUsers />, permission: 'manage_devotees' },
     { name: "Team", path: "/admin/agents", icon: <FaUsers />, permission: 'admin_only' },
     { name: "Security Log", path: "/admin/security", icon: <FaHistory />, permission: 'admin_only' },
@@ -173,30 +195,78 @@ export default function AdminLayout() {
         {/* Navigation */}
         <nav className="flex-1 py-6 flex flex-col gap-1 overflow-y-auto px-4 no-scrollbar">
           <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 px-3">Overview</p>
-          {menu.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end
-              className={({ isActive }) =>
-                `flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 group ${isActive
-                  ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
-                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
-                }`
-              }
-              onClick={() => setOpen(false)}
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-sm">{item.icon}</span>
-                {item.name}
-              </div>
-              {item.name === "Refunds" && refundCount > 0 && (
-                 <span className="bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {refundCount}
-                 </span>
-              )}
-            </NavLink>
-          ))}
+          {menu.map((item) => {
+            if (item.isDropdown) {
+              return (
+                <div key={item.name} className="flex flex-col gap-1">
+                  <button
+                    onClick={() => setHotelsOpen(!hotelsOpen)}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 group ${hotelsOpen
+                      ? "bg-slate-800 text-white"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm">{item.icon}</span>
+                      {item.name}
+                    </div>
+                    {hotelsOpen ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
+                  </button>
+                  <AnimatePresence>
+                    {hotelsOpen && (
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }} 
+                        animate={{ height: "auto", opacity: 1 }} 
+                        exit={{ height: 0, opacity: 0 }} 
+                        className="flex flex-col gap-1 pl-9 pr-2 overflow-hidden"
+                      >
+                        {item.subItems.map(subItem => (
+                           <NavLink
+                             key={subItem.name}
+                             to={subItem.path}
+                             className={({ isActive }) =>
+                               `flex items-center justify-between px-3 py-2 rounded-lg font-medium text-[11px] uppercase tracking-wider transition-all duration-200 group ${isActive
+                                 ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
+                                 : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
+                               }`
+                             }
+                             onClick={() => setOpen(false)}
+                           >
+                             {subItem.name}
+                           </NavLink>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
+
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end
+                className={({ isActive }) =>
+                  `flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 group ${isActive
+                    ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
+                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  }`
+                }
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-sm">{item.icon}</span>
+                  {item.name}
+                </div>
+                {item.name === "Refunds" && refundCount > 0 && (
+                   <span className="bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                      {refundCount}
+                   </span>
+                )}
+              </NavLink>
+            );
+          })}
         </nav>
 
         {/* Footer Support */}
