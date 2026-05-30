@@ -34,7 +34,7 @@ export default function PolicyPage() {
   }, [type, settings, t]);
 
   return (
-    <div className="min-h-screen bg-[#FDF8F1] pt-24 pb-20 font-sans">
+    <div className="min-h-[100dvh] bg-[#FDF8F1] pt-24 pb-20 font-sans">
       <div className="max-w-4xl mx-auto px-6">
         <div className="bg-white rounded-[40px] shadow-sm border border-orange-50 overflow-hidden">
           <header className="bg-slate-900 px-10 py-12 text-white">

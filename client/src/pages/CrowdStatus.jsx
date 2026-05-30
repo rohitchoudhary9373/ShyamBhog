@@ -11,7 +11,7 @@ import {
   FaArrowUp, FaLeaf, FaExternalLinkAlt, FaChevronLeft
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 
 export default function CrowdStatus() {
   const navigate = useNavigate();
@@ -97,18 +97,41 @@ export default function CrowdStatus() {
   };
 
   const downloadSnapshot = async (platform = 'instagram') => {
-    const canvas = await html2canvas(shareRef.current, {
-      backgroundColor: '#FFFBF5',
-      scale: 2,
-      logging: false,
-      useCORS: true
-    });
-    const link = document.createElement('a');
-    link.download = `CrowdStatus_${settings?.brandName || 'ShyamBhog'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    trackShare(platform);
-    setShowSharePopup(false);
+    try {
+      const dataUrl = await toPng(shareRef.current, {
+        backgroundColor: '#020617',
+        pixelRatio: 2,
+        skipFonts: true // Often helps with Safari taint issues if fonts are external
+      });
+
+      if (navigator.share && /iPhone|iPad|iPod|Mac/.test(navigator.userAgent)) {
+        try {
+          const blob = await (await fetch(dataUrl)).blob();
+          const file = new File([blob], `CrowdStatus_${settings?.brandName || 'ShyamBhog'}.png`, { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'Live Crowd Status',
+            });
+            trackShare(platform);
+            setShowSharePopup(false);
+            return;
+          }
+        } catch (shareErr) {
+          console.log('Web Share API failed, falling back to download', shareErr);
+        }
+      }
+
+      const link = document.createElement('a');
+      link.download = `CrowdStatus_${settings?.brandName || 'ShyamBhog'}.png`;
+      link.href = dataUrl;
+      link.click();
+      trackShare(platform);
+      setShowSharePopup(false);
+    } catch (err) {
+      console.error("Failed to generate image", err);
+      alert("Could not generate share card. Please try again.");
+    }
   };
 
   const copyLink = () => {
@@ -134,7 +157,7 @@ export default function CrowdStatus() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-[#FFFBF5] flex flex-col items-center justify-center p-10 gap-6">
+    <div className="min-h-[100dvh] bg-[#FFFBF5] flex flex-col items-center justify-center p-10 gap-6">
        <div className="relative w-16 h-16">
           <div className="absolute inset-0 border-[2px] border-orange-100 rounded-full"></div>
           <div className="absolute inset-0 border-[2px] border-t-orange-600 rounded-full animate-spin"></div>
@@ -144,7 +167,7 @@ export default function CrowdStatus() {
   );
 
   return (
-    <div className={`min-h-screen bg-[#FFFBF5] pb-16 font-sans selection:bg-orange-100 transition-colors duration-1000 relative overflow-hidden`}>
+    <div className={`min-h-[100dvh] bg-[#FFFBF5] pb-16 font-sans selection:bg-orange-100 transition-colors duration-1000 relative overflow-hidden`}>
       
       {/* 🔮 AMBIENCE 🔮 */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-orange-50/40 to-transparent pointer-events-none -z-10"></div>

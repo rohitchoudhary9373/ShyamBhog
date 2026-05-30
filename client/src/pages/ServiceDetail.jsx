@@ -106,14 +106,14 @@ export default function ServiceDetail() {
    }, []);
 
    if (loading) return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFFBF5] gap-4">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-[#FFFBF5] gap-4">
          <div className="w-10 h-10 border-2 border-[#0A1128] border-t-orange-500 rounded-full animate-spin" />
          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing Portal...</p>
       </div>
    );
 
    if (!service) return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFFBF5] p-10 text-center">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-[#FFFBF5] p-10 text-center">
          <h2 className="text-xl font-black text-[#0A1128] mb-6 uppercase tracking-widest">{t('common.no_videos', 'Offering Not Found')}</h2>
          <Link to="/" className="text-orange-600 font-black px-8 py-3 rounded-full border-2 border-orange-600 hover:bg-orange-600 hover:text-white transition-all">Back to Divine Feed</Link>
       </div>
@@ -188,7 +188,7 @@ export default function ServiceDetail() {
    };
 
    return (
-      <div className="min-h-screen bg-[#FFFBF5] font-sans text-slate-900 selection:bg-orange-100 pb-20">
+      <div className="min-h-[100dvh] bg-[#FFFBF5] font-sans text-slate-900 selection:bg-orange-100 pb-20">
          
          {/* ── PREMIUM MINIMAL NAV ── */}
          <nav className="sticky top-0 z-[100] bg-white/40 backdrop-blur-3xl border-b border-orange-100/10 px-6 py-4 flex items-center justify-between">

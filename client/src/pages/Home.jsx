@@ -116,7 +116,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FFFBF5] flex flex-col items-center justify-center p-10 gap-4">
+      <div className="min-h-[100dvh] bg-[#FFFBF5] flex flex-col items-center justify-center p-10 gap-4">
          <div className="w-12 h-12 border-4 border-slate-100 border-t-orange-500 rounded-full animate-spin"></div>
          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing Portal...</p>
       </div>
@@ -124,7 +124,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-[#FFFBF5] min-h-screen pt-2 pb-8 font-sans selection:bg-orange-100">
+    <div className="flex flex-col items-center bg-[#FFFBF5] min-h-[100dvh] pt-2 pb-8 font-sans selection:bg-orange-100">
 
       {/* ── HERO ── */}
       <section className="w-full max-w-xl px-6 mb-4 text-center animate-fade-in pt-2">

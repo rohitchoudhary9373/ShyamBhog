@@ -149,7 +149,7 @@ function StorefrontLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative bg-[#FDFCFB]" style={isImpersonating ? { paddingTop: '44px' } : {}}>
+    <div className="min-h-[100dvh] flex flex-col relative bg-[#FDFCFB]" style={isImpersonating ? { paddingTop: '44px' } : {}}>
       <ScrollToTop />
       {isImpersonating && (
         <div className="fixed top-0 left-0 w-full bg-slate-950 text-white h-[44px] flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-wider z-[100] border-b border-orange-500/30">

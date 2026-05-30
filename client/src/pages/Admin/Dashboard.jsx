@@ -114,7 +114,7 @@ export default function Dashboard() {
   if (loading) return <Loader text="Syncing Command Center..." />;
 
   return (
-    <div className="bg-slate-50/50 min-h-screen animate-in fade-in duration-1000 pb-20 p-6 md:p-10">
+    <div className="bg-slate-50/50 min-h-[100dvh] animate-in fade-in duration-1000 pb-20 p-6 md:p-10">
 
       {/* 🚀 ELITE COMMAND HEADER */}
       <div className="flex flex-col xl:flex-row justify-between mb-10 items-start xl:items-center gap-6">

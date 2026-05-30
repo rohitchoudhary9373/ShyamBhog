@@ -279,7 +279,7 @@ export default function ManageServices() {
   const liveCount = services.filter(s => s.isActive).length;
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-slate-100 pb-20">
+    <div className="min-h-[100dvh] bg-white text-slate-900 font-sans selection:bg-slate-100 pb-20">
       
       {/* ── CLEAN HEADER ── */}
       <section className="max-w-7xl mx-auto px-6 pt-12 pb-8 space-y-6">

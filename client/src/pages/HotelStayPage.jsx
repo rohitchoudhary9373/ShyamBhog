@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 import { getMediaUrl } from '../utils/url';
+import MapActionSheet from '../components/MapActionSheet';
 
 export default function HotelStayPage() {
    const { t } = useTranslation();
@@ -15,6 +16,7 @@ export default function HotelStayPage() {
    const [hotels, setHotels] = useState([]);
    const [faqs, setFaqs] = useState([]);
    const [loading, setLoading] = useState(true);
+   const [activeMap, setActiveMap] = useState(null);
    const [activeFilter, setActiveFilter] = useState('All');
    const [openFaq, setOpenFaq] = useState(null);
 
@@ -45,7 +47,7 @@ export default function HotelStayPage() {
       : hotels.filter(h => `${h.stars} Star` === activeFilter);
 
    if (loading) return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDF8F1]">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-[#FDF8F1]">
          <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             <p className="text-primary font-black uppercase tracking-widest text-[10px] italic">{t('hotel.loading_vault') || 'Locating Best Stays...'}</p>
@@ -54,7 +56,7 @@ export default function HotelStayPage() {
    );
 
    return (
-      <div className="min-h-screen bg-[#FDF8F1] pb-24 font-sans animate-fade-in">
+      <div className="min-h-[100dvh] bg-[#FDF8F1] pb-24 font-sans animate-fade-in">
          
          {/* ── LUXURY HEADER ── */}
          <nav className="w-full max-w-xl mx-auto px-6 pt-10 pb-8 flex flex-col items-center text-center gap-2 relative">
@@ -154,14 +156,18 @@ export default function HotelStayPage() {
                               >
                                  <FaPhoneAlt size={12}/> {t('hotel.call') || 'Call'}
                               </a>
-                               <a 
-                                  href={hotel.googleLocationUrl || hotel.location || `https://www.google.com/maps/search/${encodeURIComponent(hotel.name + " Khatu Shyam Ji")}`} 
-                                  target="_blank" 
-                                  rel="noreferrer"
+                              <button 
+                                  onClick={(e) => {
+                                     e.preventDefault();
+                                     setActiveMap({
+                                        locationName: hotel.name,
+                                        mapUrl: hotel.googleLocationUrl || hotel.location || `https://www.google.com/maps/search/${encodeURIComponent(hotel.name + " Khatu Shyam Ji")}`
+                                     });
+                                  }}
                                   className="flex-1 bg-slate-50 text-slate-600 border border-slate-100 py-4 rounded-[20px] flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all active:scale-95"
                                >
                                   <FaMapMarkerAlt size={12}/> {t('hotel.view_map') || 'View Map'}
-                               </a>
+                               </button>
                            </div>
                         </div>
                      </motion.div>
@@ -210,6 +216,14 @@ export default function HotelStayPage() {
             )}
 
          </div>
+
+         <MapActionSheet 
+            isOpen={!!activeMap}
+            onClose={() => setActiveMap(null)}
+            locationName={activeMap?.locationName}
+            mapUrl={activeMap?.mapUrl}
+         />
+
       </div>
    );
 }

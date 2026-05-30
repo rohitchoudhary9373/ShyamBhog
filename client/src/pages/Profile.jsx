@@ -112,7 +112,7 @@ export default function Profile() {
    };
 
    if (loading) return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDF8F1]">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-[#FDF8F1]">
          <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             <p className="text-primary font-black uppercase tracking-widest text-[10px] italic">{t('common.loading')}</p>
@@ -121,7 +121,7 @@ export default function Profile() {
    );
 
    return (
-      <div className="min-h-screen bg-[#FDF8F1] pb-24 font-sans animate-fade-in">
+      <div className="min-h-[100dvh] bg-[#FDF8F1] pb-24 font-sans animate-fade-in">
 
          {/* 👤 DIVINE PROFILE HERO */}
          <div className="max-w-xl mx-auto px-6 pt-24 pb-4">

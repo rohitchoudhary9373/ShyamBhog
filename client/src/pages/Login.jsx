@@ -124,7 +124,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] py-12 md:py-20 px-4 flex items-center justify-center font-sans">
+    <div className="min-h-[100dvh] bg-[#FDFCFB] py-12 md:py-20 px-4 flex items-center justify-center font-sans">
       
       {/* 🔹 Main Clean Container */}
       <motion.div 

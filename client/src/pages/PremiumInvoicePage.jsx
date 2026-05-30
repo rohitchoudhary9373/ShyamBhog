@@ -40,7 +40,7 @@ export default function PremiumInvoicePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f1f5f9] flex flex-col items-center justify-center p-10">
+      <div className="min-h-[100dvh] bg-[#f1f5f9] flex flex-col items-center justify-center p-10">
         <div className="w-10 h-10 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
         <p className="mt-4 text-slate-500 font-bold uppercase tracking-widest text-xs">Loading Invoice...</p>
       </div>
@@ -49,7 +49,7 @@ export default function PremiumInvoicePage() {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-[#f1f5f9] flex flex-col items-center justify-center p-10 text-center">
+      <div className="min-h-[100dvh] bg-[#f1f5f9] flex flex-col items-center justify-center p-10 text-center">
         <h2 className="text-2xl font-black text-slate-800 mb-4 uppercase">{error || 'Invoice Not Found'}</h2>
         <button 
           onClick={() => navigate('/profile')}
@@ -62,7 +62,7 @@ export default function PremiumInvoicePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f1f5f9] pt-24 pb-20 px-4 md:px-8">
+    <div className="min-h-[100dvh] bg-[#f1f5f9] pt-24 pb-20 px-4 md:px-8">
       <div className="max-w-4xl mx-auto mb-6 flex justify-between items-center print-hidden">
         <button 
           onClick={() => navigate(-1)}

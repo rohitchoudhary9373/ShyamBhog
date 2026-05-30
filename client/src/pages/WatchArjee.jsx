@@ -47,7 +47,7 @@ export default function WatchArjee() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF8F1] flex flex-col items-center font-sans selection:bg-orange-100">
+    <div className="min-h-[100dvh] bg-[#FDF8F1] flex flex-col items-center font-sans selection:bg-orange-100">
       
       {/* ── LUXURY HEADER ── */}
       <nav className="w-full max-w-xl px-6 pt-10 pb-6 flex flex-col items-center text-center gap-2 relative">

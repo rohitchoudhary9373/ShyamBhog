@@ -125,7 +125,7 @@ export default function AdminLayout() {
   }, [location.pathname, userRole, menu]);
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC] text-slate-800 font-sans selection:bg-orange-100 selection:text-orange-900" style={isImpersonating ? { paddingTop: '44px' } : {}}>
+    <div className="flex min-h-[100dvh] bg-[#F8FAFC] text-slate-800 font-sans selection:bg-orange-100 selection:text-orange-900" style={isImpersonating ? { paddingTop: '44px' } : {}}>
       {isImpersonating && (
         <div className="fixed top-0 left-0 w-full bg-slate-950 text-white h-[44px] flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-wider z-[100] border-b border-orange-500/30">
           <span className="flex items-center gap-1.5 text-orange-400">
@@ -143,7 +143,7 @@ export default function AdminLayout() {
       )}
 
       {/* ── SIDEBAR (Modern SaaS Dark Style) ── */}
-      <aside className={`fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-950 text-slate-300 border-r border-white/5 flex flex-col z-50 transition-all duration-500 ease-in-out shadow-2xl
+      <aside className={`fixed md:sticky top-0 left-0 h-[100dvh] w-64 bg-slate-950 text-slate-300 border-r border-white/5 flex flex-col z-50 transition-all duration-500 ease-in-out shadow-2xl
       ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       style={isImpersonating ? { top: '44px', height: 'calc(100vh - 44px)' } : {}}>
 
@@ -208,7 +208,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden">
 
         {/* Header (Glassmorphism Navbar) */}
         <header className="flex justify-between items-center bg-white/70 backdrop-blur-xl px-6 md:px-10 py-4 border-b border-slate-200/60 sticky top-0 z-40"

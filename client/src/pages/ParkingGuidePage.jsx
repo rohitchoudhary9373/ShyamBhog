@@ -14,6 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
+import MapActionSheet from '../components/MapActionSheet';
 
 export default function ParkingGuidePage() {
    const { t } = useTranslation();
@@ -23,6 +24,7 @@ export default function ParkingGuidePage() {
    const [parkings, setParkings] = useState([]);
    const [faqs, setFaqs] = useState([]);
    const [loading, setLoading] = useState(true);
+   const [activeMap, setActiveMap] = useState(null);
    const [filter, setFilter] = useState('All');
    const [openFaq, setOpenFaq] = useState(null);
 
@@ -54,13 +56,13 @@ export default function ParkingGuidePage() {
       : parkings.filter(p => p.type === filter);
 
    if (loading) return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDF8F1]">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-[#FDF8F1]">
          <div className="w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
    );
 
    return (
-      <div className="min-h-screen bg-[#FDF8F1] flex flex-col items-center font-sans selection:bg-orange-100">
+      <div className="min-h-[100dvh] bg-[#FDF8F1] flex flex-col items-center font-sans selection:bg-orange-100">
          
          {/* ── LUXURY HEADER ── */}
          <nav className="w-full max-w-xl px-6 pt-10 pb-8 flex flex-col items-center text-center gap-2 relative">
@@ -141,15 +143,19 @@ export default function ParkingGuidePage() {
                               </div>
                               <span className="text-[8px] font-black uppercase tracking-widest">Khatu Shyam Ji</span>
                            </div>
-                           <a 
-                              href={p.mapUrl || '#'} 
-                              target="_blank" 
-                              rel="noreferrer"
-                              className="flex items-center gap-2.5 bg-[#0A1128] text-white px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg active:scale-95"
+                           <button 
+                               onClick={(e) => {
+                                  e.preventDefault();
+                                  setActiveMap({
+                                     locationName: p.name,
+                                     mapUrl: p.mapUrl
+                                  });
+                               }}
+                               className="flex items-center gap-2.5 bg-[#0A1128] text-white px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg active:scale-95"
                            >
                               <FaCompass size={11} />
                               Navigate
-                           </a>
+                           </button>
                         </div>
                      </motion.div>
                   ))}
@@ -207,6 +213,14 @@ export default function ParkingGuidePage() {
             </footer>
 
          </main>
+
+         <MapActionSheet 
+            isOpen={!!activeMap}
+            onClose={() => setActiveMap(null)}
+            locationName={activeMap?.locationName}
+            mapUrl={activeMap?.mapUrl}
+         />
+
       </div>
    );
 }

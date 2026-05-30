@@ -36,7 +36,7 @@ export default function ServiceCatalog() {
   }, [category, dbCategory, settingsAdminId]);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in bg-[#FDF8F1] min-h-screen">
+    <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in bg-[#FDF8F1] min-h-[100dvh]">
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
         <div className="max-w-2xl">
           <h1 className="text-5xl font-black text-slate-900 tracking-tighter mb-4 flex items-center flex-wrap gap-3 italic">

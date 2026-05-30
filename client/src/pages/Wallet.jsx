@@ -103,7 +103,7 @@ export default function MyWallet() {
   };
 
   if (loading) return (
-    <div className="py-32 flex items-center justify-center bg-[#FDF8F1] min-h-screen">
+    <div className="py-32 flex items-center justify-center bg-[#FDF8F1] min-h-[100dvh]">
       <div className="flex flex-col items-center gap-4">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         <p className="text-primary font-black uppercase tracking-widest text-[10px] italic">{t('wallet.secure_vault')}</p>
@@ -112,7 +112,7 @@ export default function MyWallet() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FDF8F1] pb-24 font-sans animate-fade-in">
+    <div className="min-h-[100dvh] bg-[#FDF8F1] pb-24 font-sans animate-fade-in">
       
       {/* 💳 DIVINE HERO SECTION */}
       <div className="max-w-xl mx-auto px-6 pt-24 pb-4">
