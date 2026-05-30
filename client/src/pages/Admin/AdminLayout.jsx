@@ -121,11 +121,18 @@ export default function AdminLayout() {
       permission: 'manage_hotels',
       subItems: [
         { name: "Overview", path: "/admin/manage-hotels" },
-        { name: "Hotel Vendors", path: "/admin/hotel-vendors" },
-        { name: "Hotel Revenue", path: "/admin/hotel-revenue" },
-        { name: "Bookings", path: "/admin/hotel-revenue" }, // Placeholder mapped to existing for now
-        { name: "Pricing & Commission", path: "/admin/hotel-revenue" }, // Placeholder
-        { name: "Payouts", path: "/admin/hotel-revenue" }, // Placeholder
+        { name: "Vendors", path: "/admin/hotel-vendors" },
+        { name: "Revenue", path: "/admin/hotel-revenue" },
+        { name: "Bookings", path: "/admin/hotel-bookings" },
+        { name: "Pricing Engine", path: "/admin/hotel-pricing" },
+        { name: "Payouts", path: "/admin/hotel-payouts" },
+        { name: "Room Inventory", path: "/admin/manage-hotels" },
+        { name: "Analytics", path: "/admin/hotel-revenue" },
+        { name: "Verification Queue", path: "/admin/hotel-vendors" },
+        { name: "Refund Center", path: "/admin/refunds" },
+        { name: "Reviews & Ratings", path: "/admin/manage-hotels" },
+        { name: "Support Tickets", path: "/admin/feedback" },
+        { name: "Reports", path: "/admin/hotel-revenue" },
       ]
     },
     { name: "Users", path: "/admin/users", icon: <FaUsers />, permission: 'manage_devotees' },

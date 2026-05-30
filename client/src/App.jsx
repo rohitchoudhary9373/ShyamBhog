@@ -36,6 +36,9 @@ import AdminWallet from "./pages/Admin/Wallet";
 import ManageDevotees from "./pages/Admin/ManageDevotees";
 import HotelVendors from "./pages/Admin/HotelVendors";
 import HotelBookingsAdmin from "./pages/Admin/HotelBookingsAdmin";
+import HotelRevenueAdmin from "./pages/Admin/HotelRevenueAdmin";
+import PricingCommissionAdmin from "./pages/Admin/PricingCommissionAdmin";
+import PayoutsAdmin from "./pages/Admin/PayoutsAdmin";
 
 import ManageArjee from "./pages/Admin/ManageArjee";
 import ManageCrowd from "./pages/Admin/ManageCrowd";
@@ -534,7 +537,10 @@ function App() {
             <Route path="manage-parking" element={<ManageParkingDetailed />} />
             <Route path="manage-hotels" element={<ManageHotelsDetailed />} />
             <Route path="hotel-vendors" element={<HotelVendors />} />
-            <Route path="hotel-revenue" element={<HotelBookingsAdmin />} />
+            <Route path="hotel-revenue" element={<HotelRevenueAdmin />} />
+            <Route path="hotel-bookings" element={<HotelBookingsAdmin />} />
+            <Route path="hotel-pricing" element={<PricingCommissionAdmin />} />
+            <Route path="hotel-payouts" element={<PayoutsAdmin />} />
             <Route path="users" element={<ManageDevotees />} />
             <Route path="wallet" element={<AdminWallet />} />
           </Route>
