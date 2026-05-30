@@ -6,6 +6,35 @@ const Hotel = require('../models/Hotel');
 const HotelRoom = require('../models/HotelRoom');
 const HotelBooking = require('../models/HotelBooking');
 const HotelPayout = require('../models/HotelPayout');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const uniqueSuffix = require('crypto').randomBytes(8).toString('hex');
+    cb(null, `vendor-hotel-${Date.now()}-${uniqueSuffix}${ext}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new Error("Only JPG, PNG, and WEBP allowed"), false);
+    }
+    cb(null, true);
+  },
+});
 
 // @route   GET /api/vendor/dashboard
 // @desc    Get vendor dashboard analytics
@@ -44,10 +73,24 @@ router.get('/hotels', hotelVendorProtect, async (req, res) => {
 
 // @route   POST /api/vendor/hotels
 // @desc    Create a new hotel (pending approval)
-router.post('/hotels', hotelVendorProtect, async (req, res) => {
+router.post('/hotels', hotelVendorProtect, upload.single('image'), async (req, res) => {
   try {
+    const hotelData = { ...req.body };
+    
+    if (req.file) {
+      hotelData.imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    if (typeof hotelData.features === 'string') {
+      try {
+        hotelData.features = JSON.parse(hotelData.features);
+      } catch (e) {
+        hotelData.features = hotelData.features.split(',').map(f => f.trim()).filter(Boolean);
+      }
+    }
+
     const hotel = new Hotel({
-      ...req.body,
+      ...hotelData,
       ownerId: req.hotelOwner._id,
       status: 'pending' // Admin must approve
     });

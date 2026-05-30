@@ -115,4 +115,21 @@ router.delete('/:id', protect, admin, async (req, res) => {
   }
 });
 
+// @route   PUT /api/hotels/:id/moderate
+// @desc    Admin: Approve, reject, or suspend a hotel
+// @access  Private/Admin
+router.put('/:id/moderate', protect, admin, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!['pending', 'active', 'suspended', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+    const hotel = await Hotel.findByIdAndUpdate(req.params.id, { status }, { new: true });
+    if (!hotel) return res.status(404).json({ message: 'Hotel not found' });
+    res.json(hotel);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
