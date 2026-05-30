@@ -415,9 +415,9 @@ export default function Profile() {
          <AnimatePresence>
             {isEditing && (
                <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
-                  <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} className="bg-white w-full max-w-xl rounded-[48px] p-12 shadow-2xl relative">
-                     <button onClick={() => setIsEditing(false)} className="absolute top-10 right-10 w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all">✕</button>
-                     <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter mb-10 italic">{t('profile.edit_title')}</h2>
+                  <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} className="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto no-scrollbar rounded-[48px] p-8 md:p-12 shadow-2xl relative">
+                     <button type="button" onClick={() => setIsEditing(false)} className="absolute top-6 right-6 md:top-10 md:right-10 w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all z-10">✕</button>
+                     <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter mb-8 md:mb-10 italic pr-8">{t('profile.edit_title')}</h2>
                      <form onSubmit={handleUpdateProfile} className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                            <div>
