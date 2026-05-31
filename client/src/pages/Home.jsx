@@ -144,7 +144,7 @@ export default function Home() {
               const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
 
               const innerMarkup = (
-                <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
+                <div className={`flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2 relative ${item.isHotelStay ? 'pb-10 sm:pb-12' : ''}`}>
                   <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
                     {item.icon}
                   </div>
@@ -160,7 +160,7 @@ export default function Home() {
                       href={waLink} 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="text-[11px] px-3 py-1.5 rounded-full mt-2 w-auto min-w-0 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold flex items-center gap-1 justify-center shadow-md shadow-green-500/10 pointer-events-auto cursor-pointer transition-all active:scale-95 leading-none shrink-0"
+                      className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-[11px] px-3 py-1.5 rounded-full w-auto min-w-0 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold flex items-center gap-1 justify-center shadow-md shadow-green-500/10 pointer-events-auto cursor-pointer transition-all active:scale-95 leading-none shrink-0"
                     >
                       <FaWhatsapp size={10} className="animate-bounce" />
                       <span>Enquiry</span>
