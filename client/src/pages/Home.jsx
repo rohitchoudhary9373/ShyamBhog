@@ -137,35 +137,22 @@ export default function Home() {
               { to: "/watch-arjee", icon: <FaVideo size={18} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
               { to: "/crowd-status", icon: <FaUsers size={18} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
               { to: "/parking-guide", icon: <FaParking size={18} />, title: t('home.parking'), desc: 'Nav Guide' },
-              { to: "#", icon: <FaBed size={18} />, title: t('home.hotel_stay'), desc: 'COMING SOON', isHotelStay: true }
+              { to: "#", icon: <FaBed size={18} />, title: t('home.hotel_stay'), desc: t('home.stay_guide') || 'Stay Guide', isHotelStay: true }
             ].map((item, idx) => {
               const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
               const cleanWaNumber = waNumber.replace(/\D/g, '');
               const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
 
               const innerMarkup = (
-                <div className={`flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2 relative ${item.isHotelStay ? 'pb-10 sm:pb-12' : ''}`}>
+                <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
                   <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
                     {item.icon}
                   </div>
                   <div className="flex items-center gap-1 justify-center w-full">
-                    <h3 className="text-lg sm:text-2xl font-bold text-[#0A1128] leading-tight text-center group-hover:text-orange-600 transition-colors uppercase italic truncate max-w-full">{item.title}</h3>
+                    <h3 className="text-xs sm:text-sm font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic leading-tight text-center truncate max-w-full">{item.title}</h3>
                     {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-widest opacity-60 leading-none text-center truncate max-w-full">{item.desc}</p>
-
-                  {/* Compact premium WhatsApp Enquiry Button */}
-                  {item.isHotelStay && (
-                    <a 
-                      href={waLink} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-[11px] px-3 py-1.5 rounded-full w-auto min-w-0 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold flex items-center gap-1 justify-center shadow-md shadow-green-500/10 pointer-events-auto cursor-pointer transition-all active:scale-95 leading-none shrink-0"
-                    >
-                      <FaWhatsapp size={10} className="animate-bounce" />
-                      <span>Enquiry</span>
-                    </a>
-                  )}
+                  <p className="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-60 leading-none text-center truncate max-w-full">{item.desc}</p>
                 </div>
               );
 
@@ -173,8 +160,24 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white w-full h-[160px] sm:h-[220px] rounded-[24px] border border-orange-50 shadow-sm flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none"
+                    className="group relative bg-white w-full h-[145px] sm:h-[190px] p-3 rounded-3xl border border-orange-50 shadow-sm flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none"
                   >
+                    {/* Floating Coming Soon Badge */}
+                    <span className="absolute -top-2 right-3 text-[10px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
+                      Coming Soon
+                    </span>
+
+                    {/* Small WhatsApp Enquiry Button */}
+                    <a 
+                      href={waLink} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      title="WhatsApp Enquiry"
+                      className="absolute top-3 right-3 text-[10px] px-2.5 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold flex items-center justify-center shadow-md shadow-green-500/10 pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
+                    >
+                      <FaWhatsapp size={10} className="animate-bounce" />
+                    </a>
+
                     {innerMarkup}
                   </div>
                 );
@@ -184,7 +187,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white w-full h-[160px] sm:h-[220px] rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center justify-center text-center"
+                  className="group relative bg-white w-full h-[145px] sm:h-[190px] p-3 rounded-3xl border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center justify-center text-center"
                 >
                   {innerMarkup}
                 </Link>
