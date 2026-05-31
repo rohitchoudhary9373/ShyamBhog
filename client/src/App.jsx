@@ -267,7 +267,7 @@ function StorefrontLayout() {
             {/* Brand & Mission */}
             <div className="space-y-3">
               <div>
-                <h3 className="text-2xl font-black tracking-tighter text-slate-900 leading-none">{settings?.brandName}</h3>
+                <h3 className="text-2xl font-black tracking-tighter text-primary leading-none">{settings?.brandName}</h3>
                 <p className="text-primary font-black text-[7px] uppercase tracking-[0.3em] mt-1.5">{t('footer.digital_platform')}</p>
               </div>
               <p className="text-slate-400 text-[10px] font-medium leading-relaxed px-6 opacity-70">
@@ -364,7 +364,7 @@ function StorefrontLayout() {
           <div className="hidden md:grid grid-cols-4 gap-12 mb-12">
             <div className="col-span-2 space-y-6">
               <div>
-                <h3 className="text-3xl font-black tracking-tighter text-slate-900">{settings?.brandName}</h3>
+                <h3 className="text-3xl font-black tracking-tighter text-primary">{settings?.brandName}</h3>
                 <p className="text-primary font-black text-[10px] uppercase tracking-[0.3em] mt-1">{t('footer.digital_platform')}</p>
               </div>
               <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-md">
