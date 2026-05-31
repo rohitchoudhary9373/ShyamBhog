@@ -134,47 +134,46 @@ export default function Home() {
       <section className="w-full max-w-xl px-4 md:px-6 mb-12">
         <div className="grid grid-cols-2 gap-3">
             {[
-              { to: "/watch-arjee", icon: <FaVideo className="text-sm md:text-base" />, title: t('home.watch_arjee'), desc: 'Live Stream' },
-              { to: "/crowd-status", icon: <FaUsers className="text-sm md:text-base" />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
-              { to: "/parking-guide", icon: <FaParking className="text-sm md:text-base" />, title: t('home.parking'), desc: 'Nav Guide' },
-              { to: "#", icon: <FaBed className="text-sm md:text-base" />, title: t('home.hotel_stay'), desc: 'COMING SOON', isHotelStay: true }
+              { to: "/watch-arjee", icon: <FaVideo size={18} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
+              { to: "/crowd-status", icon: <FaUsers size={18} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
+              { to: "/parking-guide", icon: <FaParking size={18} />, title: t('home.parking'), desc: 'Nav Guide' },
+              { to: "#", icon: <FaBed size={18} />, title: t('home.hotel_stay'), desc: 'COMING SOON', isHotelStay: true }
             ].map((item, idx) => {
               const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
               const cleanWaNumber = waNumber.replace(/\D/g, '');
               const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
 
               const innerMarkup = (
-                <>
-                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
+                <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
+                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
                     {item.icon}
                   </div>
-                  <div className="flex items-center gap-1 md:gap-1.5 justify-center">
-                    <h3 className="text-[10px] md:text-xs font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic leading-tight">{item.title}</h3>
+                  <div className="flex items-center gap-1 justify-center w-full">
+                    <h3 className="text-lg sm:text-2xl font-bold text-[#0A1128] leading-tight text-center group-hover:text-orange-600 transition-colors uppercase italic truncate max-w-full">{item.title}</h3>
                     {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[8px] md:text-[10px] text-slate-400 font-black uppercase tracking-widest opacity-60 leading-tight">{item.desc}</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-widest opacity-60 leading-none text-center truncate max-w-full">{item.desc}</p>
 
-                  {/* Small premium responsive WhatsApp button for Hotel Stay */}
+                  {/* Compact premium WhatsApp Enquiry Button */}
                   {item.isHotelStay && (
                     <a 
                       href={waLink} 
                       target="_blank" 
                       rel="noreferrer" 
-                      title="WhatsApp Enquiry"
-                      className="text-xs px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-full flex items-center gap-1 justify-center shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all pointer-events-auto cursor-pointer border border-emerald-400/20 whitespace-nowrap leading-none"
+                      className="text-[11px] px-3 py-1.5 rounded-full mt-2 w-auto min-w-0 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold flex items-center gap-1 justify-center shadow-md shadow-green-500/10 pointer-events-auto cursor-pointer transition-all active:scale-95 leading-none shrink-0"
                     >
-                      <FaWhatsapp size={12} className="animate-bounce" />
+                      <FaWhatsapp size={10} className="animate-bounce" />
                       <span>Enquiry</span>
                     </a>
                   )}
-                </>
+                </div>
               );
 
               if (item.isHotelStay) {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white w-full max-w-full p-3 md:p-5 rounded-[24px] border border-orange-50 shadow-sm flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none gap-2"
+                    className="group relative bg-white w-full h-[160px] sm:h-[220px] rounded-[24px] border border-orange-50 shadow-sm flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none"
                   >
                     {innerMarkup}
                   </div>
@@ -185,7 +184,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white w-full max-w-full p-3 md:p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center justify-center text-center gap-2"
+                  className="group relative bg-white w-full h-[160px] sm:h-[220px] rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center justify-center text-center"
                 >
                   {innerMarkup}
                 </Link>
