@@ -479,22 +479,22 @@ export default function Bookings() {
       </header>
 
       {/* ── ANALYTICS WIDGETS ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Total Revenue</p>
-          <p className="text-2xl font-extrabold text-slate-900">₹{totalRevenue.toLocaleString()}</p>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
+        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+          <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Total Revenue</p>
+          <p className="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">₹{totalRevenue.toLocaleString()}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Active Bookings</p>
-          <p className="text-2xl font-extrabold text-amber-600">{activeBookings}</p>
+        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+          <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Active Bookings</p>
+          <p className="text-lg md:text-xl font-extrabold text-amber-600 leading-tight">{activeBookings}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Pending Invoices</p>
-          <p className="text-2xl font-extrabold text-blue-600">{pendingInvoices}</p>
+        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+          <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Pending Invoices</p>
+          <p className="text-lg md:text-xl font-extrabold text-blue-600 leading-tight">{pendingInvoices}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Refund Processing</p>
-          <p className="text-2xl font-extrabold text-purple-600">{bookings.filter(b => ['Refund_Requested', 'Refund_Processing', 'Refunded', 'Cancelled'].includes(b.status)).length}</p>
+        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+          <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Refund Processing</p>
+          <p className="text-lg md:text-xl font-extrabold text-purple-600 leading-tight">{bookings.filter(b => ['Refund_Requested', 'Refund_Processing', 'Refunded', 'Cancelled'].includes(b.status)).length}</p>
         </div>
       </div>
 
