@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Outlet, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, Link, useLocation, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaHome, FaGripHorizontal, FaWallet, FaUser } from "react-icons/fa";
 import API from "./services/api";
@@ -34,33 +34,15 @@ import LoginHistory from "./pages/Admin/LoginHistory";
 import Settings from "./pages/Admin/Settings";
 import AdminWallet from "./pages/Admin/Wallet";
 import ManageDevotees from "./pages/Admin/ManageDevotees";
-import HotelVendors from "./pages/Admin/HotelVendors";
-import HotelBookingsAdmin from "./pages/Admin/HotelBookingsAdmin";
-import HotelRevenueAdmin from "./pages/Admin/HotelRevenueAdmin";
-import PricingCommissionAdmin from "./pages/Admin/PricingCommissionAdmin";
-import PayoutsAdmin from "./pages/Admin/PayoutsAdmin";
-
 import ManageArjee from "./pages/Admin/ManageArjee";
 import ManageCrowd from "./pages/Admin/ManageCrowd";
 import ManageParkingDetailed from "./pages/Admin/ManageParkingDetailed";
-import ManageHotelsDetailed from "./pages/Admin/ManageHotelsDetailed";
 import WatchArjee from "./pages/WatchArjee";
-import HotelStayPage from "./pages/HotelStayPage";
 import ParkingGuidePage from "./pages/ParkingGuidePage";
 import CrowdStatus from "./pages/CrowdStatus";
-import HotelDetailsPage from "./pages/HotelDetailsPage";
-import HotelCheckoutPage from "./pages/HotelCheckoutPage";
-import HotelCustomerLogin from "./pages/Hotel/HotelCustomerLogin";
-import HotelVendorLogin from "./pages/Hotel/HotelVendorLogin";
 import { useSettings } from "./context/SettingsContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./pages/Cart";
-import VendorLayout from "./pages/Vendor/VendorLayout";
-import VendorDashboard from "./pages/Vendor/Dashboard";
-import VendorHotels from "./pages/Vendor/Hotels";
-import VendorRooms from "./pages/Vendor/Rooms";
-import VendorBookings from "./pages/Vendor/Bookings";
-import VendorPayouts from "./pages/Vendor/Payouts";
 import { FaWhatsapp, FaInstagram, FaFacebook, FaYoutube, FaEnvelope, FaInfoCircle, FaPhoneAlt, FaMapMarkerAlt, FaGlobe } from "react-icons/fa";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -494,15 +476,15 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/wallet" element={<MyWallet />} />
-          <Route path="/hotel-stay" element={<HotelStayPage />} />
-          <Route path="/hotel-login" element={<HotelCustomerLogin />} />
-          <Route path="/vendor-login" element={<HotelVendorLogin />} />
-          <Route path="/hotels/detail/:id" element={<HotelDetailsPage />} />
-          <Route path="/hotels/checkout/:roomId" element={
-             <ProtectedRoute>
-                <HotelCheckoutPage />
-             </ProtectedRoute>
-          } />
+          <Route path="/hotel" element={<Navigate to="/" replace />} />
+          <Route path="/hotels" element={<Navigate to="/" replace />} />
+          <Route path="/booking" element={<Navigate to="/" replace />} />
+          <Route path="/rooms" element={<Navigate to="/" replace />} />
+          <Route path="/hotel-stay" element={<Navigate to="/" replace />} />
+          <Route path="/hotel-login" element={<Navigate to="/" replace />} />
+          <Route path="/vendor-login" element={<Navigate to="/" replace />} />
+          <Route path="/hotels/detail/:id" element={<Navigate to="/" replace />} />
+          <Route path="/hotels/checkout/:roomId" element={<Navigate to="/" replace />} />
           <Route path="/parking-guide" element={<ParkingGuidePage />} />
           <Route path="/crowd-status" element={<CrowdStatus />} />
           <Route path="/policy/:type" element={<PolicyPage />} />
@@ -535,30 +517,19 @@ function App() {
             <Route path="manage-arjee" element={<ManageArjee />} />
             <Route path="manage-crowd" element={<ManageCrowd />} />
             <Route path="manage-parking" element={<ManageParkingDetailed />} />
-            <Route path="manage-hotels" element={<ManageHotelsDetailed />} />
-            <Route path="hotel-vendors" element={<HotelVendors />} />
-            <Route path="hotel-revenue" element={<HotelRevenueAdmin />} />
-            <Route path="hotel-bookings" element={<HotelBookingsAdmin />} />
-            <Route path="hotel-pricing" element={<PricingCommissionAdmin />} />
-            <Route path="hotel-payouts" element={<PayoutsAdmin />} />
+            <Route path="manage-hotels" element={<Navigate to="/admin" replace />} />
+            <Route path="hotel-vendors" element={<Navigate to="/admin" replace />} />
+            <Route path="hotel-revenue" element={<Navigate to="/admin" replace />} />
+            <Route path="hotel-bookings" element={<Navigate to="/admin" replace />} />
+            <Route path="hotel-pricing" element={<Navigate to="/admin" replace />} />
+            <Route path="hotel-payouts" element={<Navigate to="/admin" replace />} />
             <Route path="users" element={<ManageDevotees />} />
             <Route path="wallet" element={<AdminWallet />} />
           </Route>
         </Route>
 
-        {/* 🏢 VENDOR PROTECTED */}
-        <Route path="/vendor/*" element={
-          <ProtectedRoute allowedRoles={["hotel_owner", "admin"]}>
-            <VendorLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<VendorDashboard />} />
-          <Route path="dashboard" element={<VendorDashboard />} />
-          <Route path="hotels" element={<VendorHotels />} />
-          <Route path="rooms" element={<VendorRooms />} />
-          <Route path="bookings" element={<VendorBookings />} />
-          <Route path="payouts" element={<VendorPayouts />} />
-        </Route>
+        {/* 🏢 VENDOR PROTECTED (Deactivated) */}
+        <Route path="/vendor/*" element={<Navigate to="/" replace />} />
 
         {/* ❌ 404 */}
         <Route path="*" element={<NotFound />} />

@@ -192,22 +192,18 @@ app.use("/api/finance",       generalLimiter, require("./routes/finance"));
 app.use("/api/ritual-videos", generalLimiter, require("./routes/ritualVideos"));
 app.use("/api/crowd-status",  generalLimiter, require("./routes/crowdStatus"));
 app.use("/api/parking",       generalLimiter, require("./routes/parking"));
-app.use("/api/hotel-stay",    generalLimiter, require("./routes/hotelStay"));
-app.use("/api/hotels",        generalLimiter, require("./routes/hotels"));
-app.use("/api/hotel-vendor",  generalLimiter, require("./routes/hotelVendor"));
-app.use("/api/hotel-booking", generalLimiter, require("./routes/hotelBooking"));
-app.use("/api/hotel-auth",    generalLimiter, require("./routes/hotelAuth"));
-
-// Quick admin endpoint for isolated hotel vendors
-const HotelOwner = require("./models/HotelOwner");
-app.get('/api/admin/hotel-vendors', async (req, res) => {
-  try {
-    const vendors = await HotelOwner.find({});
-    res.json(vendors);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+// Hotel Booking Ecosystem (Deactivated)
+const inactiveHotelRouter = express.Router();
+inactiveHotelRouter.all('*', (req, res) => {
+  res.status(400).json({ success: false, message: "Hotel booking features are currently inactive." });
 });
+
+app.use("/api/hotel-stay",    generalLimiter, inactiveHotelRouter);
+app.use("/api/hotels",        generalLimiter, inactiveHotelRouter);
+app.use("/api/hotel-vendor",  generalLimiter, inactiveHotelRouter);
+app.use("/api/hotel-booking", generalLimiter, inactiveHotelRouter);
+app.use("/api/hotel-auth",    generalLimiter, inactiveHotelRouter);
+app.use('/api/admin/hotel-vendors', generalLimiter, inactiveHotelRouter);
 
 // ──────────────────────────────────────
 // PRODUCTION STATIC SERVING

@@ -14,8 +14,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const TABS = [
   { id: 'all',            label: 'All Users',       icon: FaUsers,       color: 'slate' },
   { id: 'devotee',        label: 'Devotee Users',   icon: FaUserCircle,  color: 'orange' },
-  { id: 'hotel_customer', label: 'Hotel Customers', icon: FaBed,         color: 'blue' },
-  { id: 'hotel_vendor',   label: 'Hotel Vendors',   icon: FaBuilding,    color: 'purple' },
   { id: 'team',           label: 'Team / Admins',   icon: FaUserShield,  color: 'indigo' },
   { id: 'suspended',      label: 'Suspended',        icon: FaBan,         color: 'red' },
 ];
@@ -23,8 +21,6 @@ const TABS = [
 const TAB_COLOR = {
   slate:  { pill: 'bg-slate-900 text-white',   soft: 'bg-slate-50 text-slate-700 border-slate-200'   },
   orange: { pill: 'bg-orange-600 text-white',  soft: 'bg-orange-50 text-orange-700 border-orange-200' },
-  blue:   { pill: 'bg-blue-600 text-white',    soft: 'bg-blue-50 text-blue-700 border-blue-200'       },
-  purple: { pill: 'bg-purple-600 text-white',  soft: 'bg-purple-50 text-purple-700 border-purple-200' },
   indigo: { pill: 'bg-indigo-600 text-white',  soft: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
   red:    { pill: 'bg-red-600 text-white',     soft: 'bg-red-50 text-red-700 border-red-200'          },
 };
@@ -47,8 +43,6 @@ function KycBadge({ kycStatus }) {
 function RoleBadge({ role, userType }) {
   if (role === 'admin')          return <span className="text-[9px] font-black uppercase tracking-widest text-slate-100 bg-slate-900 px-2.5 py-0.5 rounded-full flex items-center gap-1"><FaUserShield size={8}/>Super Admin</span>;
   if (role === 'agent')          return <span className="text-[9px] font-black uppercase tracking-widest text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full">Team</span>;
-  if (role === 'hotel_owner')    return <span className="text-[9px] font-black uppercase tracking-widest text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full flex items-center gap-1"><FaBuilding size={8}/>Vendor</span>;
-  if (role === 'hotel_customer') return <span className="text-[9px] font-black uppercase tracking-widest text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full flex items-center gap-1"><FaBed size={8}/>Hotel Guest</span>;
   return <span className="text-[9px] font-black uppercase tracking-widest text-orange-700 bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full flex items-center gap-1"><FaUserCircle size={8}/>Devotee</span>;
 }
 
@@ -81,8 +75,6 @@ function MetricCard({ label, value, color, icon: Icon, sub }) {
 // ─── MAIN COMPONENT ─────────────────────────────────────────────────────────
 export default function ManageDevotees() {
   const [devotees,      setDevotees]      = useState([]);
-  const [hotelUsers,    setHotelUsers]    = useState([]);
-  const [hotelVendors,  setHotelVendors]  = useState([]);
   const [loading,       setLoading]       = useState(true);
   const [searchTerm,    setSearchTerm]    = useState('');
   const [activeTab,     setActiveTab]     = useState('all');
@@ -102,14 +94,8 @@ export default function ManageDevotees() {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const [devoteeRes, hotelUserRes, vendorRes] = await Promise.allSettled([
-        API.get('/users'),
-        API.get('/users/hotel-customers'),
-        API.get('/users/hotel-vendors'),
-      ]);
-      if (devoteeRes.status === 'fulfilled')   setDevotees(devoteeRes.value.data.data || []);
-      if (hotelUserRes.status === 'fulfilled') setHotelUsers(hotelUserRes.value.data.data || []);
-      if (vendorRes.status === 'fulfilled')    setHotelVendors(vendorRes.value.data.data || []);
+      const res = await API.get('/users');
+      setDevotees(res.data?.data || res.data || []);
     } catch (err) {
       console.error("Error fetching users:", err);
     } finally {
@@ -121,19 +107,13 @@ export default function ManageDevotees() {
 
   // ─── ENRICH DATA ────────────────────────────────────────────────────────
   const enrichedDevotees = devotees.map(u => ({ ...u, _userType: 'devotee' }));
-  const enrichedHotelUsers = hotelUsers.map(u => ({ ...u, _userType: 'hotel_customer', role: 'hotel_customer' }));
-  const enrichedVendors = hotelVendors.map(u => ({ ...u, _userType: 'hotel_vendor', role: 'hotel_owner' }));
 
   const allUsers = useMemo(() => [
     ...enrichedDevotees,
-    ...enrichedHotelUsers,
-    ...enrichedVendors,
-  ], [devotees, hotelUsers, hotelVendors]);
+  ], [devotees]);
 
   // ─── METRICS ──────────────────────────────────────────────────────────
   const devoteeCount     = enrichedDevotees.length;
-  const hotelUserCount   = enrichedHotelUsers.length;
-  const vendorCount      = enrichedVendors.length;
   const teamCount        = devotees.filter(d => ['admin', 'agent'].includes(d.role)).length;
   const suspendedCount   = allUsers.filter(u => u.status === 'blocked').length;
   const totalCount       = allUsers.length;
@@ -145,8 +125,6 @@ export default function ManageDevotees() {
 
     // Tab filtering
     if (activeTab === 'devotee')        pool = enrichedDevotees.filter(u => !['admin', 'agent'].includes(u.role));
-    else if (activeTab === 'hotel_customer') pool = enrichedHotelUsers;
-    else if (activeTab === 'hotel_vendor')   pool = enrichedVendors;
     else if (activeTab === 'team')           pool = enrichedDevotees.filter(u => ['admin', 'agent'].includes(u.role));
     else if (activeTab === 'suspended')      pool = allUsers.filter(u => u.status === 'blocked');
 
@@ -175,13 +153,7 @@ export default function ManageDevotees() {
     const action = user.status === 'blocked' ? 'UNBLOCK' : 'BLOCK';
     if (!window.confirm(`${action} ${user.name}?`)) return;
     try {
-      if (user._userType === 'hotel_customer') {
-        await API.put(`/users/hotel-customers/${user._id}/toggle-status`);
-      } else if (user._userType === 'hotel_vendor') {
-        await API.put(`/users/hotel-vendors/${user._id}/toggle-status`);
-      } else {
-        await API.put(`/users/${user._id}/toggle-status`);
-      }
+      await API.put(`/users/${user._id}/toggle-status`);
       fetchAll();
     } catch (err) { alert(err.response?.data?.message || "Action failed"); }
   };
@@ -190,11 +162,7 @@ export default function ManageDevotees() {
     if (user.role === 'admin') return alert("Super Admin cannot be deleted!");
     if (!window.confirm(`PERMANENTLY DELETE ${user.name}?`)) return;
     try {
-      if (user._userType === 'hotel_customer') {
-        await API.delete(`/users/hotel-customers/${user._id}`);
-      } else {
-        await API.delete(`/users/${user._id}`);
-      }
+      await API.delete(`/users/${user._id}`);
       fetchAll();
     } catch (err) { alert(err.response?.data?.message || "Deletion failed"); }
   };
@@ -263,8 +231,6 @@ export default function ManageDevotees() {
   const tabCounts = {
     all:            totalCount,
     devotee:        enrichedDevotees.filter(u => !['admin', 'agent'].includes(u.role)).length,
-    hotel_customer: hotelUserCount,
-    hotel_vendor:   vendorCount,
     team:           teamCount,
     suspended:      suspendedCount,
   };
@@ -292,7 +258,7 @@ export default function ManageDevotees() {
       </header>
 
       {/* ── ANALYTICS STRIP ── */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div className="col-span-2 md:col-span-1 lg:col-span-1 bg-slate-900 p-5 rounded-[20px] shadow-xl flex flex-col gap-3">
           <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Total Users</p>
           <p className="text-3xl font-black text-white">{totalCount}</p>
@@ -300,14 +266,6 @@ export default function ManageDevotees() {
         <div className="bg-white p-5 rounded-[20px] border border-orange-100 shadow-sm flex flex-col gap-3">
           <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Devotees</p>
           <p className="text-3xl font-black text-orange-600">{tabCounts.devotee}</p>
-        </div>
-        <div className="bg-white p-5 rounded-[20px] border border-blue-100 shadow-sm flex flex-col gap-3">
-          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Hotel Guests</p>
-          <p className="text-3xl font-black text-blue-600">{hotelUserCount}</p>
-        </div>
-        <div className="bg-white p-5 rounded-[20px] border border-purple-100 shadow-sm flex flex-col gap-3">
-          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Hotel Vendors</p>
-          <p className="text-3xl font-black text-purple-600">{vendorCount}</p>
         </div>
         <div className="bg-white p-5 rounded-[20px] border border-indigo-100 shadow-sm flex flex-col gap-3">
           <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Team</p>
@@ -423,8 +381,6 @@ export default function ManageDevotees() {
                             <div className={`w-10 h-10 rounded-full text-white flex items-center justify-center font-black text-sm shadow-sm flex-shrink-0 ${
                               u.role === 'admin'          ? 'bg-slate-900' :
                               u.role === 'agent'          ? 'bg-indigo-600' :
-                              u._userType === 'hotel_customer' ? 'bg-blue-600' :
-                              u._userType === 'hotel_vendor'   ? 'bg-purple-600' :
                               'bg-orange-500'
                             }`}>
                               {u.name?.charAt(0)?.toUpperCase() || '?'}
@@ -461,9 +417,6 @@ export default function ManageDevotees() {
                           <div className="flex flex-col gap-1.5">
                             <RoleBadge role={u.role} userType={u._userType} />
                             {u.kycStatus && <KycBadge kycStatus={u.kycStatus} />}
-                            {u._userType === 'hotel_vendor' && u.ownerProfile?.businessName && (
-                              <p className="text-[9px] font-bold text-slate-400 truncate max-w-[130px]">{u.ownerProfile.businessName}</p>
-                            )}
                           </div>
                         </td>
 
@@ -479,29 +432,19 @@ export default function ManageDevotees() {
 
                         {/* WALLET / INFO */}
                         <td className="px-6 py-4 hidden xl:table-cell">
-                          {u._userType === 'devotee' ? (
-                            <div className="flex flex-col gap-2">
-                              <span className="text-lg font-black text-slate-900">₹{(u.walletBalance || 0).toLocaleString()}</span>
-                              <div className="flex gap-1.5">
-                                <button onClick={() => { setAdjustingUser(u); setAdjType('credit'); }} className="py-1 px-2.5 bg-green-50 text-green-700 rounded-lg text-[9px] font-black border border-green-200 hover:bg-green-100 transition-colors">+ADD</button>
-                                <button onClick={() => { setAdjustingUser(u); setAdjType('debit'); }} className="py-1 px-2.5 bg-red-50 text-red-700 rounded-lg text-[9px] font-black border border-red-200 hover:bg-red-100 transition-colors">−DEDUCT</button>
-                              </div>
+                          <div className="flex flex-col gap-2">
+                            <span className="text-lg font-black text-slate-900">₹{(u.walletBalance || 0).toLocaleString()}</span>
+                            <div className="flex gap-1.5">
+                              <button onClick={() => { setAdjustingUser(u); setAdjType('credit'); }} className="py-1 px-2.5 bg-green-50 text-green-700 rounded-lg text-[9px] font-black border border-green-200 hover:bg-green-100 transition-colors">+ADD</button>
+                              <button onClick={() => { setAdjustingUser(u); setAdjType('debit'); }} className="py-1 px-2.5 bg-red-50 text-red-700 rounded-lg text-[9px] font-black border border-red-200 hover:bg-red-100 transition-colors">−DEDUCT</button>
                             </div>
-                          ) : u._userType === 'hotel_vendor' ? (
-                            <div className="text-xs font-medium text-slate-600 space-y-1">
-                              {u.ownerProfile?.bankName && <p className="font-bold text-slate-800">{u.ownerProfile.bankName}</p>}
-                              {u.ownerProfile?.gstNumber && <p className="text-slate-400">GST: {u.ownerProfile.gstNumber}</p>}
-                              <p className="text-slate-400">KYC: <span className="font-bold capitalize">{u.kycStatus || 'Pending'}</span></p>
-                            </div>
-                          ) : (
-                            <div className="text-xs font-bold text-slate-500">Hotel Customer</div>
-                          )}
+                          </div>
                         </td>
 
                         {/* CONTROLS */}
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2 justify-end">
-                            {u._userType === 'devotee' && (
+                            {u.role !== 'admin' && (
                               <>
                                 <button onClick={() => fetchUserHistory(u)} className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:bg-slate-100 transition-colors flex items-center justify-center" title="Transaction History">
                                   <FaHistory size={12}/>
@@ -514,11 +457,9 @@ export default function ManageDevotees() {
                             <button onClick={() => handleToggleStatus(u)} className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-colors ${u.status === 'blocked' ? 'bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'}`} title={u.status === 'blocked' ? 'Unblock' : 'Block'}>
                               {u.status === 'blocked' ? <FaUnlock size={12}/> : <FaLock size={12}/>}
                             </button>
-                            {u._userType !== 'hotel_vendor' && (
-                              <button onClick={() => handleForceDelete(u)} className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-colors flex items-center justify-center" title="Delete">
-                                <FaTrash size={12}/>
-                              </button>
-                            )}
+                            <button onClick={() => handleForceDelete(u)} className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-colors flex items-center justify-center" title="Delete">
+                              <FaTrash size={12}/>
+                            </button>
                           </div>
                         </td>
                       </motion.tr>

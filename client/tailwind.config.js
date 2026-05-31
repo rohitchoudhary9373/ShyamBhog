@@ -20,7 +20,22 @@ export default {
         // ── Legacy support ──────────────────────────────
         secondary:    '#86868b',
         'param-bg':   '#FDF8F1',
-        'param-text': '#0F172A',
+        'param-text': '#1E293B',
+
+        // ── Custom Softened Slate Scale ─────────────────
+        slate: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#4b5563',
+          700: '#4b5563',
+          800: '#334155',
+          900: '#1e293b',
+          950: '#0f172a',
+        },
       },
       fontFamily: {
         serif: ["'Playfair Display'", 'serif'],

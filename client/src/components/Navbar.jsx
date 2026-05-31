@@ -95,7 +95,7 @@ export default function Navbar() {
                 <span className="text-primary font-black text-xl italic">{settings?.brandName?.charAt(0) || 'S'}</span>
               )}
             </div>
-            <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter group-hover:text-primary transition-colors">
+            <span className="text-xl sm:text-2xl font-black text-primary tracking-tighter transition-colors">
               {settings?.brandName || 'Shyam Bhog'}
             </span>
           </Link>

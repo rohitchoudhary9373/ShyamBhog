@@ -116,24 +116,9 @@ export default function AdminLayout() {
     { name: "Parking", path: "/admin/manage-parking", icon: <FaParking />, permission: 'manage_parking' },
     { 
       name: "Hotels", 
-      isDropdown: true,
       icon: <FaBed />, 
-      permission: 'manage_hotels',
-      subItems: [
-        { name: "Overview", path: "/admin/manage-hotels" },
-        { name: "Vendors", path: "/admin/hotel-vendors" },
-        { name: "Revenue", path: "/admin/hotel-revenue" },
-        { name: "Bookings", path: "/admin/hotel-bookings" },
-        { name: "Pricing Engine", path: "/admin/hotel-pricing" },
-        { name: "Payouts", path: "/admin/hotel-payouts" },
-        { name: "Room Inventory", path: "/admin/manage-hotels" },
-        { name: "Analytics", path: "/admin/hotel-revenue" },
-        { name: "Verification Queue", path: "/admin/hotel-vendors" },
-        { name: "Refund Center", path: "/admin/refunds" },
-        { name: "Reviews & Ratings", path: "/admin/manage-hotels" },
-        { name: "Support Tickets", path: "/admin/feedback" },
-        { name: "Reports", path: "/admin/hotel-revenue" },
-      ]
+      isDisabledShowcase: true,
+      permission: 'manage_hotels'
     },
     { name: "Users", path: "/admin/users", icon: <FaUsers />, permission: 'manage_devotees' },
     { name: "Team", path: "/admin/agents", icon: <FaUsers />, permission: 'admin_only' },
@@ -203,6 +188,21 @@ export default function AdminLayout() {
         <nav className="flex-1 py-6 flex flex-col gap-1 overflow-y-auto px-4 no-scrollbar">
           <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 px-3">Overview</p>
           {menu.map((item) => {
+            if (item.isDisabledShowcase) {
+              return (
+                <div
+                  key={item.name}
+                  className="flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-sm text-slate-500 opacity-60 cursor-not-allowed pointer-events-none select-none bg-slate-800/10 border border-slate-700/5 mb-1"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm">{item.icon}</span>
+                    {item.name}
+                  </div>
+                  <span className="text-[8px] bg-slate-800 text-slate-400 font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider">Disabled</span>
+                </div>
+              );
+            }
+
             if (item.isDropdown) {
               return (
                 <div key={item.name} className="flex flex-col gap-1">

@@ -35,8 +35,6 @@ const fixDb = async () => {
         require('./models/FAQ'),
         require('./models/Gallery'),
         require('./models/Content'),
-        require('./models/HotelStay'),
-        require('./models/Hotel'),
         require('./models/Parking'),
         require('./models/CrowdStatus'),
         require('./models/Feedback'),

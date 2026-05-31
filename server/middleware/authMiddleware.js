@@ -81,16 +81,12 @@ const admin = (req, res, next) => {
   }
 };
 
-// 🔐 HOTEL OWNER CHECK
+// 🔐 HOTEL OWNER CHECK (Deactivated)
 const hotelOwner = (req, res, next) => {
-  if (req.user && req.user.role === "hotel_owner") {
-    next();
-  } else {
-    return res.status(403).json({
-      success: false,
-      message: "Access denied (Hotel Owner only)",
-    });
-  }
+  return res.status(403).json({
+    success: false,
+    message: "Access denied (Hotel Owner feature is inactive)",
+  });
 };
 
 // 🔐 OPTIONAL: ROLE BASED ACCESS (ADVANCED)
