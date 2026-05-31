@@ -133,14 +133,13 @@ export default function Home() {
       {/* ── DIVINE HUB ── */}
       <section className="w-full max-w-xl px-6 mb-12">
         <div className="grid grid-cols-2 gap-3">
-          {[
-            { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
-            { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
-            { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
-            { to: "#hotels-showcase", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: 'Stay Guide', isAnchor: true }
-          ].map((item, idx) => {
-            const innerMarkup = (
-              <>
+            {/* ── First 3 Divine Hub items ── */}
+            {[
+              { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
+              { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
+              { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' }
+            ].map((item, idx) => (
+              <Link key={idx} to={item.to} className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center">
                 <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner">
                   {item.icon}
                 </div>
@@ -149,31 +148,47 @@ export default function Home() {
                   {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                 </div>
                 <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mt-1.5 opacity-60">{item.desc}</p>
-              </>
-            );
-
-            if (item.isAnchor) {
-              return (
-                <a
-                  key={idx}
-                  href={item.to}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('hotels-showcase')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center cursor-pointer"
-                >
-                  {innerMarkup}
-                </a>
-              );
-            }
-
-            return (
-              <Link key={idx} to={item.to} className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center">
-                {innerMarkup}
               </Link>
-            );
-          })}
+            ))}
+
+            {/* ── 4th item: Deactivated Hotel Stay Showcase ── */}
+            {(() => {
+              const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
+              const cleanWaNumber = waNumber.replace(/\D/g, '');
+              const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
+
+              return (
+                <div className="relative p-5 rounded-[24px] bg-slate-950/95 border border-slate-800 shadow-[0_4px_20px_rgba(240,121,36,0.15)] flex flex-col items-center justify-between text-center select-none cursor-not-allowed pointer-events-none transition-all duration-500 hover:shadow-[0_4px_25px_rgba(240,121,36,0.25)] hover:scale-[1.02] active:scale-95 group">
+                  {/* Glowing absolute effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-orange-600/5 to-transparent rounded-[24px] blur-sm -z-10"></div>
+                  
+                  <div className="w-10 h-10 rounded-2xl bg-slate-900 text-amber-500 flex items-center justify-center mb-4 border border-slate-800 shadow-inner group-hover:bg-amber-500 group-hover:text-slate-950 transition-all duration-500">
+                    <FaBed size={16} />
+                  </div>
+                  
+                  <div className="flex flex-col items-center gap-1.5 justify-center">
+                    <h3 className="text-[10px] font-black text-white tracking-tight uppercase group-hover:text-amber-500 transition-colors italic">{t('home.hotel_stay') || 'Hotel Stay'}</h3>
+                    <span className="text-[8px] bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-md animate-pulse">
+                      COMING SOON
+                    </span>
+                  </div>
+                  <p className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1.5 opacity-60">Stay Guide</p>
+
+                  {/* Clickable WhatsApp Enquiry Button with pointer-events-auto */}
+                  <div className="mt-4 w-full">
+                    <a 
+                      href={waLink} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="pointer-events-auto cursor-pointer w-full py-2 px-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-full font-black text-[8px] uppercase tracking-widest transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:shadow-[0_4px_12px_rgba(16,185,129,0.5)] border border-emerald-400/20 flex items-center justify-center gap-1.5"
+                    >
+                      <FaWhatsapp size={10} className="animate-bounce" />
+                      Enquiry
+                    </a>
+                  </div>
+                </div>
+              );
+            })()}
         </div>
       </section>
 
@@ -335,111 +350,6 @@ export default function Home() {
            </div>
         )}
       </div>
-
-      {/* ── LUXURY HOTELS SHOWCASE ── */}
-      <section id="hotels-showcase" className="w-full max-w-xl px-6 mb-20 scroll-mt-24">
-        <div className="mb-10 text-center">
-          <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full mb-3">
-             <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest">Premium Luxury</span>
-          </motion.div>
-          <h2 className="text-2xl md:text-3xl font-black text-[#0A1128] uppercase tracking-[0.2em]">{t('home.hotel_stay') || 'Stay Guide'}</h2>
-          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-2">Luxury Rooms Near Temple</p>
-        </div>
-
-        <div className="space-y-6">
-          {[
-            {
-              name: 'Shyam Darbar Residency',
-              image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600',
-              rating: '5.0',
-              distance: '200m from Temple',
-              description: 'Experience premium luxury and unmatched comfort. Equipped with modern amenities, round-the-clock service, and direct access to the temple corridor.',
-              amenities: ['Free Wi-Fi', 'AC Rooms', '24/7 Power', 'Temple View']
-            },
-            {
-              name: 'Radhe Palace Stay',
-              image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&q=80&w=600',
-              rating: '4.8',
-              distance: '450m from Temple',
-              description: 'A serene and peaceful getaway with spacious family suites. Perfect for families looking for relaxation and easy access to local markets.',
-              amenities: ['Room Service', 'Pure Veg Restaurant', 'Parking Space', 'AC Rooms']
-            }
-          ].map((hotel, idx) => {
-            const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
-            const cleanWaNumber = waNumber.replace(/\D/g, '');
-            const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
-
-            return (
-              <motion.div 
-                key={idx} 
-                initial={{ opacity: 0, y: 30 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="relative bg-slate-950/95 rounded-[32px] overflow-hidden border border-slate-800 shadow-2xl p-0.5 pointer-events-none select-none"
-              >
-                {/* Image Section */}
-                <div className="relative h-60 rounded-[30px] overflow-hidden">
-                  <img 
-                    src={hotel.image} 
-                    alt={hotel.name} 
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Luxury Dark Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-                  
-                  {/* Star and distance badges */}
-                  <div className="absolute top-4 left-4 flex gap-2">
-                    <span className="px-3 py-1 bg-slate-900/90 backdrop-blur-md text-[9px] font-black text-amber-500 rounded-full border border-slate-800 shadow-sm flex items-center gap-1">
-                      <FaStar size={10} className="text-amber-500" /> {hotel.rating}
-                    </span>
-                    <span className="px-3 py-1 bg-slate-900/90 backdrop-blur-md text-[9px] font-black text-slate-300 rounded-full border border-slate-800 shadow-sm">
-                      {hotel.distance}
-                    </span>
-                  </div>
-
-                  {/* Centered COMING SOON Badge */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-amber-400/30 scale-100 animate-pulse">
-                      COMING SOON
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content Section */}
-                <div className="p-6 space-y-4 relative">
-                  <div className="space-y-2">
-                    <h3 className="text-base font-black text-white uppercase tracking-wide">{hotel.name}</h3>
-                    <p className="text-[11px] text-slate-400 font-medium leading-relaxed italic">{hotel.description}</p>
-                  </div>
-
-                  {/* Amenities */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {hotel.amenities.map((am, aIdx) => (
-                      <span key={aIdx} className="px-2.5 py-1 bg-slate-900 text-[9px] font-bold text-amber-500 uppercase tracking-wider rounded-lg border border-slate-800">
-                        {am}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Centered Bottom WhatsApp Button with pointer-events-auto */}
-                  <div className="pt-4 flex justify-center">
-                    <a 
-                      href={waLink} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="pointer-events-auto inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-full font-black text-[9px] uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 active:scale-95 shadow-[0_4px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_30px_rgba(16,185,129,0.5)] border border-emerald-400/20"
-                    >
-                      <FaWhatsapp size={12} className="animate-bounce" />
-                      Enquire on WhatsApp
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
 
       {/* ── FAQ ── */}
       <section className="w-full max-w-xl px-6 mb-20">
