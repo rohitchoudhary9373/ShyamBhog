@@ -165,7 +165,7 @@ function StorefrontLayout() {
       )}
       <Navbar />
 
-      <main className="flex-grow pt-14">
+      <main className="flex-grow pt-14 md:pt-16">
         <Outlet />
       </main>
 

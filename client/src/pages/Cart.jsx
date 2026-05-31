@@ -344,27 +344,27 @@ export default function Cart() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -50, scale: 0.95 }}
                 transition={{ duration: 0.25 }}
-                className="bg-white border border-orange-50 rounded-[28px] p-4 flex items-center gap-4 group shadow-sm hover:shadow-xl hover:shadow-orange-100/40 transition-all relative"
+                className="bg-white border border-orange-50 rounded-[28px] p-3 md:p-4 flex items-center gap-3 md:gap-4 group shadow-sm hover:shadow-xl hover:shadow-orange-100/40 transition-all relative"
               >
-                <div className="w-20 h-20 rounded-[20px] overflow-hidden bg-slate-50 border border-slate-50 flex-shrink-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[20px] overflow-hidden bg-slate-50 border border-slate-50 flex-shrink-0">
                   <img src={getMediaUrl(item.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={item.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                 </div>
 
-                <div className="flex-grow">
+                <div className="flex-grow min-w-0">
                   <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{item.category}</p>
-                  <h3 className="text-sm font-black text-slate-900 leading-tight group-hover:text-primary transition-colors pr-6">{item.title}</h3>
-                  {item.unit && <p className="text-[9px] font-semibold text-slate-450 mt-0.5">{item.unit}</p>}
-                  <p className="text-sm font-black text-slate-900 mt-1">₹{item.price}</p>
+                  <h3 className="text-xs sm:text-sm font-black text-slate-900 leading-tight group-hover:text-primary transition-colors pr-6 truncate">{item.title}</h3>
+                  {item.unit && <p className="text-[9px] font-semibold text-slate-400 mt-0.5">{item.unit}</p>}
+                  <p className="text-xs sm:text-sm font-black text-slate-900 mt-1">₹{item.price}</p>
                 </div>
 
-                <div className="flex flex-col items-end gap-3 flex-shrink-0">
-                  <button onClick={() => removeFromCart(item._id)} className="w-6 h-6 flex items-center justify-center text-slate-300 hover:text-red-500 bg-red-50/50 hover:bg-red-100 rounded-full transition-all absolute top-3 right-3">
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  <button onClick={() => removeFromCart(item._id)} className="w-6 h-6 flex items-center justify-center text-slate-300 hover:text-red-500 bg-red-50/50 hover:bg-red-100 rounded-full transition-all absolute top-2.5 right-2.5">
                     <FaTrash size={10} />
                   </button>
-                  <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100 mt-4">
-                    <button onClick={() => updateQuantity(item._id, item.quantity - 1)} className="w-6 h-6 flex items-center justify-center font-black text-slate-400 hover:text-slate-900 bg-white rounded-lg shadow-sm">-</button>
-                    <span className="w-4 text-center font-black text-[10px]">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item._id, item.quantity + 1)} className="w-6 h-6 flex items-center justify-center font-black text-slate-400 hover:text-slate-900 bg-white rounded-lg shadow-sm">+</button>
+                  <div className="flex items-center gap-1.5 bg-slate-50 p-0.5 sm:p-1 rounded-xl border border-slate-100 mt-4">
+                    <button onClick={() => updateQuantity(item._id, item.quantity - 1)} className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-black text-slate-400 hover:text-slate-900 bg-white rounded-lg shadow-sm text-xs">-</button>
+                    <span className="w-4 text-center font-black text-[9px] sm:text-[10px]">{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item._id, item.quantity + 1)} className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-black text-slate-400 hover:text-slate-900 bg-white rounded-lg shadow-sm text-xs">+</button>
                   </div>
                 </div>
               </motion.div>

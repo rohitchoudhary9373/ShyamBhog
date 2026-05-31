@@ -76,14 +76,14 @@ export default function Navbar() {
   return (
     <>
       <nav 
-        className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100"
+        className="fixed top-0 left-0 w-full h-14 md:h-16 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 flex items-center"
         style={isImpersonating ? { top: '44px' } : {}}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
+        <div className="w-full max-w-7xl mx-auto px-3 py-2 md:px-8 md:py-2.5 flex justify-between items-center h-full">
 
           {/* ── LOGO ── */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center overflow-hidden border border-orange-100/50 shadow-inner">
+          <Link to="/" className="flex items-center whitespace-nowrap gap-1.5 md:gap-2.5 group">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-orange-50 flex items-center justify-center overflow-hidden border border-orange-100/50 shadow-inner shrink-0">
               {settings?.logoUrl && !logoError ? (
                 <img
                   src={getFullUrl(settings?.logoUrl)}
@@ -92,10 +92,10 @@ export default function Navbar() {
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <span className="text-primary font-black text-xl italic">{settings?.brandName?.charAt(0) || 'S'}</span>
+                <span className="text-primary font-black text-sm md:text-xl leading-none italic">{settings?.brandName?.charAt(0) || 'S'}</span>
               )}
             </div>
-            <span className="text-xl sm:text-2xl font-black text-primary tracking-tighter transition-colors">
+            <span className="text-sm md:text-xl font-black text-primary tracking-tighter whitespace-nowrap leading-none transition-colors">
               {settings?.brandName || 'Shyam Bhog'}
             </span>
           </Link>

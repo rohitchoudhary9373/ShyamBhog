@@ -131,13 +131,13 @@ export default function Home() {
       </section>
 
       {/* ── DIVINE HUB ── */}
-      <section className="w-full max-w-xl px-6 mb-12">
+      <section className="w-full max-w-xl px-4 md:px-6 mb-12">
         <div className="grid grid-cols-2 gap-3">
             {[
-              { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
-              { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
-              { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
-              { to: "#", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: 'COMING SOON', isHotelStay: true }
+              { to: "/watch-arjee", icon: <FaVideo className="text-sm md:text-base" />, title: t('home.watch_arjee'), desc: 'Live Stream' },
+              { to: "/crowd-status", icon: <FaUsers className="text-sm md:text-base" />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
+              { to: "/parking-guide", icon: <FaParking className="text-sm md:text-base" />, title: t('home.parking'), desc: 'Nav Guide' },
+              { to: "#", icon: <FaBed className="text-sm md:text-base" />, title: t('home.hotel_stay'), desc: 'COMING SOON', isHotelStay: true }
             ].map((item, idx) => {
               const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
               const cleanWaNumber = waNumber.replace(/\D/g, '');
@@ -145,25 +145,26 @@ export default function Home() {
 
               const innerMarkup = (
                 <>
-                  <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
                     {item.icon}
                   </div>
-                  <div className="flex items-center gap-1.5 justify-center">
-                    <h3 className="text-[10px] font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic">{item.title}</h3>
-                    {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
+                  <div className="flex items-center gap-1 md:gap-1.5 justify-center">
+                    <h3 className="text-[10px] md:text-xs font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic leading-tight">{item.title}</h3>
+                    {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mt-1.5 opacity-60">{item.desc}</p>
+                  <p className="text-[8px] md:text-[10px] text-slate-400 font-black uppercase tracking-widest opacity-60 leading-tight">{item.desc}</p>
 
-                  {/* Small WhatsApp query icon in the corner for Hotel Stay */}
+                  {/* Small premium responsive WhatsApp button for Hotel Stay */}
                   {item.isHotelStay && (
                     <a 
                       href={waLink} 
                       target="_blank" 
                       rel="noreferrer" 
                       title="WhatsApp Enquiry"
-                      className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:scale-110 active:scale-95 transition-all pointer-events-auto cursor-pointer border border-emerald-400/20"
+                      className="text-xs px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-full flex items-center gap-1 justify-center shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all pointer-events-auto cursor-pointer border border-emerald-400/20 whitespace-nowrap leading-none"
                     >
-                      <FaWhatsapp size={10} className="animate-bounce" />
+                      <FaWhatsapp size={12} className="animate-bounce" />
+                      <span>Enquiry</span>
                     </a>
                   )}
                 </>
@@ -173,7 +174,7 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white p-5 rounded-[24px] border border-orange-50 shadow-sm flex flex-col items-center text-center cursor-not-allowed select-none pointer-events-none"
+                    className="group relative bg-white w-full max-w-full p-3 md:p-5 rounded-[24px] border border-orange-50 shadow-sm flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none gap-2"
                   >
                     {innerMarkup}
                   </div>
@@ -184,7 +185,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center"
+                  className="group relative bg-white w-full max-w-full p-3 md:p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center justify-center text-center gap-2"
                 >
                   {innerMarkup}
                 </Link>
@@ -215,10 +216,10 @@ export default function Home() {
       </div>
 
       {/* ── PREMIUM OFFERING FEED ── */}
-      <div className="w-full max-w-xl px-6 mb-20">
-        <div className={activeTab === 'Bhog' ? "grid grid-cols-2 gap-4 md:gap-6" : "flex flex-col gap-10"}>
+      <div className="w-full max-w-5xl px-4 md:px-6 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {filteredServices.length === 0 ? (
-            <div className={activeTab === 'Bhog' ? "col-span-full py-20 text-center bg-white rounded-[32px] border border-dashed border-orange-100/50" : "py-20 text-center bg-white rounded-[32px] border border-dashed border-orange-100/50"}>
+            <div className="col-span-full py-20 text-center bg-white rounded-[32px] border border-dashed border-orange-100/50">
               <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">No offerings in this category</p>
             </div>
           ) : (
@@ -233,10 +234,10 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="bg-white rounded-[28px] p-3 border border-orange-50 shadow-sm hover:shadow-xl transition-all group flex flex-col"
+                    className="bg-white rounded-[28px] w-full max-w-full p-3 md:p-5 border border-orange-50 shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between gap-3"
                   >
                     {/* Compact Image */}
-                    <div className="relative aspect-square rounded-[20px] overflow-hidden mb-3">
+                    <div className="relative aspect-square rounded-[20px] overflow-hidden shrink-0">
                       <img 
                         src={getImageUrl(service.imageUrl)} 
                         alt={service.title} 
@@ -251,14 +252,14 @@ export default function Home() {
                     </div>
 
                     {/* Content */}
-                    <div className="px-1 flex-1 flex flex-col gap-1">
-                      <div className="flex flex-col">
-                        <h3 className="text-sm font-bold text-slate-900 truncate">{service.title}</h3>
+                    <div className="px-1 flex-1 flex flex-col justify-between gap-2">
+                      <div className="flex flex-col gap-1">
+                        <h3 className="text-sm md:text-base font-bold text-slate-900 truncate leading-tight">{service.title}</h3>
                         {service.unit && (
-                          <span className="text-[10px] font-bold text-slate-400">{service.unit}</span>
+                          <span className="text-xs md:text-sm font-bold text-slate-400 leading-tight">{service.unit}</span>
                         )}
                         <div className="flex items-center justify-between mt-1">
-                          <span className="text-sm font-black text-slate-900 tracking-tighter">₹{service.price}</span>
+                          <span className="text-sm md:text-base font-black text-slate-900 tracking-tighter leading-tight">₹{service.price}</span>
                           
                           {/* Compact Circular Add/Quantity Control */}
                           {isInCart ? (
@@ -279,8 +280,8 @@ export default function Home() {
                       </div>
 
                       {/* Primary Actions Area */}
-                      <div className="mt-2">
-                        <Link to={`/services/detail/${service._id}`} className="w-full bg-orange-600 text-white h-9 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg flex items-center justify-center hover:bg-orange-700 transition-all active:scale-95">
+                      <div className="mt-1">
+                        <Link to={`/services/detail/${service._id}`} className="w-full bg-orange-600 text-white h-9 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg flex items-center justify-center hover:bg-orange-700 transition-all active:scale-95 leading-none">
                            Buy Now
                         </Link>
                       </div>
@@ -296,41 +297,41 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-white rounded-[32px] p-4 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                  className="bg-white rounded-[28px] w-full max-w-full p-3 md:p-5 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between gap-3"
                 >
                   {/* Image with Tag inside */}
-                  <div className="relative aspect-[16/8] rounded-[24px] overflow-hidden">
+                  <div className="relative aspect-[16/10] rounded-[20px] overflow-hidden shrink-0">
                      <img 
                        src={getImageUrl(service.imageUrl)} 
                        alt={service.title} 
                        className="w-full h-full object-cover" 
                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
                      />
-                    <div className="absolute top-4 right-4">
-                       <div className="px-3 py-1 bg-white/80 backdrop-blur-md rounded-full text-[10px] font-bold text-slate-800 shadow-sm border border-white/50">
+                    <div className="absolute top-3 right-3">
+                       <div className="px-2.5 py-1 bg-white/80 backdrop-blur-md rounded-full text-[9px] font-bold text-slate-800 shadow-sm border border-white/50">
                           {service.tag || "Few slots left"}
                        </div>
                     </div>
                   </div>
 
                   {/* Content Area */}
-                  <div className="pt-5 px-1 pb-1">
-                    <div className="flex justify-between items-center mb-1">
-                       <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  <div className="px-1 flex-1 flex flex-col justify-between gap-2">
+                    <div className="flex justify-between items-start gap-2">
+                       <h3 className="text-sm md:text-base font-bold text-slate-900 tracking-tight leading-tight">
                           {service.title}
                        </h3>
-                       <div className="text-right">
-                          <span className="text-xl font-bold text-slate-900">₹{service.price}</span>
-                          {isRecurring && <span className="text-[10px] block font-bold text-slate-400 uppercase tracking-tighter">/ monthly</span>}
+                       <div className="text-right shrink-0">
+                          <span className="text-sm md:text-base font-bold text-slate-900 leading-tight">₹{service.price}</span>
+                          {isRecurring && <span className="text-[8px] md:text-[10px] block font-bold text-slate-400 uppercase tracking-tighter">/ monthly</span>}
                        </div>
                     </div>
 
-                    <div className="flex justify-between items-end">
-                       <p className="text-[11px] font-medium text-slate-400 max-w-[65%] leading-relaxed">
+                    <div className="flex flex-col gap-3">
+                       <p className="text-xs md:text-sm font-medium text-slate-400 leading-tight line-clamp-2">
                           {service.description || "A dedicated Arjee, Reserved just for you."}
                        </p>
-                       <div className="flex items-center gap-2">
-                          <Link to={`/services/detail/${service._id}`} className="bg-[#722F1E] text-white px-8 py-2.5 rounded-full text-xs font-bold shadow-lg hover:brightness-110 transition-all active:scale-95">
+                       <div className="w-full">
+                          <Link to={`/services/detail/${service._id}`} className="w-full bg-[#722F1E] text-white py-2.5 rounded-full text-xs font-bold shadow-lg hover:brightness-110 transition-all active:scale-95 block text-center leading-none">
                              Book Now
                           </Link>
                        </div>
