@@ -133,62 +133,63 @@ export default function Home() {
       {/* ── DIVINE HUB ── */}
       <section className="w-full max-w-xl px-6 mb-12">
         <div className="grid grid-cols-2 gap-3">
-            {/* ── First 3 Divine Hub items ── */}
             {[
               { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
               { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
-              { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' }
-            ].map((item, idx) => (
-              <Link key={idx} to={item.to} className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center">
-                <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner">
-                  {item.icon}
-                </div>
-                <div className="flex items-center gap-1.5 justify-center">
-                  <h3 className="text-[10px] font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic">{item.title}</h3>
-                  {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
-                </div>
-                <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mt-1.5 opacity-60">{item.desc}</p>
-              </Link>
-            ))}
-
-            {/* ── 4th item: Deactivated Hotel Stay Showcase ── */}
-            {(() => {
+              { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
+              { to: "#", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: 'COMING SOON', isHotelStay: true }
+            ].map((item, idx) => {
               const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
               const cleanWaNumber = waNumber.replace(/\D/g, '');
               const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
 
-              return (
-                <div className="relative p-5 rounded-[24px] bg-slate-950/95 border border-slate-800 shadow-[0_4px_20px_rgba(240,121,36,0.15)] flex flex-col items-center justify-between text-center select-none cursor-not-allowed pointer-events-none transition-all duration-500 hover:shadow-[0_4px_25px_rgba(240,121,36,0.25)] hover:scale-[1.02] active:scale-95 group">
-                  {/* Glowing absolute effect */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-orange-600/5 to-transparent rounded-[24px] blur-sm -z-10"></div>
-                  
-                  <div className="w-10 h-10 rounded-2xl bg-slate-900 text-amber-500 flex items-center justify-center mb-4 border border-slate-800 shadow-inner group-hover:bg-amber-500 group-hover:text-slate-950 transition-all duration-500">
-                    <FaBed size={16} />
+              const innerMarkup = (
+                <>
+                  <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner">
+                    {item.icon}
                   </div>
-                  
-                  <div className="flex flex-col items-center gap-1.5 justify-center">
-                    <h3 className="text-[10px] font-black text-white tracking-tight uppercase group-hover:text-amber-500 transition-colors italic">{t('home.hotel_stay') || 'Hotel Stay'}</h3>
-                    <span className="text-[8px] bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-md animate-pulse">
-                      COMING SOON
-                    </span>
+                  <div className="flex items-center gap-1.5 justify-center">
+                    <h3 className="text-[10px] font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic">{item.title}</h3>
+                    {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1.5 opacity-60">Stay Guide</p>
+                  <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mt-1.5 opacity-60">{item.desc}</p>
 
-                  {/* Clickable WhatsApp Enquiry Button with pointer-events-auto */}
-                  <div className="mt-4 w-full">
+                  {/* Small WhatsApp query icon in the corner for Hotel Stay */}
+                  {item.isHotelStay && (
                     <a 
                       href={waLink} 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="pointer-events-auto cursor-pointer w-full py-2 px-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-full font-black text-[8px] uppercase tracking-widest transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:shadow-[0_4px_12px_rgba(16,185,129,0.5)] border border-emerald-400/20 flex items-center justify-center gap-1.5"
+                      title="WhatsApp Enquiry"
+                      className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:scale-110 active:scale-95 transition-all pointer-events-auto cursor-pointer border border-emerald-400/20"
                     >
                       <FaWhatsapp size={10} className="animate-bounce" />
-                      Enquiry
                     </a>
-                  </div>
-                </div>
+                  )}
+                </>
               );
-            })()}
+
+              if (item.isHotelStay) {
+                return (
+                  <div 
+                    key={idx} 
+                    className="group relative bg-white p-5 rounded-[24px] border border-orange-50 shadow-sm flex flex-col items-center text-center cursor-not-allowed select-none pointer-events-none"
+                  >
+                    {innerMarkup}
+                  </div>
+                );
+              }
+
+              return (
+                <Link 
+                  key={idx} 
+                  to={item.to} 
+                  className="group relative bg-white p-5 rounded-[24px] border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center text-center"
+                >
+                  {innerMarkup}
+                </Link>
+              );
+            })}
         </div>
       </section>
 
