@@ -134,25 +134,25 @@ export default function Home() {
       <section className="w-full max-w-xl px-4 mb-12">
         <div className="grid grid-cols-2 gap-3">
             {[
-              { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
-              { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
-              { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
-              { to: "#", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: t('home.stay_guide') || 'Stay Guide', isHotelStay: true }
+              { to: "/watch-arjee", icon: <FaVideo size={14} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
+              { to: "/crowd-status", icon: <FaUsers size={14} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
+              { to: "/parking-guide", icon: <FaParking size={14} />, title: t('home.parking'), desc: 'Nav Guide' },
+              { to: "#", icon: <FaBed size={14} />, title: t('home.hotel_stay'), desc: t('home.stay_guide') || 'Stay Guide', isHotelStay: true }
             ].map((item, idx) => {
               const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
               const cleanWaNumber = waNumber.replace(/\D/g, '');
               const waLink = `https://wa.me/${cleanWaNumber || '91XXXXXXXXXX'}?text=Hello%20Shyam%20Bhog,%20I%20want%20hotel%20enquiry`;
 
               const innerMarkup = (
-                <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
-                  <div className="w-9 h-9 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
+                <div className="flex flex-col items-center justify-center h-full w-full gap-1 px-1">
+                  <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-0.5">
                     {item.icon}
                   </div>
                   <div className="flex items-center gap-1 justify-center w-full">
-                    <h3 className="text-[18px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
-                    {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
+                    <h3 className="text-[13px] sm:text-[14px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
+                    {item.badge && <span className={`w-1 h-1 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[9px] tracking-[0.18em] font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1.5">{item.desc}</p>
+                  <p className="text-[8px] sm:text-[8.5px] tracking-wider font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1">{item.desc}</p>
                 </div>
               );
 
@@ -160,10 +160,10 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
+                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[115px] p-2.5 rounded-[22px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
                   >
                     {/* Floating Coming Soon Badge */}
-                    <span className="absolute -top-2 right-3 text-[9px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
+                    <span className="absolute -top-1.5 right-2 text-[8px] px-1.5 py-0.5 rounded-full bg-orange-500 text-white font-semibold shadow-sm z-20 pointer-events-none uppercase tracking-wider leading-none">
                       Coming Soon
                     </span>
 
@@ -173,9 +173,9 @@ export default function Home() {
                       target="_blank" 
                       rel="noreferrer" 
                       title="WhatsApp Enquiry"
-                      className="absolute top-3 right-3 text-[9px] px-2.5 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold flex items-center justify-center shadow-md pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
+                      className="absolute top-2 right-2 text-[8px] px-2 py-0.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold flex items-center justify-center shadow-md pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
                     >
-                      <FaWhatsapp size={10} className="animate-bounce" />
+                      <FaWhatsapp size={8} className="animate-bounce" />
                     </a>
 
                     {innerMarkup}
@@ -187,7 +187,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
+                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[115px] p-2.5 rounded-[22px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
                 >
                   {innerMarkup}
                 </Link>
