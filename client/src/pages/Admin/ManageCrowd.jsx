@@ -292,6 +292,50 @@ export default function ManageCrowd() {
     });
   };
 
+  const DEFAULT_AARTIS = [
+    { aartiName: 'Mangla Aarti',   startTime: '04:30 AM', endTime: '05:15 AM', description: 'Pratah pehli pooja – Shyam Baba ko jagaya jata hai', priority: 0 },
+    { aartiName: 'Shringar Aarti', startTime: '07:30 AM', endTime: '08:15 AM', description: 'Shringaar – Shyam Baba ko sajaya jata hai', priority: 1 },
+    { aartiName: 'Bhog Aarti',     startTime: '12:15 PM', endTime: '01:00 PM', description: 'Dopahar ka bhog – Shyam Baba ko prasad arpit', priority: 2 },
+    { aartiName: 'Sandhya Aarti',  startTime: '06:30 PM', endTime: '07:15 PM', description: 'Sandhya dip – Sham ki aarti prasad', priority: 3 },
+    { aartiName: 'Shayan Aarti',   startTime: '09:30 PM', endTime: '10:15 PM', description: 'Raat ki pooja – Shyam Baba ko sulaya jata hai', priority: 4 },
+  ];
+
+  const handleQuickAddAarti = async (preset) => {
+    try {
+      await API.post('/crowd-status/aarti-timings', {
+        ...preset,
+        isActive: true,
+        repeatDailyForever: true,
+        festivalDate: null
+      });
+      alert(`${preset.aartiName} add ho gaya! 🙏`);
+      fetchAartiTimings();
+    } catch (err) {
+      console.error(err);
+      alert(`Failed to add ${preset.aartiName}`);
+    }
+  };
+
+  const handleSeedAllAartis = async () => {
+    if (!window.confirm('Kya aap sabhi 5 default Aarti timings add karna chahte hain?')) return;
+    try {
+      setSaving(true);
+      await API.post('/crowd-status/aarti-timings', DEFAULT_AARTIS.map(a => ({
+        ...a,
+        isActive: true,
+        repeatDailyForever: true,
+        festivalDate: null
+      })));
+      alert('Sabhi 5 Aarti timings successfully add ho gayi! 🙏');
+      fetchAartiTimings();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to seed default Aarti timings.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const fetchData = async () => {
     try {
       const user = JSON.parse(localStorage.getItem('userInfo'));
@@ -435,6 +479,65 @@ export default function ManageCrowd() {
                               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage all temple Aarti timings dynamically</p>
                            </div>
                         </div>
+
+                         {/* QUICK ADD DEFAULTS */}
+                         <div className="bg-gradient-to-br from-orange-50 to-amber-50/30 border border-orange-100 p-6 rounded-2xl space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                               <div>
+                                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                                     <FaBolt className="text-[#F07924]" size={12} /> Quick Add Default Aartis
+                                  </h4>
+                                  <p className="text-[9px] font-medium text-slate-400 mt-0.5">Har aarti ko alag alag add karo, ya ek click mein sabhi add karo</p>
+                               </div>
+                               <button
+                                  type="button"
+                                  onClick={handleSeedAllAartis}
+                                  disabled={saving}
+                                  className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#F07924] transition-all shadow-md shrink-0 disabled:opacity-50"
+                               >
+                                  <FaPlus size={10} /> {saving ? 'Adding...' : 'Seed All 5 Aartis'}
+                               </button>
+                            </div>
+
+                            <div className="grid gap-3">
+                               {DEFAULT_AARTIS.map((preset, idx) => {
+                                  const alreadyExists = aartiTimings.some(a => a.aartiName === preset.aartiName);
+                                  return (
+                                     <div key={idx} className={`flex items-center justify-between p-4 rounded-xl border gap-3 transition-all ${
+                                        alreadyExists 
+                                           ? 'bg-white/50 border-slate-100 opacity-60' 
+                                           : 'bg-white border-orange-100/60 hover:border-orange-200'
+                                     }`}>
+                                        <div className="flex items-center gap-3 flex-grow min-w-0">
+                                           <div className="w-9 h-9 rounded-xl bg-orange-50 text-[#F07924] flex items-center justify-center shrink-0">
+                                              <FaClock size={14} />
+                                           </div>
+                                           <div className="min-w-0">
+                                              <p className="text-[12px] font-extrabold text-slate-900 uppercase tracking-tight leading-none">{preset.aartiName}</p>
+                                              <p className="text-[9px] font-bold text-[#F07924] mt-0.5">{preset.startTime} — {preset.endTime}</p>
+                                              <p className="text-[8px] text-slate-400 mt-0.5 truncate">{preset.description}</p>
+                                           </div>
+                                        </div>
+                                        <div className="shrink-0">
+                                           {alreadyExists ? (
+                                              <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[9px] font-bold uppercase tracking-widest border border-emerald-100">
+                                                 <FaCheckCircle size={10} /> Added
+                                              </span>
+                                           ) : (
+                                              <button
+                                                 type="button"
+                                                 onClick={() => handleQuickAddAarti(preset)}
+                                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 text-[#F07924] hover:bg-[#F07924] hover:text-white text-[9px] font-bold uppercase tracking-widest border border-orange-100 transition-all"
+                                              >
+                                                 <FaPlus size={9} /> Add
+                                              </button>
+                                           )}
+                                        </div>
+                                     </div>
+                                  );
+                               })}
+                            </div>
+                         </div>
 
                         {/* CONFIGURATION FORM */}
                         <form onSubmit={handleSaveAarti} className="bg-slate-50/50 border border-slate-100 p-6 rounded-2xl space-y-6">
