@@ -131,8 +131,8 @@ export default function Home() {
       </section>
 
       {/* ── DIVINE HUB ── */}
-      <section className="w-full max-w-xl lg:max-w-5xl px-4 md:px-6 mb-12">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
+      <section className="w-full max-w-xl px-4 mb-12">
+        <div className="grid grid-cols-2 gap-3">
             {[
               { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
               { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
@@ -145,14 +145,14 @@ export default function Home() {
 
               const innerMarkup = (
                 <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
-                  <div className="w-9 h-9 md:w-11 md:h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
+                  <div className="w-9 h-9 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
                     {item.icon}
                   </div>
                   <div className="flex items-center gap-1 justify-center w-full">
-                    <h3 className="text-[18px] md:text-[24px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
+                    <h3 className="text-[18px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
                     {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[9px] md:text-[11px] tracking-[0.18em] font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1.5">{item.desc}</p>
+                  <p className="text-[9px] tracking-[0.18em] font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1.5">{item.desc}</p>
                 </div>
               );
 
@@ -160,7 +160,7 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] lg:h-[180px] max-w-full lg:max-w-[240px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none hover:scale-[1.02] transition-all duration-300"
+                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none hover:scale-[1.02] transition-all duration-300"
                   >
                     {/* Floating Coming Soon Badge */}
                     <span className="absolute -top-2 right-3 text-[9px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
@@ -187,7 +187,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] lg:h-[180px] max-w-full lg:max-w-[240px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center hover:scale-[1.02] transition-all duration-300"
+                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center hover:scale-[1.02] transition-all duration-300"
                 >
                   {innerMarkup}
                 </Link>
@@ -218,8 +218,8 @@ export default function Home() {
       </div>
 
       {/* ── PREMIUM OFFERING FEED ── */}
-      <div className="w-full max-w-5xl px-3 mb-20">
-        <div className={`grid gap-4 ${activeTab === 'Bhog' ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'}`}>
+      <div className="w-full max-w-xl px-3 mb-20">
+        <div className={`grid gap-4 ${activeTab === 'Bhog' ? 'grid-cols-2 gap-3' : 'grid-cols-1'}`}>
           {filteredServices.length === 0 ? (
             <div className="col-span-full py-20 text-center bg-white rounded-[32px] border border-dashed border-orange-100/50">
               <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">No offerings in this category</p>
