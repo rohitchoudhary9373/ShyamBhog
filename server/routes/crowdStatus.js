@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const CrowdStatus = require('../models/CrowdStatus');
 const DarshanWaitTime = require('../models/DarshanWaitTime');
+const AartiTiming = require('../models/AartiTiming');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 router.get('/', async (req, res) => {
@@ -211,6 +212,114 @@ router.delete('/wait-times/:id', protect, admin, async (req, res) => {
   try {
     const adminId = req.effectiveId;
     const record = await DarshanWaitTime.findOneAndDelete({ _id: req.params.id, adminId });
+    if (!record) {
+      return res.status(404).json({ success: false, message: "Record not found" });
+    }
+    res.json({ success: true, message: "Deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+// GET /aarti-timings - Public route to fetch today's Aarti timings
+router.get('/aarti-timings', async (req, res) => {
+  try {
+    const { tenantId } = req.query;
+    let adminId = tenantId;
+    if (!adminId || adminId === 'undefined') {
+      const User = require('../models/User');
+      const superAdmin = await User.findOne({ role: "admin" }).lean();
+      adminId = superAdmin ? superAdmin._id : null;
+    }
+
+    const getLocalDateString = (d) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const todayStr = getLocalDateString(new Date());
+
+    // 1. Fetch active configs
+    const configs = await AartiTiming.find({ adminId, isActive: true }).sort({ priority: 1, startTime: 1 }).lean();
+
+    // 2. Check for festival override matching today's date
+    const festivalConfigs = configs.filter(c => c.festivalDate === todayStr);
+
+    let result;
+    if (festivalConfigs.length > 0) {
+      result = festivalConfigs;
+    } else {
+      result = configs.filter(c => !c.festivalDate);
+    }
+
+    // 3. Fallback to default aarti timings if no configs found
+    if (result.length === 0) {
+      result = [
+        { aartiName: "Mangla Aarti", startTime: "04:30 AM", endTime: "05:15 AM", description: "First morning prayer", repeatDailyForever: true },
+        { aartiName: "Shringar Aarti", startTime: "07:30 AM", endTime: "08:15 AM", description: "Lord decoration details", repeatDailyForever: true },
+        { aartiName: "Bhog Aarti", startTime: "12:15 PM", endTime: "01:00 PM", description: "Midday food offering", repeatDailyForever: true },
+        { aartiName: "Sandhya Aarti", startTime: "06:30 PM", endTime: "07:15 PM", description: "Evening lighting prayer", repeatDailyForever: true },
+        { aartiName: "Shayan Aarti", startTime: "09:30 PM", endTime: "10:15 PM", description: "Night rest routine", repeatDailyForever: true }
+      ];
+    }
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET /aarti-timings/admin - Fetch all configs (including inactive/festival overrides) for admin view
+router.get('/aarti-timings/admin', protect, admin, async (req, res) => {
+  try {
+    const adminId = req.effectiveId;
+    const configs = await AartiTiming.find({ adminId }).sort({ priority: 1, festivalDate: 1, startTime: 1 });
+    res.json(configs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /aarti-timings - Create or bulk-create Aarti timings
+router.post('/aarti-timings', protect, admin, async (req, res) => {
+  try {
+    const adminId = req.effectiveId;
+    const payload = req.body;
+    let data;
+    if (Array.isArray(payload)) {
+      data = await AartiTiming.insertMany(payload.map(p => ({ ...p, adminId })));
+    } else {
+      data = await AartiTiming.create({ ...payload, adminId });
+    }
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// PUT /aarti-timings/:id - Update single entry
+router.put('/aarti-timings/:id', protect, admin, async (req, res) => {
+  try {
+    const adminId = req.effectiveId;
+    const record = await AartiTiming.findOneAndUpdate(
+      { _id: req.params.id, adminId },
+      req.body,
+      { new: true }
+    );
+    if (!record) {
+      return res.status(404).json({ success: false, message: "Record not found" });
+    }
+    res.json({ success: true, data: record });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE /aarti-timings/:id - Delete single entry
+router.delete('/aarti-timings/:id', protect, admin, async (req, res) => {
+  try {
+    const adminId = req.effectiveId;
+    const record = await AartiTiming.findOneAndDelete({ _id: req.params.id, adminId });
     if (!record) {
       return res.status(404).json({ success: false, message: "Record not found" });
     }

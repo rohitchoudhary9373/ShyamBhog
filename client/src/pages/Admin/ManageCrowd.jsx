@@ -54,6 +54,21 @@ export default function ManageCrowd() {
   const [waitTimes, setWaitTimes] = useState([]);
   const [waitLoading, setWaitLoading] = useState(false);
 
+  const [aartiTimings, setAartiTimings] = useState([]);
+  const [aartiLoading, setAartiLoading] = useState(false);
+  const [newAarti, setNewAarti] = useState({
+    aartiName: 'Mangla Aarti',
+    startTime: '04:30 AM',
+    endTime: '05:15 AM',
+    description: 'First morning prayer',
+    isActive: true,
+    priority: 0,
+    repeatDailyForever: true,
+    festivalDate: ''
+  });
+
+  const aartiPresets = ['Mangla Aarti', 'Shringar Aarti', 'Bhog Aarti', 'Sandhya Aarti', 'Shayan Aarti', 'Special Festival Aarti'];
+
   const [newEntry, setNewEntry] = useState({
     exactDate: '',
     weekday: 'Monday',
@@ -176,6 +191,7 @@ export default function ManageCrowd() {
   useEffect(() => {
     fetchData();
     fetchWaitTimes();
+    fetchAartiTimings();
   }, []);
 
   const fetchWaitTimes = async () => {
@@ -188,6 +204,92 @@ export default function ManageCrowd() {
     } finally {
       setWaitLoading(false);
     }
+  };
+
+  const fetchAartiTimings = async () => {
+    setAartiLoading(true);
+    try {
+      const res = await API.get('/crowd-status/aarti-timings/admin');
+      setAartiTimings(res.data || []);
+    } catch (err) {
+      console.error("Error fetching admin aarti timings:", err);
+    } finally {
+      setAartiLoading(false);
+    }
+  };
+
+  const handleSaveAarti = async (e) => {
+    e.preventDefault();
+    try {
+      setSaving(true);
+      const payload = {
+        aartiName: newAarti.aartiName,
+        startTime: newAarti.startTime,
+        endTime: newAarti.endTime,
+        description: newAarti.description,
+        isActive: newAarti.isActive,
+        priority: Number(newAarti.priority) || 0,
+        repeatDailyForever: newAarti.repeatDailyForever,
+        festivalDate: newAarti.festivalDate || null
+      };
+
+      if (newAarti._id) {
+        await API.put(`/crowd-status/aarti-timings/${newAarti._id}`, payload);
+        alert("Aarti timing updated successfully! 🙏");
+      } else {
+        await API.post('/crowd-status/aarti-timings', payload);
+        alert("Aarti timing created successfully! 🙏");
+      }
+      fetchAartiTimings();
+      setNewAarti({
+        aartiName: 'Mangla Aarti',
+        startTime: '04:30 AM',
+        endTime: '05:15 AM',
+        description: 'First morning prayer',
+        isActive: true,
+        priority: 0,
+        repeatDailyForever: true,
+        festivalDate: ''
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save Aarti timing.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteAarti = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this Aarti timing configuration?")) return;
+    try {
+      await API.delete(`/crowd-status/aarti-timings/${id}`);
+      fetchAartiTimings();
+    } catch (err) {
+      alert("Failed to delete Aarti timing config.");
+    }
+  };
+
+  const handleToggleActiveAarti = async (item) => {
+    try {
+      await API.put(`/crowd-status/aarti-timings/${item._id}`, { isActive: !item.isActive });
+      fetchAartiTimings();
+    } catch (err) {
+      alert("Failed to toggle status.");
+    }
+  };
+
+  const handleEditAarti = (item) => {
+    setNewAarti({
+      _id: item._id,
+      aartiName: item.aartiName,
+      startTime: item.startTime,
+      endTime: item.endTime,
+      description: item.description || '',
+      isActive: item.isActive,
+      priority: item.priority || 0,
+      repeatDailyForever: item.repeatDailyForever,
+      festivalDate: item.festivalDate || ''
+    });
   };
 
   const fetchData = async () => {
@@ -221,10 +323,7 @@ export default function ManageCrowd() {
     }
   };
 
-  // Helper functions for slots/advisories...
-  const addSlot = () => setData({ ...data, slots: [...data.slots, { title: '', startTime: '', endTime: '', level: 'Low', notes: '', order: data.slots.length }] });
-  const updateSlot = (index, field, val) => { const newSlots = [...data.slots]; newSlots[index][field] = val; setData({ ...data, slots: newSlots }); };
-  const removeSlot = (index) => setData({ ...data, slots: data.slots.filter((_, i) => i !== index) });
+  // Helper functions for advisories...
   
   const addAdvisory = () => setData({ ...data, advisories: [...data.advisories, { text: '', order: data.advisories.length }] });
   const updateAdvisory = (index, val) => { const newAdv = [...data.advisories]; newAdv[index].text = val; setData({ ...data, advisories: newAdv }); };
@@ -273,7 +372,7 @@ export default function ManageCrowd() {
             <div className="flex flex-wrap gap-2 p-1.5 bg-white border border-slate-200 rounded-xl w-fit">
                {[
                  { id: 'hero', label: 'Hero Content', icon: <FaStar /> },
-                 { id: 'slots', label: 'Time Slots', icon: <FaClock /> },
+                 { id: 'aartiTimings', label: 'Aarti Timings', icon: <FaClock /> },
                  { id: 'advisory', label: 'Advisories', icon: <FaShieldAlt /> },
                  { id: 'weekly', label: 'Weekly Patterns', icon: <FaChartLine /> },
                  { id: 'share', label: 'Share Engine', icon: <FaShareAlt /> },
@@ -328,26 +427,255 @@ export default function ManageCrowd() {
                     </motion.div>
                   )}
 
-                  {activeTab === 'slots' && (
-                    <motion.div key="slots" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-                       <div className="flex items-center justify-between">
-                          <h3 className="text-xl font-bold text-slate-900 tracking-tight uppercase">Slot Registry</h3>
-                          <button onClick={addSlot} className="bg-orange-50 text-orange-600 px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all"><FaPlus className="inline mr-2" /> Add Slot</button>
-                       </div>
-                       <div className="space-y-4">
-                          {data.slots.map((slot, i) => (
-                             <div key={i} className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-6 relative group">
-                                <button onClick={() => removeSlot(i)} className="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition-colors"><FaTrash size={12} /></button>
-                                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
-                                   <div className="md:col-span-4 space-y-2"><label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Title</label><input type="text" value={slot.title} onChange={e => updateSlot(i, 'title', e.target.value)} className="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl font-bold text-xs" /></div>
-                                   <div className="md:col-span-3 space-y-2"><label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Start</label><input type="text" value={slot.startTime} onChange={e => updateSlot(i, 'startTime', e.target.value)} className="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl font-bold text-xs" /></div>
-                                   <div className="md:col-span-3 space-y-2"><label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">End</label><input type="text" value={slot.endTime} onChange={e => updateSlot(i, 'endTime', e.target.value)} className="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl font-bold text-xs" /></div>
-                                   <div className="md:col-span-2 space-y-2"><select value={slot.level} onChange={e => updateSlot(i, 'level', e.target.value)} className="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl font-bold text-[10px] uppercase tracking-widest"><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option><option value="Extreme">Extreme</option></select></div>
-                                </div>
-                             </div>
-                          ))}
-                       </div>
-                    </motion.div>
+                  {activeTab === 'aartiTimings' && (
+                     <motion.div key="aartiTimings" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-50 pb-6 gap-4">
+                           <div>
+                              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Aarti Timing <span className="text-[#F07924] not-italic">Manager</span></h3>
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage all temple Aarti timings dynamically</p>
+                           </div>
+                        </div>
+
+                        {/* CONFIGURATION FORM */}
+                        <form onSubmit={handleSaveAarti} className="bg-slate-50/50 border border-slate-100 p-6 rounded-2xl space-y-6">
+                           <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{newAarti._id ? "Update Aarti Timing" : "Add Aarti Timing"}</h4>
+                              {newAarti._id && (
+                                 <button 
+                                    type="button" 
+                                    onClick={() => setNewAarti({
+                                       aartiName: 'Mangla Aarti',
+                                       startTime: '04:30 AM',
+                                       endTime: '05:15 AM',
+                                       description: 'First morning prayer',
+                                       isActive: true,
+                                       priority: 0,
+                                       repeatDailyForever: true,
+                                       festivalDate: ''
+                                    })}
+                                    className="text-slate-450 hover:text-slate-600 text-[9px] font-bold uppercase tracking-widest"
+                                 >
+                                    Cancel Edit
+                                 </button>
+                              )}
+                           </div>
+                           
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Aarti Preset</label>
+                                 <select 
+                                    value={aartiPresets.includes(newAarti.aartiName) ? newAarti.aartiName : 'Special Festival Aarti'} 
+                                    onChange={e => {
+                                       const val = e.target.value;
+                                       if (val === 'Special Festival Aarti') {
+                                          setNewAarti({...newAarti, aartiName: 'Special Festival Aarti'});
+                                       } else {
+                                          setNewAarti({...newAarti, aartiName: val});
+                                       }
+                                    }} 
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-bold text-xs"
+                                 >
+                                    {aartiPresets.map(name => (
+                                       <option key={name} value={name}>{name}</option>
+                                    ))}
+                                 </select>
+                              </div>
+
+                              {(!aartiPresets.filter(n => n !== 'Special Festival Aarti').includes(newAarti.aartiName)) && (
+                                 <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Custom Aarti Name</label>
+                                    <input 
+                                       type="text" 
+                                       required 
+                                       value={newAarti.aartiName} 
+                                       onChange={e => setNewAarti({...newAarti, aartiName: e.target.value})} 
+                                       placeholder="Enter Aarti Name" 
+                                       className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-bold text-xs" 
+                                    />
+                                 </div>
+                              )}
+
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Start Time</label>
+                                 <input 
+                                    type="text" 
+                                    required 
+                                    value={newAarti.startTime} 
+                                    onChange={e => setNewAarti({...newAarti, startTime: e.target.value})} 
+                                    placeholder="e.g. 04:30 AM" 
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-bold text-xs" 
+                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">End Time</label>
+                                 <input 
+                                    type="text" 
+                                    required 
+                                    value={newAarti.endTime} 
+                                    onChange={e => setNewAarti({...newAarti, endTime: e.target.value})} 
+                                    placeholder="e.g. 05:15 AM" 
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-bold text-xs" 
+                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Priority Order</label>
+                                 <input 
+                                    type="number" 
+                                    value={newAarti.priority} 
+                                    onChange={e => setNewAarti({...newAarti, priority: e.target.value})} 
+                                    placeholder="e.g. 0 (lower values sort first)" 
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-bold text-xs" 
+                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Festival Date (Optional Override)</label>
+                                 <input 
+                                    type="date" 
+                                    value={newAarti.festivalDate} 
+                                    onChange={e => setNewAarti({...newAarti, festivalDate: e.target.value})} 
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-bold text-xs" 
+                                 />
+                              </div>
+                           </div>
+
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-bold text-slate-450 uppercase tracking-widest px-1">Description / Notes</label>
+                              <textarea 
+                                 value={newAarti.description} 
+                                 onChange={e => setNewAarti({...newAarti, description: e.target.value})} 
+                                 placeholder="e.g. First morning prayer, Lord is bathed and decorated." 
+                                 className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#F07924] font-medium text-xs leading-relaxed resize-none" 
+                                 rows="2" 
+                              />
+                           </div>
+
+                           <div className="flex flex-wrap gap-6 items-center justify-between pt-2">
+                              <div className="flex gap-6 items-center">
+                                 <div className="flex items-center gap-2">
+                                    <button
+                                       type="button"
+                                       onClick={() => setNewAarti({...newAarti, repeatDailyForever: !newAarti.repeatDailyForever})}
+                                       className="focus:outline-none"
+                                    >
+                                       {newAarti.repeatDailyForever ? (
+                                          <FaToggleOn className="text-[#F07924] text-2xl" />
+                                       ) : (
+                                          <FaToggleOff className="text-slate-300 text-2xl" />
+                                       )}
+                                    </button>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Repeat Daily Forever</span>
+                                 </div>
+
+                                 <div className="flex items-center gap-2">
+                                    <button
+                                       type="button"
+                                       onClick={() => setNewAarti({...newAarti, isActive: !newAarti.isActive})}
+                                       className="focus:outline-none"
+                                    >
+                                       {newAarti.isActive ? (
+                                          <FaToggleOn className="text-[#F07924] text-2xl" />
+                                       ) : (
+                                          <FaToggleOff className="text-slate-300 text-2xl" />
+                                       )}
+                                    </button>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Active</span>
+                                 </div>
+                              </div>
+
+                              <button 
+                                 type="submit" 
+                                 className="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#F07924] transition-all shadow-md"
+                              >
+                                 {newAarti._id ? "Update Config" : "Save Aarti Config"}
+                              </button>
+                           </div>
+                        </form>
+
+                        {/* LISTING SENSITIVE DATA GRID */}
+                        <div className="space-y-4">
+                           <h4 className="text-xs font-bold text-slate-950 uppercase tracking-widest">Active Aarti Timing Configurations</h4>
+                           
+                           {aartiLoading ? (
+                              <div className="text-center py-10">
+                                 <div className="w-8 h-8 border-2 border-t-orange-500 rounded-full animate-spin mx-auto mb-2"></div>
+                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Syncing Aarti Registry...</p>
+                              </div>
+                           ) : aartiTimings.length === 0 ? (
+                              <div className="bg-slate-50/50 border border-dashed border-slate-200 p-10 rounded-2xl text-center text-slate-400 text-xs font-medium">
+                                 No configurations found. Standard system fallback timings are active.
+                              </div>
+                           ) : (
+                              <div className="grid gap-3">
+                                 {aartiTimings.map((item) => (
+                                    <div key={item._id} className="bg-white p-5 border border-slate-100 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                       <div className="space-y-1.5 flex-grow">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                             {item.festivalDate ? (
+                                                <span className="px-2.5 py-0.5 bg-orange-600 text-white text-[9px] font-bold uppercase tracking-wider rounded-md">
+                                                   Festival Date: {item.festivalDate}
+                                                </span>
+                                             ) : (
+                                                <span className="px-2.5 py-0.5 bg-purple-50 text-purple-700 border border-purple-100 text-[9px] font-bold uppercase tracking-wider rounded-md">
+                                                   Daily Recurring
+                                                </span>
+                                             )}
+                                             <span className="text-xs font-extrabold text-slate-800">{item.aartiName}</span>
+                                             {!item.isActive && (
+                                                <span className="px-2 py-0.5 bg-red-50 text-red-600 text-[8px] font-bold uppercase tracking-wider rounded-full border border-red-100/50">Disabled</span>
+                                             )}
+                                          </div>
+                                          <div className="flex flex-wrap gap-2 pt-1">
+                                             <span className="bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-600 flex items-center gap-1.5">
+                                                <FaClock size={12} className="text-slate-450" />
+                                                <strong>{item.startTime} - {item.endTime}</strong>
+                                             </span>
+                                             {item.priority !== undefined && (
+                                                <span className="bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-600">
+                                                   Priority: <strong>{item.priority}</strong>
+                                                </span>
+                                             )}
+                                          </div>
+                                          {item.description && (
+                                             <p className="text-[11px] text-slate-550 italic mt-1 font-medium">{item.description}</p>
+                                          )}
+                                       </div>
+
+                                       <div className="flex items-center gap-2 shrink-0">
+                                          <button
+                                             type="button"
+                                             onClick={() => handleToggleActiveAarti(item)}
+                                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                                                item.isActive 
+                                                   ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' 
+                                                   : 'bg-slate-100 text-slate-400 hover:bg-slate-400 hover:text-white'
+                                             }`}
+                                          >
+                                             {item.isActive ? <FaToggleOn size={16} /> : <FaToggleOff size={16} />}
+                                          </button>
+                                          <button
+                                             type="button"
+                                             onClick={() => handleEditAarti(item)}
+                                             className="px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-widest border border-orange-100 text-orange-600 hover:bg-orange-50 transition-all"
+                                          >
+                                             Edit Setup
+                                          </button>
+                                          <button
+                                             type="button"
+                                             onClick={() => handleDeleteAarti(item._id)}
+                                             className="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"
+                                          >
+                                             <FaTrash size={12} />
+                                          </button>
+                                       </div>
+                                    </div>
+                                 ))}
+                              </div>
+                           )}
+                        </div>
+                     </motion.div>
                   )}
 
                   {activeTab === 'advisory' && (
@@ -775,6 +1103,43 @@ export default function ManageCrowd() {
                            </div>
                         </div>
                         <p className="text-[9px] text-slate-400 italic text-center">Changes will reflect immediately on client page</p>
+                     </div>
+                  ) : activeTab === 'aartiTimings' ? (
+                     <div className="space-y-4">
+                        <div className="text-center space-y-2">
+                           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-orange-100 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                              <FaCircle className="text-orange-500 animate-pulse" size={6} /> Aarti Live Preview
+                           </span>
+                        </div>
+                        <div className="bg-[#FFFDF9]/85 backdrop-blur-md rounded-2xl border border-[#F07924]/80 p-5 shadow-[0_8px_30px_rgba(240,121,36,0.06)] space-y-3.5 text-left">
+                           <div className="flex items-center justify-between border-b border-orange-50 pb-2.5">
+                              <span className="text-xs font-semibold text-slate-800 uppercase tracking-widest flex items-center gap-1.5">
+                                 <span className="w-1.5 h-1.5 rounded-full bg-[#F07924]"></span>
+                                 Aaj Ki Aarti Timings
+                              </span>
+                              {newAarti.festivalDate && (
+                                 <span className="text-[8px] font-extrabold text-orange-650 uppercase tracking-wider bg-orange-50 px-2 py-0.5 rounded-full">
+                                    Festival Override
+                                 </span>
+                              )}
+                           </div>
+                           <div className="bg-white p-3.5 rounded-xl border border-orange-100/50 shadow-sm flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                 <div className="w-9 h-9 rounded-lg bg-orange-50 text-[#F07924] flex items-center justify-center shrink-0">
+                                    <FaClock size={14} />
+                                 </div>
+                                 <div>
+                                    <h4 className="text-[12px] font-bold text-slate-900 leading-none mb-1 uppercase tracking-tight">{newAarti.aartiName || 'Unnamed Aarti'}</h4>
+                                    <span className="text-[9px] font-bold text-slate-400">{newAarti.startTime || '04:30 AM'} - {newAarti.endTime || '05:15 AM'}</span>
+                                    {newAarti.description && <p className="text-[8px] text-slate-400 mt-0.5 font-medium leading-none line-clamp-1">{newAarti.description}</p>}
+                                 </div>
+                              </div>
+                              <span className="px-2 py-0.5 rounded-md text-[8px] font-bold uppercase border bg-emerald-50 text-emerald-700 border-emerald-100/50">
+                                 PREVIEW
+                              </span>
+                           </div>
+                        </div>
+                        <p className="text-[9px] text-slate-400 italic text-center">Preview of the timing configuration being edited/created</p>
                      </div>
                   ) : (
                      <>

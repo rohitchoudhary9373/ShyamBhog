@@ -24,12 +24,14 @@ export default function CrowdStatus() {
   const [copying, setCopying] = useState(false);
   const [waitTimes, setWaitTimes] = useState([]);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0);
+  const [aartiTimings, setAartiTimings] = useState([]);
   const shareRef = useRef(null);
   const popupRef = useRef(null);
 
   useEffect(() => {
     fetchCrowdStatus();
     fetchWaitTimes();
+    fetchAartiTimings();
     const handleClickOutside = (e) => {
       if (popupRef.current && !popupRef.current.contains(e.target)) {
         setShowSharePopup(false);
@@ -38,6 +40,65 @@ export default function CrowdStatus() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [settingsAdminId]);
+
+  const fetchAartiTimings = async () => {
+    try {
+      const tenantId = settingsAdminId || '';
+      const res = await API.get(`/crowd-status/aarti-timings?tenantId=${tenantId}`);
+      setAartiTimings(res.data || []);
+    } catch (err) {
+      console.error("Error fetching aarti timings:", err);
+    }
+  };
+
+  const getAartiStatus = (startTime, endTime) => {
+    if (!startTime || !endTime) return 'UPCOMING';
+
+    const parseTimeToMinutes = (timeStr) => {
+      let clean = timeStr.trim().toUpperCase();
+      let hours = 0;
+      let minutes = 0;
+      
+      const ampmMatch = clean.match(/^(\d+):(\d+)\s*(AM|PM)$/);
+      if (ampmMatch) {
+         hours = parseInt(ampmMatch[1], 10);
+         minutes = parseInt(ampmMatch[2], 10);
+         let period = ampmMatch[3];
+         if (period === 'PM' && hours < 12) hours += 12;
+         if (period === 'AM' && hours === 12) hours = 0;
+      } else {
+         const normalMatch = clean.match(/^(\d+):(\d+)$/);
+         if (normalMatch) {
+            hours = parseInt(normalMatch[1], 10);
+            minutes = parseInt(normalMatch[2], 10);
+         }
+      }
+      return hours * 60 + minutes;
+    };
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const startMin = parseTimeToMinutes(startTime);
+    const endMin = parseTimeToMinutes(endTime);
+
+    if (currentMinutes >= startMin && currentMinutes <= endMin) {
+      return 'LIVE NOW';
+    } else if (currentMinutes > endMin) {
+      return 'COMPLETED';
+    }
+    return 'UPCOMING';
+  };
+
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'LIVE NOW':
+        return 'bg-emerald-50 text-emerald-700 border-emerald-100/50 animate-pulse';
+      case 'COMPLETED':
+        return 'bg-slate-50 text-slate-400 border-slate-100/50';
+      default:
+        return 'bg-amber-50 text-amber-700 border-amber-100/50';
+    }
+  };
 
   const fetchWaitTimes = async () => {
     try {
@@ -432,17 +493,41 @@ export default function CrowdStatus() {
 
            <AnimatePresence mode="wait">
              {viewMode === 'today' ? (
-               <motion.div key="today" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="grid gap-3">
-                  {(crowd?.slots && crowd.slots.length > 0 ? crowd.slots : []).map((slot, i) => (
-                    <div key={i} className="bg-white p-4 rounded-xl border border-orange-50 shadow-sm flex items-center justify-between group transition-all hover:border-orange-200">
-                       <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-all"><FaClock size={16} /></div>
-                          <div><h4 className="text-[13px] font-bold text-slate-900 leading-none mb-1 uppercase italic">{slot.title}</h4><span className="text-[9px] font-bold text-slate-400 italic">{slot.startTime} - {slot.endTime}</span></div>
-                       </div>
-                       <span className={`px-3 py-1 rounded-lg text-[10px] font-semibold uppercase border ${slot.level === 'Low' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>{slot.level}</span>
-                    </div>
-                  ))}
-               </motion.div>
+                <motion.div key="today" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+                   <div className="flex items-center justify-between px-1">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aaj Ki Aarti Timings</span>
+                      <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                   </div>
+                   
+                   <div className="grid gap-3">
+                      {(aartiTimings.length > 0 ? aartiTimings : [
+                         { aartiName: "Mangla Aarti", startTime: "04:30 AM", endTime: "05:15 AM", description: "First morning prayer" },
+                         { aartiName: "Shringar Aarti", startTime: "07:30 AM", endTime: "08:15 AM", description: "Lord decoration details" },
+                         { aartiName: "Bhog Aarti", startTime: "12:15 PM", endTime: "01:00 PM", description: "Midday food offering" },
+                         { aartiName: "Sandhya Aarti", startTime: "06:30 PM", endTime: "07:15 PM", description: "Evening lighting prayer" },
+                         { aartiName: "Shayan Aarti", startTime: "09:30 PM", endTime: "10:15 PM", description: "Night rest routine" }
+                      ]).map((aarti, i) => {
+                         const status = getAartiStatus(aarti.startTime, aarti.endTime);
+                         return (
+                            <div key={i} className="bg-white p-4 rounded-2xl border border-orange-50 hover:border-orange-100 shadow-sm flex items-center justify-between group transition-all">
+                               <div className="flex items-center gap-4">
+                                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                                     <FaClock size={15} />
+                                  </div>
+                                  <div>
+                                     <h4 className="text-[13px] font-bold text-slate-900 leading-none mb-1 uppercase tracking-tight">{aarti.aartiName}</h4>
+                                     <span className="text-[9px] font-bold text-slate-400">{aarti.startTime} - {aarti.endTime}</span>
+                                     {aarti.description && <p className="text-[8px] text-slate-400 mt-0.5 font-medium leading-none line-clamp-1">{aarti.description}</p>}
+                                  </div>
+                               </div>
+                               <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase border ${getStatusBadgeClass(status)}`}>
+                                  {status}
+                               </span>
+                            </div>
+                         );
+                      })}
+                   </div>
+                </motion.div>
              ) : (
                <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white p-8 rounded-2xl border border-orange-50 shadow-lg">
                   <div className="flex items-end justify-between h-40 gap-4">
