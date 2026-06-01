@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import API from '../../services/api';
 import { 
   FaUsers, FaClock, FaCheckCircle, FaExclamationTriangle, 
@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ManageCrowd() {
+  const aartiFormRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState({
@@ -292,6 +293,13 @@ export default function ManageCrowd() {
     });
   };
 
+  const handleEditFromCard = (item) => {
+    handleEditAarti(item);
+    setTimeout(() => {
+      aartiFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
   const DEFAULT_AARTIS = [
     { aartiName: 'Mangla Aarti',   startTime: '04:30 AM', endTime: '05:15 AM', description: 'Pratah pehli pooja – Shyam Baba ko jagaya jata hai', priority: 0 },
     { aartiName: 'Shringar Aarti', startTime: '07:30 AM', endTime: '08:15 AM', description: 'Shringaar – Shyam Baba ko sajaya jata hai', priority: 1 },
@@ -505,7 +513,7 @@ export default function ManageCrowd() {
                                   return (
                                      <div key={idx} className={`flex items-center justify-between p-4 rounded-xl border gap-3 transition-all ${
                                         alreadyExists 
-                                           ? 'bg-white/50 border-slate-100 opacity-60' 
+                                           ? 'bg-white border-slate-150 opacity-100' 
                                            : 'bg-white border-orange-100/60 hover:border-orange-200'
                                      }`}>
                                         <div className="flex items-center gap-3 flex-grow min-w-0">
@@ -518,12 +526,33 @@ export default function ManageCrowd() {
                                               <p className="text-[8px] text-slate-400 mt-0.5 truncate">{preset.description}</p>
                                            </div>
                                         </div>
-                                        <div className="shrink-0">
-                                           {alreadyExists ? (
-                                              <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[9px] font-bold uppercase tracking-widest border border-emerald-100">
-                                                 <FaCheckCircle size={10} /> Added
-                                              </span>
-                                           ) : (
+                                        <div className="shrink-0 flex items-center gap-2">
+                                           {alreadyExists ? (() => {
+                                              const savedItem = aartiTimings.find(a => a.aartiName === preset.aartiName);
+                                              return (
+                                                 <>
+                                                    <button
+                                                       type="button"
+                                                       onClick={() => savedItem && handleToggleActiveAarti(savedItem)}
+                                                       title={savedItem?.isActive ? 'Live hai – click karo deactivate ke liye' : 'Inactive hai – click karo activate ke liye'}
+                                                       className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all border ${
+                                                          savedItem?.isActive
+                                                             ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-600 hover:text-white'
+                                                             : 'bg-slate-100 text-slate-400 border-slate-200 hover:bg-slate-400 hover:text-white'
+                                                       }`}
+                                                    >
+                                                       {savedItem?.isActive ? <FaToggleOn size={15} /> : <FaToggleOff size={15} />}
+                                                    </button>
+                                                    <button
+                                                       type="button"
+                                                       onClick={() => savedItem && handleEditFromCard(savedItem)}
+                                                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 text-[#F07924] hover:bg-[#F07924] hover:text-white text-[9px] font-bold uppercase tracking-widest border border-orange-100 transition-all"
+                                                    >
+                                                       ✏️ Edit
+                                                    </button>
+                                                 </>
+                                              );
+                                           })() : (
                                               <button
                                                  type="button"
                                                  onClick={() => handleQuickAddAarti(preset)}
@@ -540,7 +569,7 @@ export default function ManageCrowd() {
                          </div>
 
                         {/* CONFIGURATION FORM */}
-                        <form onSubmit={handleSaveAarti} className="bg-slate-50/50 border border-slate-100 p-6 rounded-2xl space-y-6">
+                        <form ref={aartiFormRef} onSubmit={handleSaveAarti} className="bg-slate-50/50 border border-slate-100 p-6 rounded-2xl space-y-6">
                            <div className="flex justify-between items-center border-b border-slate-100 pb-2">
                               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{newAarti._id ? "Update Aarti Timing" : "Add Aarti Timing"}</h4>
                               {newAarti._id && (
