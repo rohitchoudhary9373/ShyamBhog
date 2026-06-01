@@ -219,7 +219,7 @@ export default function Home() {
 
       {/* ── PREMIUM OFFERING FEED ── */}
       <div className="w-full max-w-5xl px-3 mb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className={`grid gap-4 ${activeTab === 'Bhog' ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'}`}>
           {filteredServices.length === 0 ? (
             <div className="col-span-full py-20 text-center bg-white rounded-[32px] border border-dashed border-orange-100/50">
               <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">No offerings in this category</p>
@@ -236,10 +236,10 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="bg-white rounded-[28px] w-full max-w-full p-3 md:p-5 border border-orange-50 shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between gap-3"
+                    className="bg-[#fffdf8] rounded-[32px] w-full max-w-full p-2 md:p-4 border-2 border-orange-300 hover:border-orange-400 shadow-[0_8px_30px_rgba(255,140,0,0.08)] hover:scale-[1.02] transition-all duration-300 group flex flex-col justify-between gap-3 h-auto"
                   >
                     {/* Compact Image */}
-                    <div className="relative aspect-square rounded-[20px] overflow-hidden shrink-0">
+                    <div className="relative aspect-square rounded-2xl overflow-hidden shrink-0">
                       <img 
                         src={getImageUrl(service.imageUrl)} 
                         alt={service.title} 
@@ -256,26 +256,26 @@ export default function Home() {
                     {/* Content */}
                     <div className="px-1 flex-1 flex flex-col justify-between gap-2">
                       <div className="flex flex-col gap-1">
-                        <h3 className="text-sm md:text-base font-bold text-slate-900 truncate leading-tight">{service.title}</h3>
+                        <h3 className="text-xs sm:text-sm md:text-base font-medium text-slate-900 truncate leading-tight">{service.title}</h3>
                         {service.unit && (
-                          <span className="text-xs md:text-sm font-bold text-slate-400 leading-tight">{service.unit}</span>
+                          <span className="text-[10px] md:text-xs font-normal text-slate-400 leading-tight">{service.unit}</span>
                         )}
                         <div className="flex items-center justify-between mt-1">
-                          <span className="text-sm md:text-base font-black text-slate-900 tracking-tighter leading-tight">₹{service.price}</span>
+                          <span className="text-xs md:text-sm font-semibold text-slate-900 tracking-tighter leading-tight">₹{service.price}</span>
                           
                           {/* Compact Circular Add/Quantity Control */}
                           {isInCart ? (
                             <div className="flex items-center bg-orange-50 rounded-full p-0.5 border border-orange-100 h-8 shadow-sm">
-                               <button onClick={() => updateQuantity(service._id, isInCart.quantity - 1)} className="w-6 h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm">-</button>
-                               <span className="px-2 text-[10px] font-bold text-orange-700">{isInCart.quantity}</span>
-                               <button onClick={() => updateQuantity(service._id, isInCart.quantity + 1)} className="w-6 h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm">+</button>
+                               <button onClick={() => updateQuantity(service._id, isInCart.quantity - 1)} className="w-5 h-5 md:w-6 md:h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm">-</button>
+                               <span className="px-1.5 md:px-2 text-[9px] md:text-[10px] font-bold text-orange-700">{isInCart.quantity}</span>
+                               <button onClick={() => updateQuantity(service._id, isInCart.quantity + 1)} className="w-5 h-5 md:w-6 md:h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm">+</button>
                             </div>
                           ) : (
                             <button 
                               onClick={() => addToCart(service)} 
-                              className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all hover:bg-orange-600"
+                              className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all hover:bg-orange-600"
                             >
-                              <span className="text-lg font-light">+</span>
+                              <span className="text-lg font-light leading-none">+</span>
                             </button>
                           )}
                         </div>
@@ -283,7 +283,7 @@ export default function Home() {
 
                       {/* Primary Actions Area */}
                       <div className="mt-1">
-                        <Link to={`/services/detail/${service._id}`} className="w-full bg-orange-600 text-white h-9 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg flex items-center justify-center hover:bg-orange-700 transition-all active:scale-95 leading-none">
+                        <Link to={`/services/detail/${service._id}`} className="w-full bg-orange-600 text-white py-1 md:py-1.5 rounded-lg text-[10px] font-medium shadow-md flex items-center justify-center hover:bg-orange-700 transition-all active:scale-95 leading-none px-2">
                            Buy Now
                         </Link>
                       </div>
@@ -299,7 +299,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full h-auto min-h-[280px] border border-orange-100/60 shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
+                  className="bg-[#fffdf8] rounded-[32px] w-full max-w-full h-auto min-h-[280px] border-2 border-orange-300 hover:border-orange-400 shadow-[0_8px_30px_rgba(255,140,0,0.08)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
                 >
                   {/* Top Strip for Subscription */}
                   {isRecurring && (
