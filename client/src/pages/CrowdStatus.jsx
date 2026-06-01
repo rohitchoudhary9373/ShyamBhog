@@ -22,11 +22,14 @@ export default function CrowdStatus() {
   const [viewMode, setViewMode] = useState('today');
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [waitTimes, setWaitTimes] = useState([]);
+  const [selectedDateIdx, setSelectedDateIdx] = useState(0);
   const shareRef = useRef(null);
   const popupRef = useRef(null);
 
   useEffect(() => {
     fetchCrowdStatus();
+    fetchWaitTimes();
     const handleClickOutside = (e) => {
       if (popupRef.current && !popupRef.current.contains(e.target)) {
         setShowSharePopup(false);
@@ -35,6 +38,53 @@ export default function CrowdStatus() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [settingsAdminId]);
+
+  const fetchWaitTimes = async () => {
+    try {
+      const tenantId = settingsAdminId || '';
+      const res = await API.get(`/crowd-status/wait-times?tenantId=${tenantId}`);
+      if (res.data && res.data.length > 0) {
+        setWaitTimes(res.data);
+      } else {
+        setWaitTimes(generateFallbackWaitTimes());
+      }
+    } catch (err) {
+      console.error("Error fetching wait times:", err);
+      setWaitTimes(generateFallbackWaitTimes());
+    }
+  };
+
+  const generateFallbackWaitTimes = () => {
+    const getLocalDateString = (d) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const getWeekdayName = (dateStr) => {
+      const date = new Date(dateStr + 'T00:00:00');
+      const options = { weekday: 'long' };
+      return new Intl.DateTimeFormat('en-US', options).format(date);
+    };
+
+    const result = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+      const dStr = getLocalDateString(d);
+      result.push({
+        date: dStr,
+        weekday: getWeekdayName(dStr),
+        lines: [
+          { range: "Line 1 - 4", time: "25 min", label: "Best" },
+          { range: "Line 5 - 8", time: "20 min" },
+          { range: "Line 9 - 11", time: "25 min" }
+        ]
+      });
+    }
+    return result;
+  };
 
   const fetchCrowdStatus = async () => {
     try {
@@ -99,9 +149,9 @@ export default function CrowdStatus() {
   const downloadSnapshot = async (platform = 'instagram') => {
     try {
       const dataUrl = await toPng(shareRef.current, {
-        backgroundColor: '#020617',
-        pixelRatio: 2,
-        skipFonts: true // Often helps with Safari taint issues if fonts are external
+        backgroundColor: '#FDF8F1',
+        pixelRatio: 3,
+        skipFonts: false
       });
 
       if (navigator.share && /iPhone|iPad|iPod|Mac/.test(navigator.userAgent)) {
@@ -301,11 +351,70 @@ export default function CrowdStatus() {
                     </div>
                  </div>
 
-                 <div className="w-full p-5 bg-slate-900/5 rounded-xl border border-[#0A1128]/5">
-                    <p className="text-[12px] font-bold text-slate-700 italic leading-snug line-clamp-2">
-                       "{crowd?.description || 'System online and monitoring current flow parameters.'}"
-                    </p>
-                 </div>
+                  {/* Dynamic Darshan Wait Time Module */}
+                  <div className="w-full space-y-4 pt-4 border-t border-orange-50/50">
+                     <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Darshan Wait Time</span>
+                        {waitTimes[selectedDateIdx] && (
+                           <span className="text-[9px] font-extrabold text-[#F07924] uppercase tracking-wider bg-orange-50 px-2.5 py-0.5 rounded-full border border-orange-100/30">
+                              {waitTimes[selectedDateIdx].weekday}
+                           </span>
+                        )}
+                     </div>
+
+                     {/* 7-Day Rolling Selector Strip */}
+                     <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
+                        {waitTimes.map((item, idx) => {
+                           const dateObj = new Date(item.date + 'T00:00:00');
+                           const dayNum = dateObj.getDate();
+                           const shortMonth = dateObj.toLocaleDateString('en-US', { month: 'short' });
+                           const shortWeekday = item.weekday.substring(0, 3);
+                           const isSelected = selectedDateIdx === idx;
+                           const isToday = idx === 0;
+
+                           return (
+                              <button
+                                 type="button"
+                                 key={item.date}
+                                 onClick={() => setSelectedDateIdx(idx)}
+                                 className={`flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 py-2.5 rounded-2xl border transition-all duration-300 ${
+                                    isSelected
+                                       ? 'bg-[#F07924] text-white border-[#F07924] shadow-lg shadow-orange-500/20 scale-105'
+                                       : 'bg-white text-slate-700 border-orange-100/50 hover:border-orange-300'
+                                 }`}
+                              >
+                                 <span className={`text-[8px] font-bold uppercase tracking-wider ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
+                                    {isToday ? 'Today' : shortWeekday}
+                                 </span>
+                                 <span className="text-xs font-extrabold mt-0.5">{dayNum}</span>
+                                 <span className={`text-[7px] font-semibold uppercase ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>{shortMonth}</span>
+                              </button>
+                           );
+                        })}
+                     </div>
+
+                     {/* Lines wait time detail card */}
+                     {waitTimes[selectedDateIdx] && (
+                        <div className="bg-[#FFFDF9]/85 backdrop-blur-md rounded-2xl border border-[#F07924]/80 p-4 shadow-[0_8px_30px_rgba(240,121,36,0.04)] space-y-2.5">
+                           {waitTimes[selectedDateIdx].lines.map((line, lIdx) => (
+                              <div
+                                 key={lIdx}
+                                 className="flex items-center justify-between py-2 px-3 bg-white/70 rounded-xl border border-orange-100/30 hover:border-orange-200/50 transition-all gap-2"
+                              >
+                                 <span className="text-[11px] font-bold text-slate-800">{line.range}</span>
+                                 <div className="flex items-center gap-1.5">
+                                    <span className="text-[11px] font-extrabold text-[#F07924] bg-orange-50/50 px-2 py-0.5 rounded-lg border border-orange-100/20">{line.time}</span>
+                                    {line.label && (
+                                       <span className="text-[8px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100/30 px-1.5 py-0.5 rounded-md">
+                                          {line.label}
+                                       </span>
+                                    )}
+                                 </div>
+                              </div>
+                           ))}
+                        </div>
+                     )}
+                  </div>
               </div>
            </motion.div>
         </section>
@@ -384,55 +493,111 @@ export default function CrowdStatus() {
 
       {/* ── HIDDEN SNAPSHOT (INSTAGRAM READY) ── */}
       <div className="absolute -left-[9999px]">
-         <div ref={shareRef} className="w-[1080px] h-[1920px] bg-[#020617] relative flex flex-col justify-between overflow-hidden p-16">
+         <div ref={shareRef} className="w-[1080px] h-[1920px] bg-[#FDF8F1] relative flex flex-col justify-between overflow-hidden p-20 font-sans">
             {/* Cinematic Backgrounds */}
-            <div className={`absolute top-0 right-0 w-[800px] h-[800px] ${config.pulse} rounded-full blur-[150px] opacity-20 -mr-40 -mt-40`}></div>
-            <div className="absolute bottom-0 left-0 w-[1000px] h-[1000px] bg-slate-800 rounded-full blur-[200px] opacity-40 -ml-60 -mb-60"></div>
+            <div className="absolute top-0 right-0 w-[900px] h-[900px] bg-orange-100/40 rounded-full blur-[150px] -mr-40 -mt-40"></div>
+            <div className="absolute bottom-0 left-0 w-[1100px] h-[1100px] bg-amber-50/30 rounded-full blur-[180px] -ml-60 -mb-60"></div>
             
             {/* Overlay Grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:50px_50px]"></div>
 
             {/* Header Content */}
-            <div className="relative z-10 flex justify-between items-start mt-24">
+            <div className="relative z-10 flex justify-between items-center mt-20 border-b border-orange-100/40 pb-10">
                <div>
-                  <h4 className="text-6xl font-extrabold text-white tracking-tighter mb-4">{settings?.brandName || 'Shyam Bhog'}</h4>
-                  <p className="text-2xl font-semibold text-slate-400 uppercase tracking-[0.3em]">{crowd?.shareConfig?.template?.title || 'Live Intel'}</p>
+                  <h4 className="text-5xl font-extrabold text-slate-900 tracking-tight mb-2">{settings?.brandName || 'Shyam Bhog'}</h4>
+                  <p className="text-xl font-bold text-slate-400 uppercase tracking-[0.35em]">Live Density Intel</p>
                </div>
-               <div className="w-24 h-24 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-3xl flex items-center justify-center text-white shadow-2xl">
-                  <FaUsers size={40} />
+               <div className="w-24 h-24 bg-white/95 border border-orange-100/30 rounded-[28px] flex items-center justify-center text-orange-600 shadow-xl">
+                  <FaUsers size={44} />
                </div>
             </div>
 
-            {/* Main Status Centerpiece */}
-            <div className="relative z-10 w-full flex flex-col items-center justify-center my-auto">
+            {/* Main Status Centerpiece (Replicating Website UI Card) */}
+            <div className="relative z-10 w-full bg-white/95 backdrop-blur-3xl rounded-[40px] border border-orange-100 p-12 shadow-[0_25px_60px_rgba(240,121,36,0.08)] flex flex-col items-center text-center gap-8">
                <div className="relative">
-                  <div className={`absolute -inset-10 ${config.bg} opacity-20 blur-[60px] rounded-full`}></div>
-                  <div className={`w-48 h-48 rounded-[40px] bg-white/10 backdrop-blur-3xl border-2 ${config.border} flex items-center justify-center text-[80px] shadow-2xl mb-16 mx-auto ${config.color}`}>
+                  <div className={`w-28 h-28 rounded-3xl ${config.bg} ${config.color} flex items-center justify-center text-5xl shadow-md`}>
                      <FaUsers />
                   </div>
+                  <div className={`absolute -inset-4 rounded-[36px] border border-dashed ${config.border} opacity-30`}></div>
                </div>
-               <h2 className={`text-[120px] font-extrabold text-white tracking-tighter uppercase leading-none drop-shadow-2xl text-center`}>{crowd?.status}</h2>
-               <div className="mt-8 flex items-center gap-6 px-10 py-5 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full">
-                  <span className={`w-4 h-4 rounded-full ${config.pulse} animate-pulse`}></span>
-                  <span className="text-3xl font-semibold text-slate-300 uppercase tracking-widest">Live Sync Active</span>
+
+               <div className="space-y-2">
+                  <h2 className={`text-6xl font-bold ${config.color} tracking-tight uppercase leading-none`}>
+                     {crowd?.status || 'Active Intel'}
+                  </h2>
+                  <p className="text-lg font-bold text-slate-400 uppercase tracking-widest">Intensity Index</p>
+               </div>
+
+               {/* Stat Grid */}
+               <div className="w-full grid grid-cols-2 gap-8">
+                  <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100 flex flex-col items-center">
+                     <FaClock className="text-orange-500 mb-2" size={24} />
+                     <p className="text-base font-bold text-slate-400 uppercase tracking-widest mb-1">Wait Est.</p>
+                     <p className="text-3xl font-extrabold text-slate-900">{crowd?.waitingTime || '-- Mins'}</p>
+                  </div>
+                  <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100 flex flex-col items-center">
+                     <FaBolt className="text-amber-500 mb-2" size={24} />
+                     <p className="text-base font-bold text-slate-400 uppercase tracking-widest mb-1">Prime</p>
+                     <p className="text-2xl font-extrabold text-slate-900">{crowd?.bestSlot || 'N/A'}</p>
+                  </div>
+               </div>
+
+               {/* Progress bar */}
+               <div className="w-full space-y-3">
+                  <div className="flex justify-between items-end px-1">
+                     <span className="text-base font-bold text-slate-400 uppercase tracking-widest">Density Index</span>
+                     <span className={`text-base font-bold ${config.color} uppercase`}>{crowd?.percentage || 0}%</span>
+                  </div>
+                  <div className="h-6 w-full bg-slate-100/50 rounded-full overflow-hidden p-1 border border-slate-100">
+                     <div style={{ width: `${crowd?.percentage || 0}%` }} className={`h-full rounded-full bg-gradient-to-r ${config.bar}`} />
+                  </div>
                </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="relative z-10 grid grid-cols-2 gap-8 mb-24">
-               <div className="p-12 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[40px]">
-                  <p className="text-2xl font-semibold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-4"><FaClock /> Wait Time</p>
-                  <p className="text-7xl font-extrabold text-white">{crowd?.waitingTime}</p>
+            {/* Darshan Wait Time Card (Replicating Website UI Card) */}
+            <div className="relative z-10 w-full bg-[#FFFDF9]/95 backdrop-blur-md rounded-[40px] border-2 border-[#F07924]/80 p-12 shadow-[0_20px_50px_rgba(240,121,36,0.06)] space-y-6">
+               <div className="flex items-center justify-between border-b border-orange-100/40 pb-4">
+                  <span className="text-lg font-bold text-slate-800 uppercase tracking-widest flex items-center gap-3">
+                     <span className="w-3.5 h-3.5 rounded-full bg-[#F07924]"></span>
+                     Darshan Wait Time
+                  </span>
+                  {waitTimes[selectedDateIdx] && (
+                     <span className="text-sm font-extrabold text-[#F07924] uppercase tracking-wider bg-orange-50 px-4 py-1 rounded-full border border-orange-100/30">
+                        {waitTimes[selectedDateIdx].weekday}
+                     </span>
+                  )}
                </div>
-               <div className="p-12 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[40px]">
-                  <p className="text-2xl font-semibold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-4"><FaBolt /> Prime Slot</p>
-                  <p className="text-5xl font-extrabold text-white mt-4">{crowd?.bestSlot || 'N/A'}</p>
+
+               <div className="space-y-4">
+                  {(waitTimes[selectedDateIdx] ? waitTimes[selectedDateIdx].lines : [
+                     { range: "Line 1 - 4", time: "25 min", label: "Best" },
+                     { range: "Line 5 - 8", time: "20 min" },
+                     { range: "Line 9 - 11", time: "25 min" }
+                  ]).map((line, lIdx) => (
+                     <div
+                        key={lIdx}
+                        className="flex items-center justify-between py-4 px-6 bg-white/90 rounded-2xl border border-orange-100/30 gap-4"
+                     >
+                        <span className="text-xl font-bold text-slate-800">{line.range}</span>
+                        <div className="flex items-center gap-3">
+                           <span className="text-xl font-extrabold text-[#F07924] bg-orange-50/50 px-4 py-1 rounded-xl border border-orange-100/20">{line.time}</span>
+                           {line.label && (
+                              <span className="text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100/30 px-3 py-1 rounded-md">
+                                 {line.label}
+                              </span>
+                           )}
+                        </div>
+                     </div>
+                  ))}
                </div>
             </div>
 
             {/* Footer */}
-            <div className="relative z-10 text-center border-t border-white/10 pt-12 pb-12">
-               <p className="text-3xl font-bold text-slate-500 tracking-widest uppercase">Verified via Official App</p>
+            <div className="relative z-10 text-center border-t border-orange-100/40 pt-10 pb-16 flex flex-col items-center gap-4">
+               <p className="text-xl font-bold text-slate-400 uppercase tracking-widest">Official Divine Platform • Shyam Bhog</p>
+               <div className="flex justify-center items-center gap-8 text-slate-300">
+                  <FaShieldAlt size={28} /><FaMapMarkerAlt size={28} /><FaHistory size={28} />
+               </div>
             </div>
          </div>
       </div>
