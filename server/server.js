@@ -194,7 +194,7 @@ app.use("/api/crowd-status",  generalLimiter, require("./routes/crowdStatus"));
 app.use("/api/parking",       generalLimiter, require("./routes/parking"));
 // Hotel Booking Ecosystem (Deactivated)
 const inactiveHotelRouter = express.Router();
-inactiveHotelRouter.all('*', (req, res) => {
+inactiveHotelRouter.all('/{*path}', (req, res) => {
   res.status(400).json({ success: false, message: "Hotel booking features are currently inactive." });
 });
 
