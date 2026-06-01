@@ -236,7 +236,7 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full p-2 md:p-4 border border-orange-100/60 shadow-[0_10px_40px_rgba(0,0,0,0.06)] hover:scale-[1.02] transition-all duration-300 group flex flex-col justify-between gap-3 h-auto"
+                    className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full p-2 md:p-4 border border-[#F07924]/80 shadow-[0_10px_40px_rgba(0,0,0,0.06)] hover:scale-[1.02] transition-all duration-300 group flex flex-col justify-between gap-3 h-auto"
                   >
                     {/* Compact Image */}
                     <div className="relative aspect-square rounded-2xl overflow-hidden shrink-0">
@@ -299,7 +299,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full h-auto min-h-[280px] border border-orange-100/60 shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
+                  className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full h-auto min-h-[280px] border border-[#F07924]/80 shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
                 >
                   {/* Top Strip for Subscription */}
                   {isRecurring && (
@@ -349,7 +349,7 @@ export default function Home() {
                         </div>
                         <Link 
                           to={`/services/detail/${service._id}`} 
-                          className="w-full bg-gradient-to-r from-[#722F1E] to-[#8C3A27] text-white py-2 rounded-full text-xs font-bold shadow-md hover:brightness-110 transition-all active:scale-95 block text-center leading-none"
+                          className="w-full bg-gradient-to-r from-[#722F1E] to-[#8C3A27] text-white py-1.5 rounded-xl text-[10px] sm:text-xs font-semibold shadow-sm hover:brightness-110 transition-all active:scale-95 block text-center leading-none"
                         >
                           Book Now
                         </Link>
