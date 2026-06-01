@@ -236,7 +236,7 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="bg-[#fffdf8] rounded-[32px] w-full max-w-full p-2 md:p-4 border-2 border-orange-300 hover:border-orange-400 shadow-[0_8px_30px_rgba(255,140,0,0.08)] hover:scale-[1.02] transition-all duration-300 group flex flex-col justify-between gap-3 h-auto"
+                    className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full p-2 md:p-4 border border-orange-100/60 shadow-[0_10px_40px_rgba(0,0,0,0.06)] hover:scale-[1.02] transition-all duration-300 group flex flex-col justify-between gap-3 h-auto"
                   >
                     {/* Compact Image */}
                     <div className="relative aspect-square rounded-2xl overflow-hidden shrink-0">
@@ -299,7 +299,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-[#fffdf8] rounded-[32px] w-full max-w-full h-auto min-h-[280px] border-2 border-orange-300 hover:border-orange-400 shadow-[0_8px_30px_rgba(255,140,0,0.08)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
+                  className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full h-auto min-h-[280px] border border-orange-100/60 shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
                 >
                   {/* Top Strip for Subscription */}
                   {isRecurring && (
