@@ -145,14 +145,14 @@ export default function Home() {
 
               const innerMarkup = (
                 <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
-                  <div className="w-9 h-9 lg:w-11 lg:h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
+                  <div className="w-9 h-9 md:w-11 md:h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
                     {item.icon}
                   </div>
                   <div className="flex items-center gap-1 justify-center w-full">
-                    <h3 className="text-[18px] lg:text-[24px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
+                    <h3 className="text-[18px] md:text-[24px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
                     {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[9px] lg:text-[11px] tracking-[0.18em] font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1.5">{item.desc}</p>
+                  <p className="text-[9px] md:text-[11px] tracking-[0.18em] font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1.5">{item.desc}</p>
                 </div>
               );
 
