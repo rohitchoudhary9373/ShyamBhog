@@ -264,20 +264,23 @@ export default function Home() {
                           <span className="text-xs md:text-sm font-semibold text-slate-900 tracking-tighter leading-tight">₹{service.price}</span>
                           
                           {/* Compact Circular Add/Quantity Control */}
-                          {isInCart ? (
-                            <div className="flex items-center bg-orange-50 rounded-full p-0.5 border border-orange-100 h-8 shadow-sm">
-                               <button onClick={() => updateQuantity(service._id, isInCart.quantity - 1)} className="w-5 h-5 md:w-6 md:h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm">-</button>
-                               <span className="px-1.5 md:px-2 text-[9px] md:text-[10px] font-bold text-orange-700">{isInCart.quantity}</span>
-                               <button onClick={() => updateQuantity(service._id, isInCart.quantity + 1)} className="w-5 h-5 md:w-6 md:h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm">+</button>
-                            </div>
-                          ) : (
-                            <button 
-                              onClick={() => addToCart(service)} 
-                              className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all hover:bg-orange-600"
-                            >
-                              <span className="text-lg font-light leading-none">+</span>
-                            </button>
-                          )}
+                          <div className="flex items-center bg-orange-50 rounded-full p-0.5 border border-orange-100 h-8 shadow-sm">
+                             <button 
+                               onClick={() => isInCart ? updateQuantity(service._id, isInCart.quantity - 1) : null} 
+                               className={`w-5 h-5 md:w-6 md:h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm ${!isInCart ? 'opacity-50 cursor-not-allowed' : ''}`}
+                             >
+                               -
+                             </button>
+                             <span className="px-1.5 md:px-2 text-[9px] md:text-[10px] font-bold text-orange-700">
+                               {isInCart ? isInCart.quantity : 0}
+                             </span>
+                             <button 
+                               onClick={() => isInCart ? updateQuantity(service._id, isInCart.quantity + 1) : addToCart(service)} 
+                               className="w-5 h-5 md:w-6 md:h-6 bg-white text-slate-900 rounded-full font-bold text-[10px] flex items-center justify-center shadow-sm"
+                             >
+                               +
+                             </button>
+                          </div>
                         </div>
                       </div>
 
