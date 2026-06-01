@@ -196,10 +196,10 @@ export default function ServiceDetail() {
                <span className="text-lg">←</span>
             </button>
             <div className="flex flex-col items-center">
-               <span className="text-[9px] font-black text-[#0A1128] uppercase tracking-widest leading-none">{service.title}</span>
+               <span className="text-xs font-semibold text-[#0A1128] leading-none">{service.title}</span>
                <div className="flex items-center gap-1 mt-1">
                   <div className="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></div>
-                  <span className="text-[7px] font-black text-slate-400 uppercase tracking-widest">{service.category}</span>
+                  <span className="text-[9px] font-medium text-slate-400 uppercase tracking-wider">{service.category}</span>
                </div>
             </div>
             <div className="w-10"></div>
@@ -214,30 +214,30 @@ export default function ServiceDetail() {
                <div className="w-full aspect-[16/10] overflow-hidden rounded-[26px] relative">
                   <img src={getMediaUrl(service.imageUrl) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'} alt={service.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }} />
                   <div className="absolute top-4 left-4">
-                     <span className="px-3 py-1 bg-orange-600 text-white font-black text-[8px] uppercase tracking-widest rounded-lg shadow-xl">{service.category}</span>
+                     <span className="px-2.5 py-0.5 bg-orange-600 text-white font-semibold text-[9px] rounded-md shadow-sm">{service.category}</span>
                   </div>
                </div>
                
                {/* CONTENT SECTION */}
                <div className="px-2 space-y-4 text-center">
                   <div className="flex flex-col items-center gap-1">
-                     <h1 className="text-2xl font-black text-[#0A1128] tracking-tighter uppercase italic leading-none">{service.title}</h1>
+                     <h1 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128]">{service.title}</h1>
                      <div className="flex items-center justify-center gap-2 mt-1">
                         <div className="flex items-center gap-1.5 bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
                            <FaStar size={10} className="text-orange-500" />
-                           <span className="text-[10px] font-black text-orange-700">4.9</span>
+                           <span className="text-[10px] font-semibold text-orange-700">4.9</span>
                         </div>
                         <a 
                            href={`https://wa.me/${settings?.whatsapp?.replace(/\D/g, '') || '919876543210'}?text=${encodeURIComponent(`Jai Shree Shyam! I want to inquire about the offering: ${service.title} (₹${service.price}). Please guide me.`)}`}
                            target="_blank"
                            rel="noreferrer"
-                           className="flex items-center gap-1 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full border border-emerald-100 hover:bg-emerald-500 hover:text-white transition-all active:scale-95 text-[9px] font-black uppercase tracking-widest shrink-0"
+                           className="flex items-center gap-1 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full border border-emerald-100 hover:bg-emerald-500 hover:text-white transition-all active:scale-95 text-[10px] font-medium tracking-normal shrink-0"
                         >
                            <FaWhatsapp size={10} /> Inquire
                         </a>
                      </div>
                   </div>
-                  <p className="text-slate-500 text-[12px] font-medium leading-relaxed italic opacity-80 max-w-sm mx-auto">
+                  <p className="text-slate-500 text-xs sm:text-sm font-normal leading-relaxed opacity-80 max-w-sm mx-auto">
                      " {service.description || 'Jai Shree Shyam'} "
                   </p>
                </div>
@@ -250,9 +250,9 @@ export default function ServiceDetail() {
                   <div className="bg-white rounded-[26px] p-6 border border-orange-50 shadow-sm space-y-4">
                      <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-[#0A1128] text-white flex items-center justify-center shadow-lg"><FaRegCalendarAlt size={14} /></div>
-                        <h3 className="text-[10px] font-black text-[#0A1128] uppercase tracking-[0.25em]">{t('booking.select_date')}</h3>
+                        <h3 className="text-sm font-semibold tracking-tight text-[#0A1128]">{t('booking.select_date')}</h3>
                      </div>
-                     <input type="date" required value={globalSlot} onChange={(e) => setGlobalSlot(e.target.value)} className="w-full p-4 bg-orange-50/50 border border-orange-100/50 rounded-2xl outline-none focus:border-orange-600 focus:bg-white font-black text-slate-700 transition-all text-sm cursor-pointer shadow-inner" />
+                     <input type="date" required value={globalSlot} onChange={(e) => setGlobalSlot(e.target.value)} className="w-full p-4 bg-orange-50/50 border border-orange-100/50 rounded-2xl outline-none focus:border-orange-600 focus:bg-white font-medium text-slate-700 transition-all text-sm cursor-pointer shadow-inner" />
                   </div>
 
                   {/* FORM SECTIONS */}
@@ -260,33 +260,33 @@ export default function ServiceDetail() {
                      {isArjee ? (
                         <div className="space-y-6">
                            <div className="flex items-center justify-between px-2">
-                              <h3 className="text-[10px] font-black text-[#0A1128] uppercase tracking-[0.25em] flex items-center gap-2">
+                              <h3 className="text-sm font-semibold tracking-tight text-[#0A1128] flex items-center gap-2">
                                  <FaPrayingHands className="text-orange-500" /> {t('booking.devotee_details')}
                               </h3>
-                              <button type="button" onClick={() => setMembers([...members, { name: '', whatsapp: '', message: '' }])} className="px-4 py-2 bg-orange-50 text-orange-600 rounded-xl font-black text-[8px] uppercase tracking-widest border border-orange-100 hover:bg-orange-600 hover:text-white transition-all">+ Add Devotee</button>
+                              <button type="button" onClick={() => setMembers([...members, { name: '', whatsapp: '', message: '' }])} className="px-3 py-1.5 bg-orange-50 text-orange-600 rounded-lg font-medium text-[10px] border border-orange-100 hover:bg-orange-600 hover:text-white transition-all">+ Add Devotee</button>
                            </div>
                            <AnimatePresence mode="popLayout">
                               {members.map((m, idx) => (
                                  <motion.div key={idx} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white p-6 rounded-[26px] border border-orange-50 shadow-sm relative space-y-5 group">
                                     <div className="flex justify-between items-center">
-                                       <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">{t('booking.devotee')} {idx + 1}</span>
+                                       <span className="text-[10px] font-semibold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">{t('booking.devotee')} {idx + 1}</span>
                                        {members.length > 1 && (
                                           <button type="button" onClick={() => setMembers(members.filter((_, i) => i !== idx))} className="w-7 h-7 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm"><FaTrashAlt size={10} /></button>
                                        )}
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                        <div className="space-y-2">
-                                          <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('booking.full_name')}</label>
-                                          <input type="text" required value={m.name} onChange={(e) => handleMemberChange(idx, 'name', e.target.value)} placeholder="e.g. Rahul Kumar" className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white font-bold text-[#0A1128] text-sm transition-all" />
+                                          <label className="text-[10px] font-medium text-slate-400 ml-1">{t('booking.full_name')}</label>
+                                          <input type="text" required value={m.name} onChange={(e) => handleMemberChange(idx, 'name', e.target.value)} placeholder="e.g. Rahul Kumar" className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white font-medium text-[#0A1128] text-sm transition-all" />
                                        </div>
                                        <div className="space-y-2">
-                                          <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('booking.whatsapp_no')}</label>
-                                          <input type="tel" required value={m.whatsapp} onChange={(e) => handleMemberChange(idx, 'whatsapp', e.target.value)} placeholder="10 Digit Number" className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white font-bold text-[#0A1128] text-sm transition-all" />
+                                          <label className="text-[10px] font-medium text-slate-400 ml-1">{t('booking.whatsapp_no')}</label>
+                                          <input type="tel" required value={m.whatsapp} onChange={(e) => handleMemberChange(idx, 'whatsapp', e.target.value)} placeholder="10 Digit Number" className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white font-medium text-[#0A1128] text-sm transition-all" />
                                        </div>
                                     </div>
                                     <div className="space-y-2">
-                                       <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('profile.sacred_prayer')}</label>
-                                       <textarea value={m.message} onChange={(e) => handleMemberChange(idx, 'message', e.target.value)} placeholder="Type your prayer here..." className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white h-20 resize-none font-bold text-slate-600 text-sm transition-all" />
+                                       <label className="text-[10px] font-medium text-slate-400 ml-1">{t('profile.sacred_prayer')}</label>
+                                       <textarea value={m.message} onChange={(e) => handleMemberChange(idx, 'message', e.target.value)} placeholder="Type your prayer here..." className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white h-20 resize-none font-medium text-slate-600 text-sm transition-all" />
                                     </div>
                                  </motion.div>
                               ))}
@@ -295,20 +295,20 @@ export default function ServiceDetail() {
                      ) : (
                         <div className="space-y-6">
                            <div className="flex items-center justify-between p-6 bg-white rounded-[26px] border border-orange-50 shadow-sm">
-                              <div><span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Quantity</span><span className="text-[7px] text-orange-500 font-bold uppercase tracking-[0.2em]">Divine Abundance</span></div>
+                              <div><span className="text-sm font-semibold text-slate-800 block mb-0.5">Quantity</span><span className="text-[10px] text-orange-500 font-medium tracking-wide">Divine Abundance</span></div>
                               <div className="flex items-center gap-5">
-                                 <button type="button" onClick={() => quantity > 1 && setQuantity(prev => prev - 1)} className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center font-black shadow-sm text-orange-600 hover:bg-orange-600 hover:text-white transition-all active:scale-90">-</button>
-                                 <span className="font-black text-[#0A1128] text-xl tracking-tighter w-6 text-center">{quantity}</span>
-                                 <button type="button" onClick={() => setQuantity(prev => prev + 1)} className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center font-black shadow-sm text-orange-600 hover:bg-orange-600 hover:text-white transition-all active:scale-90">+</button>
+                                 <button type="button" onClick={() => quantity > 1 && setQuantity(prev => prev - 1)} className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center font-semibold shadow-sm text-orange-600 hover:bg-orange-600 hover:text-white transition-all active:scale-90">-</button>
+                                 <span className="font-semibold text-[#0A1128] text-base w-6 text-center">{quantity}</span>
+                                 <button type="button" onClick={() => setQuantity(prev => prev + 1)} className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center font-semibold shadow-sm text-orange-600 hover:bg-orange-600 hover:text-white transition-all active:scale-90">+</button>
                               </div>
                            </div>
                         </div>
                      )}
                   </div>
 
-                  {error && <div className="p-4 bg-red-50 text-red-600 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center border border-red-100 animate-shake">⚠ {error}</div>}
+                  {error && <div className="p-3 bg-red-50 text-red-600 rounded-xl text-xs font-semibold text-center border border-red-100 animate-shake">⚠ {error}</div>}
 
-                  <button type="button" onClick={handleNextStep} className="w-full bg-[#0A1128] text-white py-5 rounded-[22px] font-black text-[11px] uppercase tracking-[0.3em] hover:bg-orange-600 transition-all duration-500 shadow-xl shadow-slate-200 flex items-center justify-center gap-3 group active:scale-95">
+                  <button type="button" onClick={handleNextStep} className="w-full bg-[#0A1128] text-white py-3.5 rounded-xl text-xs md:text-sm font-medium hover:bg-orange-600 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 group active:scale-95">
                      Continue to Payment <FaArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
                   </button>
                </motion.div>
@@ -317,70 +317,70 @@ export default function ServiceDetail() {
             {/* ── BOOKING STEP 2 ── */}
             {step === 2 && (
                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                  <button onClick={() => setStep(1)} className="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-orange-600 transition-all flex items-center gap-2 group"><span className="group-hover:-translate-x-1 transition-transform">←</span> Edit Details</button>
+                  <button onClick={() => setStep(1)} className="text-xs font-medium text-slate-400 hover:text-orange-600 transition-all flex items-center gap-2 group"><span className="group-hover:-translate-x-1 transition-transform">←</span> Edit Details</button>
                   <div className="bg-white rounded-[28px] p-7 border border-orange-50 shadow-2xl shadow-orange-100/30 space-y-8">
                      <div className="space-y-6">
                         <div className="flex items-center gap-3">
                            <div className="w-8 h-8 rounded-xl bg-orange-600 text-white flex items-center justify-center text-[10px] shadow-lg shadow-orange-200">₹</div>
-                           <h3 className="text-[10px] font-black text-[#0A1128] uppercase tracking-widest">Divine Summary</h3>
+                           <h3 className="text-sm font-semibold tracking-tight text-[#0A1128]">Divine Summary</h3>
                         </div>
                         <div className="flex justify-between items-end pt-6 border-t border-orange-50/50">
-                           <div className="flex flex-col"><span className="text-[9px] font-black uppercase text-orange-600 tracking-widest mb-1">Total Payable</span></div>
-                           <span className="text-5xl font-black tracking-tighter text-[#0A1128] leading-[0.8]">₹{finalAmount}</span>
+                           <div className="flex flex-col"><span className="text-xs font-medium text-orange-600 mb-0.5">Total Payable</span></div>
+                           <span className="text-2xl sm:text-3xl font-semibold text-[#0A1128]">₹{finalAmount}</span>
                         </div>
                      </div>
 
                      <div className="space-y-4 pt-4">
                         {user && (
-                            <div 
-                              onClick={() => {
-                                 if (!walletData.walletFrozen) {
-                                    setUseWallet(!useWallet);
-                                 }
-                              }} 
-                              className={`p-5 rounded-[22px] border-2 transition-all duration-300 ${
-                                 walletData.walletFrozen 
-                                    ? 'bg-red-50/30 border-red-100/60 cursor-not-allowed opacity-85' 
-                                    : useWallet 
-                                       ? 'bg-orange-50 border-orange-500 shadow-xl shadow-orange-100/40 cursor-pointer' 
-                                       : 'bg-slate-50/30 border-slate-100 cursor-pointer'
-                              }`}
-                            >
-                               <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-4">
-                                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
-                                        walletData.walletFrozen 
-                                           ? 'bg-red-100 text-red-600' 
-                                           : useWallet 
-                                              ? 'bg-orange-600 text-white shadow-md' 
-                                              : 'bg-slate-200 text-slate-400'
-                                     }`}><FaWallet size={12} /></div>
-                                     <div className="flex flex-col">
-                                        <span className={`text-[10px] font-black uppercase tracking-widest ${
-                                           walletData.walletFrozen 
-                                              ? 'text-red-600' 
-                                              : useWallet 
-                                                 ? 'text-orange-600' 
-                                                 : 'text-[#0A1128]'
-                                        }`}>
-                                           {t('booking.apply_wallet')} {walletData.walletFrozen && <span className="text-[8px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full ml-2 font-black uppercase tracking-wider animate-pulse">Frozen</span>}
-                                        </span>
-                                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Bal: ₹{walletData.balance}</span>
-                                     </div>
-                                  </div>
-                                  {!walletData.walletFrozen ? (
-                                     <div className={`w-9 h-5 rounded-full p-1 transition-all ${useWallet ? 'bg-orange-600' : 'bg-slate-300'}`}><div className={`w-3 h-3 bg-white rounded-full transition-all shadow-sm ${useWallet ? 'translate-x-4' : 'translate-x-0'}`}></div></div>
-                                  ) : (
-                                     <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">Locked</span>
-                                  )}
-                               </div>
-                            </div>
-                         )}
-                        {error && <div className="p-4 bg-red-50 text-red-600 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center border border-red-100 animate-shake">⚠ {error}</div>}
-                        <button onClick={handleSubmit} disabled={submitLoading} className="w-full bg-[#0A1128] text-white py-6 rounded-[22px] font-black text-[11px] uppercase tracking-[0.3em] hover:bg-orange-600 transition-all shadow-xl disabled:opacity-50 active:scale-95 flex items-center justify-center gap-3 group relative overflow-hidden">
+                             <div 
+                               onClick={() => {
+                                  if (!walletData.walletFrozen) {
+                                     setUseWallet(!useWallet);
+                                  }
+                               }} 
+                               className={`p-5 rounded-[22px] border-2 transition-all duration-300 ${
+                                  walletData.walletFrozen 
+                                     ? 'bg-red-50/30 border-red-100/60 cursor-not-allowed opacity-85' 
+                                     : useWallet 
+                                        ? 'bg-orange-50 border-orange-500 shadow-xl shadow-orange-100/40 cursor-pointer' 
+                                        : 'bg-slate-50/30 border-slate-100 cursor-pointer'
+                               }`}
+                             >
+                                <div className="flex items-center justify-between">
+                                   <div className="flex items-center gap-4">
+                                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+                                         walletData.walletFrozen 
+                                            ? 'bg-red-100 text-red-600' 
+                                            : useWallet 
+                                               ? 'bg-orange-600 text-white shadow-md' 
+                                               : 'bg-slate-200 text-slate-400'
+                                      }`}><FaWallet size={12} /></div>
+                                      <div className="flex flex-col">
+                                         <span className={`text-xs font-semibold ${
+                                            walletData.walletFrozen 
+                                               ? 'text-red-600' 
+                                               : useWallet 
+                                                  ? 'text-orange-600' 
+                                                  : 'text-[#0A1128]'
+                                         }`}>
+                                            {t('booking.apply_wallet')} {walletData.walletFrozen && <span className="text-[8px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full ml-2 font-black uppercase tracking-wider animate-pulse">Frozen</span>}
+                                         </span>
+                                         <span className="text-[10px] font-medium text-slate-400 mt-0.5">Bal: ₹{walletData.balance}</span>
+                                      </div>
+                                   </div>
+                                   {!walletData.walletFrozen ? (
+                                      <div className={`w-9 h-5 rounded-full p-1 transition-all ${useWallet ? 'bg-orange-600' : 'bg-slate-300'}`}><div className={`w-3 h-3 bg-white rounded-full transition-all shadow-sm ${useWallet ? 'translate-x-4' : 'translate-x-0'}`}></div></div>
+                                   ) : (
+                                      <span className="text-[10px] font-semibold text-red-500">Locked</span>
+                                   )}
+                                </div>
+                             </div>
+                          )}
+                        {error && <div className="p-3 bg-red-50 text-red-600 rounded-xl text-xs font-semibold text-center border border-red-100 animate-shake">⚠ {error}</div>}
+                        <button onClick={handleSubmit} disabled={submitLoading} className="w-full bg-[#0A1128] text-white py-3.5 rounded-xl text-xs md:text-sm font-medium hover:bg-orange-600 transition-all duration-300 shadow-lg disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 group relative overflow-hidden">
                            {submitLoading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <><span className="relative z-10">{payableAmount > 0 ? `Pay ₹${payableAmount}` : "Confirm Ritual"}</span><FaArrowRight size={10} className="relative z-10 group-hover:translate-x-1 transition-transform" /></>}
                         </button>
-                        <p className="text-center text-[8px] text-slate-400 font-bold uppercase tracking-[0.1em] px-4 opacity-70">Secured Divine Transaction Protocol</p>
+                        <p className="text-center text-[10px] text-slate-400 font-medium tracking-normal px-4 opacity-70">Secured Divine Transaction Protocol</p>
                      </div>
                   </div>
                </motion.div>
@@ -390,14 +390,14 @@ export default function ServiceDetail() {
             {faqs.length > 0 && (
                <div className="space-y-6 pt-4">
                   <div className="text-center mb-8">
-                     <h2 className="text-2xl font-black text-[#0A1128] tracking-tighter mb-2 italic">Divine <span className="text-orange-600">Clarification</span></h2>
-                     <p className="text-slate-400 font-black uppercase tracking-widest text-[8px] opacity-60">Essential info for your ritual</p>
+                     <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] mb-1">Divine <span className="text-orange-600">Clarification</span></h2>
+                     <p className="text-slate-400 font-medium text-[10px] tracking-wide mb-4">Essential info for your ritual</p>
                   </div>
                   <div className="space-y-3">
                      {faqs.map((faq, idx) => (
                         <div key={faq._id} className={`bg-white rounded-[22px] border ${openFaq === idx ? 'border-orange-200 shadow-xl shadow-orange-50' : 'border-orange-50 shadow-sm'} overflow-hidden transition-all duration-300`}>
                            <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between p-5 text-left group">
-                              <span className="font-black text-[#0A1128] tracking-tight text-sm pr-4 group-hover:text-orange-600 transition-colors uppercase italic">{faq.question}</span>
+                              <span className="font-semibold text-[#0A1128] text-sm pr-4 group-hover:text-orange-600 transition-colors">{faq.question}</span>
                               <div className={`w-7 h-7 rounded-full ${openFaq === idx ? 'bg-orange-600 text-white' : 'bg-orange-50 text-orange-400'} flex items-center justify-center transition-all shrink-0`}>
                                  {openFaq === idx ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
                               </div>
@@ -405,7 +405,7 @@ export default function ServiceDetail() {
                            <AnimatePresence>
                               {openFaq === idx && (
                                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
-                                    <div className="p-5 pt-0 text-slate-500 text-[13px] font-medium leading-relaxed border-t border-orange-50/50 pt-4 bg-orange-50/10 italic">"{faq.answer}"</div>
+                                    <div className="p-5 pt-0 text-slate-500 text-xs sm:text-sm font-medium leading-relaxed border-t border-orange-50/50 pt-4 bg-orange-50/10">"{faq.answer}"</div>
                                  </motion.div>
                               )}
                            </AnimatePresence>
@@ -420,7 +420,7 @@ export default function ServiceDetail() {
                <div className="flex justify-center items-center gap-10">
                   <FaShieldAlt size={20} /><FaHistory size={20} /><FaPrayingHands size={20} />
                </div>
-               <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.4em] italic">Official Divine Platform • Shyam Bhog</p>
+               <p className="text-[10px] font-medium text-slate-300 tracking-wide">Official Divine Platform • Shyam Bhog</p>
             </footer>
 
          </div>
