@@ -218,8 +218,8 @@ export default function Home() {
       </div>
 
       {/* ── PREMIUM OFFERING FEED ── */}
-      <div className="w-full max-w-5xl px-4 md:px-6 mb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+      <div className="w-full max-w-5xl px-3 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredServices.length === 0 ? (
             <div className="col-span-full py-20 text-center bg-white rounded-[32px] border border-dashed border-orange-100/50">
               <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">No offerings in this category</p>
@@ -299,41 +299,39 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-white rounded-[28px] w-full max-w-full p-3 md:p-5 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between gap-3"
+                  className="bg-white rounded-[28px] w-full max-w-full h-auto min-h-[260px] p-3 md:p-5 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between gap-3"
                 >
                   {/* Image with Tag inside */}
-                  <div className="relative aspect-[16/10] rounded-[20px] overflow-hidden shrink-0">
+                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden shrink-0">
                      <img 
                        src={getImageUrl(service.imageUrl)} 
                        alt={service.title} 
                        className="w-full h-full object-cover" 
                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
                      />
-                    <div className="absolute top-3 right-3">
-                       <div className="px-2.5 py-1 bg-white/80 backdrop-blur-md rounded-full text-[9px] font-bold text-slate-800 shadow-sm border border-white/50">
-                          {service.tag || "Few slots left"}
-                       </div>
-                    </div>
+                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md rounded-full text-[10px] px-2 py-1 font-bold text-slate-800 shadow-sm border border-white/50 z-10 leading-none">
+                        {service.tag || "Few slots left"}
+                     </div>
                   </div>
 
                   {/* Content Area */}
                   <div className="px-1 flex-1 flex flex-col justify-between gap-2">
-                    <div className="flex justify-between items-start gap-2">
-                       <h3 className="text-sm md:text-base font-bold text-slate-900 tracking-tight leading-tight">
+                    <div className="flex justify-between items-start gap-2 w-full">
+                       <h3 className="text-base sm:text-lg font-semibold leading-snug text-slate-900 truncate min-w-0 flex-1">
                           {service.title}
                        </h3>
                        <div className="text-right shrink-0">
-                          <span className="text-sm md:text-base font-bold text-slate-900 leading-tight">₹{service.price}</span>
+                          <span className="text-sm font-bold text-slate-900 leading-none">₹{service.price}</span>
                           {isRecurring && <span className="text-[8px] md:text-[10px] block font-bold text-slate-400 uppercase tracking-tighter">/ monthly</span>}
                        </div>
                     </div>
 
                     <div className="flex flex-col gap-3">
-                       <p className="text-xs md:text-sm font-medium text-slate-400 leading-tight line-clamp-2">
+                       <p className="text-xs font-medium text-slate-400 leading-relaxed line-clamp-2">
                           {service.description || "A dedicated Arjee, Reserved just for you."}
                        </p>
                        <div className="w-full">
-                          <Link to={`/services/detail/${service._id}`} className="w-full bg-[#722F1E] text-white py-2.5 rounded-full text-xs font-bold shadow-lg hover:brightness-110 transition-all active:scale-95 block text-center leading-none">
+                          <Link to={`/services/detail/${service._id}`} className="w-full bg-[#722F1E] text-white py-2 rounded-xl text-sm font-bold shadow-lg hover:brightness-110 transition-all active:scale-95 block text-center leading-none">
                              Book Now
                           </Link>
                        </div>
