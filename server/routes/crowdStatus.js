@@ -219,6 +219,8 @@ router.delete('/wait-times/:id', protect, admin, async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+});
+
 // GET /aarti-timings - Public route to fetch today's Aarti timings
 router.get('/aarti-timings', async (req, res) => {
   try {
