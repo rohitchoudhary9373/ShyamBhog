@@ -125,19 +125,19 @@ export default function Home() {
       {/* ── HERO ── */}
       <section className="w-full max-w-xl px-6 mb-4 text-center animate-fade-in pt-2">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="inline-flex items-center gap-3 px-4 py-1.5 bg-white rounded-full border border-orange-100 shadow-sm">
-           <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
-           <span className="text-[9px] font-black text-[#0A1128] uppercase tracking-[0.3em]">Official Platform</span>
+           <span className="w-1.5 h-1.5 rounded-full bg-orange-50 animate-pulse"></span>
+           <span className="text-[9px] font-semibold text-[#0A1128] uppercase tracking-[0.3em]">Official Platform</span>
         </motion.div>
       </section>
 
       {/* ── DIVINE HUB ── */}
-      <section className="w-full max-w-xl px-4 md:px-6 mb-12">
-        <div className="grid grid-cols-2 gap-3">
+      <section className="w-full max-w-xl lg:max-w-5xl px-4 md:px-6 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
             {[
-              { to: "/watch-arjee", icon: <FaVideo size={18} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
-              { to: "/crowd-status", icon: <FaUsers size={18} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
-              { to: "/parking-guide", icon: <FaParking size={18} />, title: t('home.parking'), desc: 'Nav Guide' },
-              { to: "#", icon: <FaBed size={18} />, title: t('home.hotel_stay'), desc: t('home.stay_guide') || 'Stay Guide', isHotelStay: true }
+              { to: "/watch-arjee", icon: <FaVideo size={16} />, title: t('home.watch_arjee'), desc: 'Live Stream' },
+              { to: "/crowd-status", icon: <FaUsers size={16} />, title: t('home.bheed_alert'), desc: 'Live Crowd', badge: true },
+              { to: "/parking-guide", icon: <FaParking size={16} />, title: t('home.parking'), desc: 'Nav Guide' },
+              { to: "#", icon: <FaBed size={16} />, title: t('home.hotel_stay'), desc: t('home.stay_guide') || 'Stay Guide', isHotelStay: true }
             ].map((item, idx) => {
               const waNumber = settings?.whatsappNo || '91XXXXXXXXXX';
               const cleanWaNumber = waNumber.replace(/\D/g, '');
@@ -145,14 +145,14 @@ export default function Home() {
 
               const innerMarkup = (
                 <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
-                  <div className="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
+                  <div className="w-9 h-9 lg:w-11 lg:h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
                     {item.icon}
                   </div>
                   <div className="flex items-center gap-1 justify-center w-full">
-                    <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase italic leading-tight text-center truncate max-w-full">{item.title}</h3>
+                    <h3 className="text-[18px] lg:text-[24px] font-semibold tracking-tight leading-none text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase text-center truncate max-w-full">{item.title}</h3>
                     {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[10px] sm:text-xs font-medium uppercase tracking-[0.18em] text-gray-400 leading-none text-center truncate max-w-full mt-0.5">{item.desc}</p>
+                  <p className="text-[9px] lg:text-[11px] tracking-[0.18em] font-medium uppercase text-gray-400 leading-none text-center truncate max-w-full mt-1.5">{item.desc}</p>
                 </div>
               );
 
@@ -160,10 +160,10 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[145px] sm:h-[180px] p-3 rounded-[28px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none hover:scale-[1.02] transition-all duration-300"
+                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] lg:h-[180px] max-w-full lg:max-w-[240px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none hover:scale-[1.02] transition-all duration-300"
                   >
                     {/* Floating Coming Soon Badge */}
-                    <span className="absolute -top-2 right-3 text-[10px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
+                    <span className="absolute -top-2 right-3 text-[9px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
                       Coming Soon
                     </span>
 
@@ -173,7 +173,7 @@ export default function Home() {
                       target="_blank" 
                       rel="noreferrer" 
                       title="WhatsApp Enquiry"
-                      className="absolute top-3 right-3 text-[11px] px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold flex items-center justify-center shadow-lg pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
+                      className="absolute top-3 right-3 text-[9px] px-2.5 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold flex items-center justify-center shadow-md pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
                     >
                       <FaWhatsapp size={10} className="animate-bounce" />
                     </a>
@@ -187,7 +187,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[145px] sm:h-[180px] p-3 rounded-[28px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center hover:scale-[1.02] transition-all duration-300"
+                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] lg:h-[180px] max-w-full lg:max-w-[240px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center hover:scale-[1.02] transition-all duration-300"
                 >
                   {innerMarkup}
                 </Link>
@@ -354,9 +354,9 @@ export default function Home() {
       </div>
 
       {/* ── FAQ ── */}
-      <section className="w-full max-w-xl px-6 mb-20">
-          <div className="mb-12 text-center">
-             <h2 className="text-2xl md:text-3xl font-black text-[#0A1128] uppercase tracking-[0.2em]">{t('home.faq')}</h2>
+      <section className="w-full max-w-xl px-6 py-8 md:py-12">
+          <div className="mb-6 text-center">
+             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase">{t('home.faq')}</h2>
           </div>
           <div className="space-y-4">
             {faqs.map(faq => (
@@ -381,9 +381,9 @@ export default function Home() {
 
       {/* ── GALLERY ── */}
       {galleries.length > 0 && (
-        <section className="w-full max-w-xl px-6 mb-20">
-          <div className="mb-12 text-center">
-             <h2 className="text-2xl md:text-3xl font-black text-[#0A1128] uppercase tracking-[0.2em]">{t('home.gallery')}</h2>
+        <section className="w-full max-w-xl px-6 py-8 md:py-12">
+          <div className="mb-6 text-center">
+             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase">{t('home.gallery')}</h2>
           </div>
           <div className="overflow-hidden -mx-6">
             <div className="flex w-fit gap-4 animate-scroll px-6 hover:[animation-play-state:paused]">
@@ -424,9 +424,9 @@ export default function Home() {
 
       {/* ── TESTIMONIALS ── */}
       {feedbacks.length > 0 && (
-        <section className="w-full max-w-xl px-6 mb-20">
-          <div className="mb-12 text-center">
-             <h2 className="text-2xl md:text-3xl font-black text-[#0A1128] uppercase tracking-[0.2em]">{t('home.what_devotees_say')}</h2>
+        <section className="w-full max-w-xl px-6 py-8 md:py-12">
+          <div className="mb-6 text-center">
+             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase">{t('home.what_devotees_say')}</h2>
           </div>
           <div className="overflow-hidden -mx-6">
              <div className="flex w-fit gap-4 animate-scroll px-6 hover:[animation-play-state:paused]">
@@ -459,13 +459,13 @@ export default function Home() {
       )}
 
       {/* ── SUBMIT FEEDBACK ── */}
-      <section className="w-full max-w-xl px-6 mb-20">
-         <div className="bg-[#0A1128] rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+      <section className="w-full max-w-xl px-6 py-8 md:py-12">
+         <div className="bg-[#0A1128] rounded-[40px] p-8 md:p-10 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
             <div className="relative z-10 space-y-6">
                <div className="space-y-2">
-                  <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{t('home.write_to_us')}</h2>
-                  <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest italic">{t('home.submit_feedback')}</p>
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-white uppercase">{t('home.write_to_us')}</h2>
+                  <p className="text-white/40 text-[10px] font-medium uppercase tracking-[0.18em]">{t('home.submit_feedback')}</p>
                </div>
                
                <form onSubmit={handleFeedbackSubmit} className="space-y-4">
