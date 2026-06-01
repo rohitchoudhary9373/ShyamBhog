@@ -299,42 +299,61 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-white rounded-[28px] w-full max-w-full h-auto min-h-[260px] p-3 md:p-5 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between gap-3"
+                  className="bg-[#FCFAF7] rounded-[28px] w-full max-w-full h-auto min-h-[280px] border border-orange-100/60 shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden hover:scale-[1.02] transition-all duration-300 group"
                 >
-                  {/* Image with Tag inside */}
-                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden shrink-0">
-                     <img 
-                       src={getImageUrl(service.imageUrl)} 
-                       alt={service.title} 
-                       className="w-full h-full object-cover" 
-                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
-                     />
-                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md rounded-full px-3 py-1 text-[10px] font-semibold text-slate-800 shadow-sm border border-white/50 z-10 leading-none">
-                        {service.tag || "Few slots left"}
-                     </div>
-                  </div>
+                  {/* Top Strip for Subscription */}
+                  {isRecurring && (
+                    <div className="w-full bg-[#F5F3FF] py-1.5 px-3 border-b border-purple-100 flex items-center justify-center shrink-0">
+                      <span className="text-[8px] sm:text-[9px] font-semibold text-purple-700 tracking-wider uppercase text-center leading-none">
+                        • Monthly Ekadashi Arjee Subscription Available •
+                      </span>
+                    </div>
+                  )}
 
-                  {/* Content Area */}
-                  <div className="px-1 flex-1 flex flex-col justify-between gap-2">
-                    <div className="flex justify-between items-start gap-2 w-full">
-                       <h3 className="text-base sm:text-lg font-semibold leading-snug text-slate-900 truncate min-w-0 flex-1">
-                          {service.title}
-                       </h3>
-                       <div className="text-right shrink-0">
-                          <span className="text-sm font-bold text-slate-900 leading-none">₹{service.price}</span>
-                          {isRecurring && <span className="text-[8px] md:text-[10px] block font-bold text-slate-400 uppercase tracking-tighter">/ monthly</span>}
+                  {/* Padded Container for Card Interior */}
+                  <div className="p-3 flex flex-col flex-grow justify-between gap-3">
+                    {/* Image Section */}
+                    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden shrink-0 border border-orange-50/50">
+                       <img 
+                         src={getImageUrl(service.imageUrl)} 
+                         alt={service.title} 
+                         className="w-full h-full object-cover" 
+                         onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
+                       />
+                       <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md rounded-full px-3 py-1 text-[10px] font-semibold text-slate-800 shadow-sm border border-white/50 z-10 leading-none">
+                          {service.tag || "Few slots left"}
                        </div>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                       <p className="text-xs font-medium text-slate-400 leading-relaxed line-clamp-2">
+                    {/* Bottom Split Layout Area */}
+                    <div className="px-1 flex-1 flex justify-between items-stretch gap-4 w-full">
+                      {/* Left Side: Title & Description */}
+                      <div className="flex-1 flex flex-col justify-between gap-1.5 min-w-0">
+                        <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#0B1330] leading-snug truncate max-w-full">
+                          {service.title}
+                        </h3>
+                        <p className="text-xs font-medium text-gray-500 leading-relaxed line-clamp-2">
                           {service.description || "A dedicated Arjee, Reserved just for you."}
-                       </p>
-                       <div className="w-full">
-                          <Link to={`/services/detail/${service._id}`} className="w-full bg-[#722F1E] text-white py-2 rounded-xl text-sm font-bold shadow-lg hover:brightness-110 transition-all active:scale-95 block text-center leading-none">
-                             Book Now
-                          </Link>
-                       </div>
+                        </p>
+                      </div>
+
+                      {/* Right Side: Price & CTA button */}
+                      <div className="w-24 sm:w-28 shrink-0 flex flex-col justify-between items-end gap-2 text-right">
+                        <div className="flex flex-col items-end">
+                          <span className="text-sm sm:text-base font-bold text-[#ea580c] leading-none">₹{service.price}</span>
+                          {isRecurring && (
+                            <span className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">
+                              / monthly
+                            </span>
+                          )}
+                        </div>
+                        <Link 
+                          to={`/services/detail/${service._id}`} 
+                          className="w-full bg-gradient-to-r from-[#722F1E] to-[#8C3A27] text-white py-2 rounded-full text-xs font-bold shadow-md hover:brightness-110 transition-all active:scale-95 block text-center leading-none"
+                        >
+                          Book Now
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
