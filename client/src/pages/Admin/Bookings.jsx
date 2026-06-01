@@ -480,19 +480,19 @@ export default function Bookings() {
 
       {/* ── ANALYTICS WIDGETS ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
-        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+        <div className="border border-white/40 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-2 md:p-4 rounded-[28px] flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:scale-[1.02] transition-all duration-300">
           <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Total Revenue</p>
           <p className="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">₹{totalRevenue.toLocaleString()}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+        <div className="border border-white/40 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-2 md:p-4 rounded-[28px] flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:scale-[1.02] transition-all duration-300">
           <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Active Bookings</p>
           <p className="text-lg md:text-xl font-extrabold text-amber-600 leading-tight">{activeBookings}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+        <div className="border border-white/40 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-2 md:p-4 rounded-[28px] flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:scale-[1.02] transition-all duration-300">
           <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Pending Invoices</p>
           <p className="text-lg md:text-xl font-extrabold text-blue-600 leading-tight">{pendingInvoices}</p>
         </div>
-        <div className="bg-white border border-slate-200 p-2 md:p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:shadow-md transition-shadow">
+        <div className="border border-white/40 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-2 md:p-4 rounded-[28px] flex flex-col justify-between relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-2 md:gap-4 group hover:scale-[1.02] transition-all duration-300">
           <p className="text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-widest leading-none">Refund Processing</p>
           <p className="text-lg md:text-xl font-extrabold text-purple-600 leading-tight">{bookings.filter(b => ['Refund_Requested', 'Refund_Processing', 'Refunded', 'Cancelled'].includes(b.status)).length}</p>
         </div>

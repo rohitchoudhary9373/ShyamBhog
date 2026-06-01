@@ -145,14 +145,14 @@ export default function Home() {
 
               const innerMarkup = (
                 <div className="flex flex-col items-center justify-center h-full w-full gap-1 sm:gap-2 px-2">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
+                  <div className="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-[#0A1128] group-hover:text-white transition-all duration-500 shadow-inner shrink-0 mb-1">
                     {item.icon}
                   </div>
                   <div className="flex items-center gap-1 justify-center w-full">
-                    <h3 className="text-xs sm:text-sm font-black text-[#0A1128] tracking-tight uppercase group-hover:text-orange-600 transition-colors italic leading-tight text-center truncate max-w-full">{item.title}</h3>
+                    <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-[#0B1330] group-hover:text-orange-600 transition-colors uppercase italic leading-tight text-center truncate max-w-full">{item.title}</h3>
                     {item.badge && <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${crowd?.status === 'High' ? 'bg-red-500' : 'bg-green-500'}`}></span>}
                   </div>
-                  <p className="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-60 leading-none text-center truncate max-w-full">{item.desc}</p>
+                  <p className="text-[10px] sm:text-xs font-medium uppercase tracking-[0.18em] text-gray-400 leading-none text-center truncate max-w-full mt-0.5">{item.desc}</p>
                 </div>
               );
 
@@ -160,7 +160,7 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white w-full h-[145px] sm:h-[190px] p-3 rounded-3xl border border-orange-50 shadow-sm flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none"
+                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[145px] sm:h-[180px] p-3 rounded-[28px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none hover:scale-[1.02] transition-all duration-300"
                   >
                     {/* Floating Coming Soon Badge */}
                     <span className="absolute -top-2 right-3 text-[10px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
@@ -173,7 +173,7 @@ export default function Home() {
                       target="_blank" 
                       rel="noreferrer" 
                       title="WhatsApp Enquiry"
-                      className="absolute top-3 right-3 text-[10px] px-2.5 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold flex items-center justify-center shadow-md shadow-green-500/10 pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
+                      className="absolute top-3 right-3 text-[11px] px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold flex items-center justify-center shadow-lg pointer-events-auto cursor-pointer border border-emerald-400/20 z-20 leading-none"
                     >
                       <FaWhatsapp size={10} className="animate-bounce" />
                     </a>
@@ -187,7 +187,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white w-full h-[145px] sm:h-[190px] p-3 rounded-3xl border border-orange-50 hover:border-orange-500/20 transition-all duration-500 shadow-sm flex flex-col items-center justify-center text-center"
+                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[145px] sm:h-[180px] p-3 rounded-[28px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center hover:scale-[1.02] transition-all duration-300"
                 >
                   {innerMarkup}
                 </Link>
@@ -309,7 +309,7 @@ export default function Home() {
                        className="w-full h-full object-cover" 
                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'; }}
                      />
-                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md rounded-full text-[10px] px-2 py-1 font-bold text-slate-800 shadow-sm border border-white/50 z-10 leading-none">
+                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md rounded-full px-3 py-1 text-[10px] font-semibold text-slate-800 shadow-sm border border-white/50 z-10 leading-none">
                         {service.tag || "Few slots left"}
                      </div>
                   </div>

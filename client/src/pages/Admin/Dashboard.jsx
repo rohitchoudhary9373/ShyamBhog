@@ -286,7 +286,7 @@ function KPICard({ title, value, icon, color, trend, link, isAlert }) {
   return (
     <Link 
       to={link} 
-      className="p-2 md:p-4 rounded-xl bg-white border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow flex flex-col justify-between min-h-[80px] md:min-h-[100px] gap-2 md:gap-4"
+      className="p-2 md:p-4 rounded-[28px] border border-white/40 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] relative overflow-hidden group hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between min-h-[80px] md:min-h-[100px] gap-2 md:gap-4"
     >
       <div className="flex items-center justify-between w-full">
         <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-white bg-gradient-to-br ${color} shadow-sm shrink-0`}>
@@ -303,7 +303,7 @@ function KPICard({ title, value, icon, color, trend, link, isAlert }) {
 
 function ModuleCard({ title, path, icon, color, bg }) {
   return (
-    <Link to={path} className="flex flex-col items-center justify-center p-3 md:p-4 bg-white border border-slate-200 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-1 md:gap-2">
+    <Link to={path} className="flex flex-col items-center justify-center p-3 md:p-4 rounded-[28px] border border-white/40 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] hover:scale-[1.02] transition-all duration-300 group relative overflow-hidden min-h-[80px] md:min-h-[100px] gap-1 md:gap-2">
        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg ${bg} ${color} flex items-center justify-center text-sm md:text-base transition-all duration-500 group-hover:scale-105 shadow-sm`}>
           {icon}
        </div>
