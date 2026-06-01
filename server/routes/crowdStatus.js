@@ -164,10 +164,11 @@ router.post('/wait-times/bulk', protect, admin, async (req, res) => {
     const results = [];
     for (const entry of entries) {
       const { exactDate, weekday, lines, priority, isActive } = entry;
+      const finalExactDate = (exactDate && exactDate.trim() !== "") ? exactDate : null;
       let record;
-      if (exactDate) {
+      if (finalExactDate) {
         record = await DarshanWaitTime.findOneAndUpdate(
-          { adminId, exactDate },
+          { adminId, exactDate: finalExactDate },
           { weekday, lines, priority, isActive },
           { new: true, upsert: true }
         );
