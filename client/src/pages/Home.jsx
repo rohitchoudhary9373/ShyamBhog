@@ -352,7 +352,7 @@ export default function Home() {
                         </div>
                         <Link 
                           to={`/services/detail/${service._id}`} 
-                          className="w-full bg-gradient-to-r from-[#722F1E] to-[#8C3A27] text-white py-1.5 rounded-xl text-[10px] sm:text-xs font-semibold shadow-sm hover:brightness-110 transition-all active:scale-95 block text-center leading-none"
+                          className="w-full bg-gradient-to-r from-[#722F1E] to-[#8C3A27] text-white py-2 rounded-xl text-[10px] sm:text-xs font-semibold shadow-sm hover:brightness-110 transition-all active:scale-95 flex items-center justify-center text-center"
                         >
                           Book Now
                         </Link>
