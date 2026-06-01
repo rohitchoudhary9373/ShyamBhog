@@ -160,7 +160,7 @@ export default function Home() {
                 return (
                   <div 
                     key={idx} 
-                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none pointer-events-none hover:scale-[1.02] transition-all duration-300"
+                    className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center cursor-not-allowed select-none transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
                   >
                     {/* Floating Coming Soon Badge */}
                     <span className="absolute -top-2 right-3 text-[9px] px-2 py-1 rounded-full bg-orange-500 text-white font-bold shadow-md z-20 pointer-events-none uppercase tracking-wider leading-none">
@@ -187,7 +187,7 @@ export default function Home() {
                 <Link 
                   key={idx} 
                   to={item.to} 
-                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center hover:scale-[1.02] transition-all duration-300"
+                  className="group relative bg-white/80 backdrop-blur-xl w-full h-[135px] p-3 rounded-[26px] border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
                 >
                   {innerMarkup}
                 </Link>
