@@ -19,7 +19,6 @@ export default function CrowdStatus() {
   const settingsAdminId = settings?.adminId;
   const [crowd, setCrowd] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('today');
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [copying, setCopying] = useState(false);
   const [waitTimes, setWaitTimes] = useState([]);
@@ -480,75 +479,53 @@ export default function CrowdStatus() {
            </motion.div>
         </section>
 
-        {/* ── COMPACT TOGGLE ── */}
-        <section className="space-y-6">
-           <div className="flex p-1 bg-white rounded-xl border border-orange-100/60 shadow-sm w-fit mx-auto">
-              {['today', 'weekly'].map(mode => (
-                <button key={mode} onClick={() => setViewMode(mode)} className={`px-8 py-3 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all relative ${viewMode === mode ? 'text-white' : 'text-slate-400'}`}>
-                   {viewMode === mode && ( <motion.div layoutId="miniPill" className="absolute inset-0 bg-slate-900 rounded-lg" /> )}
-                   <span className="relative z-10">{mode}</span>
-                </button>
-              ))}
+        {/* ── AAJ KI AARTI TIMINGS ── */}
+        <section className="space-y-5">
+           <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                 <FaClock className="text-orange-500" size={13} />
+                 <span className="text-[11px] font-bold text-slate-700 uppercase tracking-widest">Aaj Ki Aarti Timings</span>
+              </div>
+              <span className="flex items-center gap-1.5 text-[9px] font-bold text-orange-500 uppercase tracking-widest">
+                 <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse inline-block"></span>
+                 Live
+              </span>
            </div>
 
-           <AnimatePresence mode="wait">
-             {viewMode === 'today' ? (
-                <motion.div key="today" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                   <div className="flex items-center justify-between px-1">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aaj Ki Aarti Timings</span>
-                      <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                   </div>
-                   
-                   <div className="grid gap-3">
-                      {(aartiTimings.length > 0 ? aartiTimings : [
-                         { aartiName: "Mangla Aarti", startTime: "04:30 AM", endTime: "05:15 AM", description: "First morning prayer" },
-                         { aartiName: "Shringar Aarti", startTime: "07:30 AM", endTime: "08:15 AM", description: "Lord decoration details" },
-                         { aartiName: "Bhog Aarti", startTime: "12:15 PM", endTime: "01:00 PM", description: "Midday food offering" },
-                         { aartiName: "Sandhya Aarti", startTime: "06:30 PM", endTime: "07:15 PM", description: "Evening lighting prayer" },
-                         { aartiName: "Shayan Aarti", startTime: "09:30 PM", endTime: "10:15 PM", description: "Night rest routine" }
-                      ]).map((aarti, i) => {
-                         const status = getAartiStatus(aarti.startTime, aarti.endTime);
-                         return (
-                            <div key={i} className="bg-white p-4 rounded-2xl border border-orange-50 hover:border-orange-100 shadow-sm flex items-center justify-between group transition-all">
-                               <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-all">
-                                     <FaClock size={15} />
-                                  </div>
-                                  <div>
-                                     <h4 className="text-[13px] font-bold text-slate-900 leading-none mb-1 uppercase tracking-tight">{aarti.aartiName}</h4>
-                                     <span className="text-[9px] font-bold text-slate-400">{aarti.startTime} - {aarti.endTime}</span>
-                                     {aarti.description && <p className="text-[8px] text-slate-400 mt-0.5 font-medium leading-none line-clamp-1">{aarti.description}</p>}
-                                  </div>
-                               </div>
-                               <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase border ${getStatusBadgeClass(status)}`}>
-                                  {status}
-                               </span>
-                            </div>
-                         );
-                      })}
-                   </div>
-                </motion.div>
-             ) : (
-               <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white p-8 rounded-2xl border border-orange-50 shadow-lg">
-                  <div className="flex items-end justify-between h-40 gap-4">
-                     {(crowd?.weekly || [
-                       { day: 'Mon', intensity: 15 },
-                       { day: 'Tue', intensity: 20 },
-                       { day: 'Wed', intensity: 40 },
-                       { day: 'Thu', intensity: 15 },
-                       { day: 'Fri', intensity: 50 },
-                       { day: 'Sat', intensity: 90 },
-                       { day: 'Sun', intensity: 95 }
-                     ]).map((d, i) => (
-                       <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
-                          <div className="w-full flex-grow relative flex flex-col justify-end"><motion.div initial={{ height: 0 }} animate={{ height: `${d.intensity}%` }} className={`w-full rounded-t-xl bg-orange-500/80 group-hover:bg-orange-500 transition-colors`} /></div>
-                          <span className="text-[9px] font-bold text-slate-900 uppercase opacity-40 group-hover:opacity-100">{d.day}</span>
+           <div className="grid gap-3">
+              {(aartiTimings.length > 0 ? aartiTimings : [
+                 { aartiName: "Mangla Aarti", startTime: "04:30 AM", endTime: "05:15 AM", description: "First morning prayer" },
+                 { aartiName: "Shringar Aarti", startTime: "07:30 AM", endTime: "08:15 AM", description: "Lord decoration details" },
+                 { aartiName: "Bhog Aarti", startTime: "12:15 PM", endTime: "01:00 PM", description: "Midday food offering" },
+                 { aartiName: "Sandhya Aarti", startTime: "06:30 PM", endTime: "07:15 PM", description: "Evening lighting prayer" },
+                 { aartiName: "Shayan Aarti", startTime: "09:30 PM", endTime: "10:15 PM", description: "Night rest routine" }
+              ]).map((aarti, i) => {
+                 const status = getAartiStatus(aarti.startTime, aarti.endTime);
+                 return (
+                    <motion.div
+                       key={i}
+                       initial={{ opacity: 0, y: 6 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: i * 0.06 }}
+                       className="bg-white p-4 rounded-2xl border border-orange-50 hover:border-orange-100 shadow-sm flex items-center justify-between group transition-all"
+                    >
+                       <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                             <FaClock size={15} />
+                          </div>
+                          <div>
+                             <h4 className="text-[13px] font-bold text-slate-900 leading-none mb-1 uppercase tracking-tight">{aarti.aartiName}</h4>
+                             <span className="text-[9px] font-bold text-slate-400">{aarti.startTime} — {aarti.endTime}</span>
+                             {aarti.description && <p className="text-[8px] text-slate-400 mt-0.5 font-medium leading-none line-clamp-1">{aarti.description}</p>}
+                          </div>
                        </div>
-                     ))}
-                  </div>
-               </motion.div>
-             )}
-           </AnimatePresence>
+                       <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase border ${getStatusBadgeClass(status)}`}>
+                          {status}
+                       </span>
+                    </motion.div>
+                 );
+              })}
+           </div>
         </section>
 
         {/* ── SLIM ADVISORY ── */}
