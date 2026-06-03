@@ -53,6 +53,7 @@ class WalletService {
     const transaction = await Transaction.create({
       userId,
       adminId,
+      targetUserId: method === 'admin_self_topup' ? userId : null,
       amount,
       openingBalance,
       closingBalance,
@@ -129,6 +130,7 @@ class WalletService {
     const transaction = await Transaction.create({
       userId,
       adminId,
+      targetUserId: method === 'admin_self_topup' ? userId : null,
       amount,
       openingBalance,
       closingBalance,

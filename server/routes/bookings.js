@@ -9,7 +9,7 @@ const asyncHandler = require('../utils/asyncHandler');
 router.post('/', validate(schemas.bookingCreate), asyncHandler(bookingController.createBooking));
 
 // GET /api/bookings - Get all bookings (Admin/Tenant)
-router.get('/', protect, admin, asyncHandler(bookingController.getAllBookings));
+router.get('/', protect, asyncHandler(bookingController.getAllBookings));
 
 // PUT /api/bookings/:id/status - Update booking status
 router.put('/:id/status', protect, admin, validate(schemas.bookingUpdateStatus), asyncHandler(bookingController.updateStatus));

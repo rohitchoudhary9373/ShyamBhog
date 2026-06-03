@@ -4,55 +4,110 @@ const Refund = require('../models/Refund');
 const bookingService = require('../services/bookingService');
 const walletService = require('../services/walletService');
 const ApiError = require('../utils/ApiError');
+const logger = require('../utils/logger');
+const jwt = require('jsonwebtoken');
 
 class BookingController {
   // POST /api/bookings
   async createBooking(req, res) {
-    const { name, whatsapp, serviceType, message, slot, price, tenantId } = req.body;
+    try {
+      const { name, whatsapp, serviceType, message, slot, price, tenantId } = req.body;
+      logger.info(`[createBooking] Creating booking: name=${name}, whatsapp=${whatsapp}, serviceType=${serviceType}, price=${price}`);
 
-    let adminId = tenantId;
-    if (!adminId) {
-      const superAdminUser = await User.findOne({ role: 'admin' });
-      if (superAdminUser) adminId = superAdminUser._id;
+      let adminId = tenantId;
+      if (!adminId) {
+        const superAdminUser = await User.findOne({ role: 'admin' });
+        if (superAdminUser) adminId = superAdminUser._id;
+      }
+      if (!adminId) {
+        logger.error(`[createBooking] Booking creation failed: No tenant/admin user found in database`);
+        throw new ApiError(400, "No tenant found");
+      }
+
+      // Check for optional logged-in user via header token or req.user
+      let optionalUserId = null;
+      if (req.user?._id) {
+        optionalUserId = req.user._id;
+      } else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+        try {
+          const token = req.headers.authorization.split(" ")[1];
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          optionalUserId = decoded.id;
+        } catch (authErr) {
+          logger.warn(`[createBooking] Optional token verification failed: ${authErr.message}`);
+        }
+      }
+
+      const order = new ArjeeOrder({
+        adminId,
+        userId: optionalUserId,
+        name,
+        whatsapp,
+        serviceType,
+        message: message || "",
+        slot: slot ? new Date(slot) : new Date(),
+        price,
+        status: "Pending"
+      });
+
+      const createdOrder = await order.save();
+      logger.info(`[createBooking] Booking created successfully: orderId=${createdOrder._id}, adminId=${adminId}`);
+
+      res.status(201).json({
+        success: true,
+        message: "Booking created successfully",
+        data: createdOrder
+      });
+    } catch (err) {
+      logger.error(`[createBooking] Exception: ${err.message}`);
+      throw err;
     }
-    if (!adminId) {
-      throw new ApiError(400, "No tenant found");
-    }
-
-    const order = new ArjeeOrder({
-      adminId,
-      name,
-      whatsapp,
-      serviceType,
-      message,
-      slot: new Date(slot),
-      price,
-      status: "Pending"
-    });
-
-    const createdOrder = await order.save();
-
-    res.status(201).json({
-      success: true,
-      message: "Booking created successfully",
-      data: createdOrder
-    });
   }
 
   // GET /api/bookings
   async getAllBookings(req, res) {
-    const filter = {};
-    if (req.user.role !== 'admin') {
-      filter.adminId = req.effectiveId;
+    try {
+      console.log(req.user);
+      console.log(req.user ? req.user.id : undefined);
+      const filter = {};
+      if (req.user && req.user.role !== 'admin') {
+        if (req.user.role === 'agent') {
+          filter.adminId = req.effectiveId;
+        } else {
+          const conditions = [{ userId: req.user._id }];
+          
+          const cleanPhoneSuffix = (num) => {
+            const digits = String(num || '').replace(/\D/g, '');
+            return digits.length >= 10 ? digits.slice(-10) : null;
+          };
+
+          const mobileSuffix = cleanPhoneSuffix(req.user.mobile);
+          if (mobileSuffix) {
+            conditions.push({ whatsapp: { $regex: `${mobileSuffix}$` } });
+          }
+
+          const whatsappSuffix = cleanPhoneSuffix(req.user.whatsappNumber);
+          if (whatsappSuffix) {
+            conditions.push({ whatsapp: { $regex: `${whatsappSuffix}$` } });
+          }
+
+          filter.$or = conditions;
+        }
+      }
+
+      logger.info(`[getAllBookings] Fetching bookings for user=${req.user?._id} role=${req.user?.role} with filter=${JSON.stringify(filter)}`);
+      const orders = await ArjeeOrder.find(filter).sort({ createdAt: -1 });
+      logger.info(`[getAllBookings] Fetched ${orders ? orders.length : 0} bookings`);
+
+      res.json({
+        success: true,
+        count: orders ? orders.length : 0,
+        data: orders || []
+      });
+    } catch (err) {
+      logger.error(`[getAllBookings] Exception: ${err.message}`);
+      throw err;
     }
-
-    const orders = await ArjeeOrder.find(filter).sort({ createdAt: -1 });
-
-    res.json({
-      success: true,
-      count: orders.length,
-      data: orders
-    });
   }
 
   // PUT /api/bookings/:id/status
@@ -150,80 +205,92 @@ class BookingController {
 
   // POST /api/bookings/v2
   async createBookingV2(req, res) {
-    const { name, whatsapp, items, totalPrice, taxAmount, serviceType, paymentMode, tenantId } = req.body;
+    try {
+      const { name, whatsapp, items, totalPrice, taxAmount, serviceType, paymentMode, tenantId } = req.body;
+      logger.info(`[createBookingV2] Starting V2 booking: name=${name}, whatsapp=${whatsapp}, itemsCount=${items?.length || 0}, totalPrice=${totalPrice}`);
 
-    let adminId = tenantId;
-    if (!adminId) {
-      const superAdminUser = await User.findOne({ role: 'admin' });
-      if (superAdminUser) adminId = superAdminUser._id;
-    }
-
-    const walletDeduction = req.body.walletDeduction || 0;
-    const totalAmount = totalPrice;
-
-    // Check slot locking first for V2 booking items
-    for (const item of items) {
-      if (item.slot) {
-        await bookingService.acquireSlotLock(item.serviceId, req.user._id, item.slot, item.quantity);
+      let adminId = tenantId;
+      if (!adminId) {
+        const superAdminUser = await User.findOne({ role: 'admin' });
+        if (superAdminUser) adminId = superAdminUser._id;
       }
-    }
 
-    // Handle wallet deduction if applicable
-    if (walletDeduction > 0) {
-      try {
-        const description = `Wallet payment for booking: ${serviceType || 'Devotional Service'}`;
-        await walletService.debit(req.user._id, walletDeduction, 'wallet', description);
-      } catch (err) {
-        // Rollback any slot locks if wallet debit fails
+      const walletDeduction = req.body.walletDeduction || 0;
+      const totalAmount = totalPrice;
+
+      // Check slot locking first for V2 booking items
+      if (items && Array.isArray(items)) {
         for (const item of items) {
           if (item.slot) {
-            await bookingService.releaseSlotLock(item.serviceId, req.user._id, item.slot);
+            await bookingService.acquireSlotLock(item.serviceId, req.user._id, item.slot, item.quantity);
           }
         }
-        throw err;
       }
+
+      // Handle wallet deduction if applicable
+      if (walletDeduction > 0) {
+        try {
+          const description = `Wallet payment for booking: ${serviceType || 'Devotional Service'}`;
+          await walletService.debit(req.user._id, walletDeduction, 'wallet', description);
+        } catch (err) {
+          // Rollback any slot locks if wallet debit fails
+          if (items && Array.isArray(items)) {
+            for (const item of items) {
+              if (item.slot) {
+                await bookingService.releaseSlotLock(item.serviceId, req.user._id, item.slot);
+              }
+            }
+          }
+          throw err;
+        }
+      }
+
+      // Create ONE consolidated order with items
+      const order = new ArjeeOrder({
+        adminId,
+        userId: req.user?._id || null,
+        name,
+        whatsapp,
+        items: (items || []).map(i => ({
+          serviceId: i.serviceId,
+          title: i.title,
+          price: i.price,
+          quantity: i.quantity || 1,
+          slot: i.slot ? new Date(i.slot) : new Date(),
+          message: i.message || "",
+          devoteeName: i.devoteeName || "",
+          devoteeWhatsapp: i.devoteeWhatsapp || ""
+        })),
+        serviceType: serviceType || 'Arjee',
+        totalPrice: totalAmount,
+        taxAmount: taxAmount || 0,
+        walletDeduction,
+        payableAmount: req.body.payableAmount || (totalAmount - walletDeduction),
+        paymentMode: paymentMode || 'one-time',
+        slot: items?.[0]?.slot ? new Date(items[0].slot) : new Date(),
+        message: items?.[0]?.message || "",
+        status: "Pending"
+      });
+
+      const isFullyPaid = walletDeduction >= totalAmount;
+      await order.save();
+      logger.info(`[createBookingV2] Booking recorded: orderId=${order._id}, isFullyPaid=${isFullyPaid}`);
+
+      let finalOrder = order;
+      if (isFullyPaid) {
+        finalOrder = await bookingService.confirmBooking(order._id);
+        logger.info(`[createBookingV2] Booking confirmed immediately: orderId=${order._id}`);
+      }
+
+      res.status(201).json({
+        success: true,
+        message: isFullyPaid ? "Booked Successfully! 🎉" : "Booking Recorded (Pending Payment)",
+        data: finalOrder
+      });
+    } catch (err) {
+      logger.error(`[createBookingV2] Exception: ${err.message}`);
+      throw err;
     }
-
-    // Create ONE consolidated order with items
-    const order = new ArjeeOrder({
-      adminId,
-      userId: req.user._id,
-      name,
-      whatsapp,
-      items: items.map(i => ({
-        serviceId: i.serviceId,
-        title: i.title,
-        price: i.price,
-        quantity: i.quantity || 1,
-        slot: i.slot ? new Date(i.slot) : new Date(),
-        message: i.message,
-        devoteeName: i.devoteeName,
-        devoteeWhatsapp: i.devoteeWhatsapp
-      })),
-      serviceType: serviceType || 'Arjee',
-      totalPrice: totalAmount,
-      taxAmount: taxAmount || 0,
-      walletDeduction,
-      payableAmount: req.body.payableAmount || (totalAmount - walletDeduction),
-      paymentMode: paymentMode || 'one-time',
-      slot: items[0]?.slot ? new Date(items[0].slot) : new Date(),
-      message: items[0]?.message || "",
-      status: "Pending"
-    });
-
-    const isFullyPaid = walletDeduction >= totalAmount;
-    await order.save();
-
-    let finalOrder = order;
-    if (isFullyPaid) {
-      finalOrder = await bookingService.confirmBooking(order._id);
-    }
-
-    res.status(201).json({
-      success: true,
-      message: isFullyPaid ? "Booked Successfully! 🎉" : "Booking Recorded (Pending Payment)",
-      data: finalOrder
-    });
   }
 }
 

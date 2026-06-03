@@ -181,6 +181,7 @@ app.use("/api/users",         generalLimiter, require("./routes/users"));
 app.use("/api/settings",      generalLimiter, require("./routes/settings"));
 app.use("/api/services",      generalLimiter, require("./routes/services"));
 app.use("/api/bookings",      generalLimiter, require("./routes/bookings"));
+app.use("/api/user/bookings", generalLimiter, require("./routes/bookings"));
 app.use("/api/feedback",      generalLimiter, require("./routes/feedback"));
 app.use("/api/faq",           generalLimiter, require("./routes/faq"));
 app.use("/api/gallery",       generalLimiter, require("./routes/gallery"));

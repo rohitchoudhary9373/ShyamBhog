@@ -16,6 +16,10 @@ API.interceptors.request.use((req) => {
   if (tenantId) {
     req.headers['X-Tenant-ID'] = tenantId;
   }
+  // Prevent browser caching of API responses
+  req.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+  req.headers['Pragma'] = 'no-cache';
+  req.headers['Expires'] = '0';
   return req;
 });
 

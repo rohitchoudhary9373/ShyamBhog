@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const walletService = require('../services/walletService');
 const ApiError = require('../utils/ApiError');
+const logger = require('../utils/logger');
 
 class WalletController {
   // GET /api/wallet/my-wallet
@@ -76,26 +77,34 @@ class WalletController {
 
   // POST /api/wallet/self-topup
   async selfTopup(req, res) {
-    if (req.user.role !== 'admin') {
-      throw new ApiError(403, "Only admins can perform self top-up");
+    try {
+      if (req.user.role !== 'admin') {
+        logger.error(`[selfTopup] Unauthorized attempt by user=${req.user?._id} with role=${req.user?.role}`);
+        throw new ApiError(403, "Only admins can perform self top-up");
+      }
+
+      const { amount, type, description } = req.body;
+      const desc = description || `Admin Self ${type || 'credit'}`;
+      logger.info(`[selfTopup] Admin self-topup: adminId=${req.user._id}, amount=${amount}, type=${type}, desc=${desc}`);
+
+      if (type === 'debit') {
+        await walletService.debit(req.user._id, Number(amount), 'admin_self_topup', desc);
+      } else {
+        await walletService.credit(req.user._id, Number(amount), 'admin_self_topup', desc);
+      }
+
+      const adminUser = await User.findById(req.user._id).lean();
+      logger.info(`[selfTopup] Admin balance updated: adminId=${req.user._id}, newBalance=${adminUser?.walletBalance}`);
+
+      res.json({
+        success: true,
+        message: "Balance updated successfully",
+        newBalance: adminUser?.walletBalance || 0
+      });
+    } catch (err) {
+      logger.error(`[selfTopup] Exception: ${err.message}`);
+      throw err;
     }
-
-    const { amount, type, description } = req.body;
-    const desc = description || `Admin Self ${type || 'credit'}`;
-
-    if (type === 'debit') {
-      await walletService.debit(req.user._id, Number(amount), 'admin_self_topup', desc);
-    } else {
-      await walletService.credit(req.user._id, Number(amount), 'admin_self_topup', desc);
-    }
-
-    const adminUser = await User.findById(req.user._id).lean();
-
-    res.json({
-      success: true,
-      message: "Balance updated successfully",
-      newBalance: adminUser.walletBalance
-    });
   }
 
   // POST /api/wallet/admin-adjustment
@@ -144,23 +153,40 @@ class WalletController {
 
   // GET /api/wallet/global-history
   async globalHistory(req, res) {
-    if (req.user.role !== 'admin') {
-      throw new ApiError(403, "Only admins can view global wallet history");
+    try {
+      if (req.user.role !== 'admin') {
+        logger.error(`[globalHistory] Unauthorized access attempt by user=${req.user?._id} with role=${req.user?.role}`);
+        throw new ApiError(403, "Only admins can view global wallet history");
+      }
+
+      logger.info(`[globalHistory] Admin fetching global wallet ledger logs`);
+      const history = await Transaction.find({
+        method: { $in: ['admin_adjustment', 'admin_transfer', 'admin_self_topup'] }
+      })
+        .populate('userId', 'name mobile role')
+        .populate('targetUserId', 'name mobile role')
+        .sort({ createdAt: -1 })
+        .limit(100)
+        .lean();
+
+      // For self-topups, populate targetUserId with the admin user object (userId) if it is missing
+      const processedHistory = (history || []).map(tx => {
+        if (tx.method === 'admin_self_topup' && !tx.targetUserId) {
+          tx.targetUserId = tx.userId;
+        }
+        return tx;
+      });
+
+      logger.info(`[globalHistory] Found ${processedHistory.length} ledger history entries`);
+
+      res.json({
+        success: true,
+        history: processedHistory
+      });
+    } catch (err) {
+      logger.error(`[globalHistory] Exception: ${err.message}`);
+      throw err;
     }
-
-    const history = await Transaction.find({
-      method: { $in: ['admin_adjustment', 'admin_transfer'] }
-    })
-      .populate('userId', 'name mobile role')
-      .populate('targetUserId', 'name mobile role')
-      .sort({ createdAt: -1 })
-      .limit(100)
-      .lean();
-
-    res.json({
-      success: true,
-      history
-    });
   }
 
   // POST /api/wallet/freeze

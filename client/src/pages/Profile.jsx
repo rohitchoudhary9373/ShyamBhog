@@ -32,15 +32,34 @@ export default function Profile() {
          setEditForm(user);
 
          const refundsArray = refundRes.data?.data || [];
-         const allOrders = ordersRes.data.data || ordersRes.data;
+         const allOrders = ordersRes.data.data || ordersRes.data || [];
+
+         // Robust normalization helper for phone numbers (matches last 10 digits)
+         const cleanPhone = (num) => String(num || '').replace(/\D/g, '').slice(-10);
 
          const myOrders = allOrders
-            .filter(o => o.whatsapp === user.mobile || o.userId === user._id)
+            .filter(o => {
+               if (!o) return false;
+               const cleanOrderWhatsapp = cleanPhone(o.whatsapp);
+               const cleanUserMobile = cleanPhone(user.mobile);
+               const cleanUserWhatsapp = cleanPhone(user.whatsappNumber);
+
+               const isPhoneMatch = cleanOrderWhatsapp && (cleanOrderWhatsapp === cleanUserMobile || cleanOrderWhatsapp === cleanUserWhatsapp);
+               
+               const oUserIdStr = o.userId?._id ? String(o.userId._id) : (o.userId ? String(o.userId) : '');
+               const uIdStr = user._id ? String(user._id) : '';
+               const isIdMatch = uIdStr && oUserIdStr === uIdStr;
+
+               return isPhoneMatch || isIdMatch;
+            })
             .map(o => {
                const refundInfo = refundsArray.find(r => (r.orderId?._id || r.orderId) === o._id);
                if (refundInfo) o.refundRequest = refundInfo;
                return o;
             });
+
+         console.log(ordersRes.data);
+         console.log(myOrders);
 
          setOrders(myOrders);
       } catch (err) {
