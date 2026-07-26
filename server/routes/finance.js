@@ -56,27 +56,38 @@ router.get('/revenue', protect, admin, async (req, res) => {
 
 router.get('/reseller-stats', protect, admin, async (req, res) => {
   try {
-    const filter = { adminId: req.effectiveId };
+    const adminId = req.effectiveId || req.user._id;
+    // Match orders belonging to this admin or all if superAdmin without tenantId restriction
+    const filter = (req.user.role === 'admin' && !req.query.tenantId) ? {} : { adminId };
 
-    const totalBookings = await ArjeeOrder.countDocuments({ ...filter, status: { $in: ['Completed', 'Active'] } });
-    const pendingRefunds = await Refund.countDocuments({ ...filter, status: 'pending' });
-    const agentsCount = await User.countDocuments({ role: 'agent', parentAdmin: req.effectiveId });
+    const validPaidStatuses = ['Completed', 'Active', 'Payment_Verified', 'Approved', 'Invoice_Generated'];
+    const allBookingStatuses = ['Completed', 'Active', 'Payment_Verified', 'Approved', 'Invoice_Generated', 'Pending'];
+
+    const totalBookings = await ArjeeOrder.countDocuments({ 
+      ...(Object.keys(filter).length ? filter : {}), 
+      status: { $in: allBookingStatuses } 
+    });
+    const pendingRefunds = await Refund.countDocuments({ 
+      ...(Object.keys(filter).length ? filter : {}), 
+      status: 'pending' 
+    });
+    const agentsCount = await User.countDocuments({ role: 'agent', parentAdmin: adminId });
     
     const revenueAgg = await ArjeeOrder.aggregate([
-      { $match: { ...filter, status: { $in: ['Completed', 'Active'] } } },
-      { $group: { _id: null, totalRevenue: { $sum: "$totalPrice" } } }
+      { $match: { ...(Object.keys(filter).length ? filter : {}), status: { $in: validPaidStatuses } } },
+      { $group: { _id: null, totalRevenue: { $sum: { $ifNull: ["$payableAmount", "$totalPrice"] } } } }
     ]);
     const totalRevenue = revenueAgg[0]?.totalRevenue || 0;
 
     const walletAgg = await User.aggregate([
-      { $match: { role: 'user', parentAdmin: req.effectiveId } },
+      { $match: { role: 'user' } },
       { $group: { _id: null, totalWalletBalance: { $sum: "$walletBalance" } } }
     ]);
     const totalWalletFloat = walletAgg[0]?.totalWalletBalance || 0;
 
-    const recentBookings = await ArjeeOrder.find(filter).sort({ createdAt: -1 }).limit(5);
+    const recentBookings = await ArjeeOrder.find(Object.keys(filter).length ? filter : {}).sort({ createdAt: -1 }).limit(10);
 
-    const adminUser = await User.findById(req.effectiveId);
+    const adminUser = await User.findById(adminId);
     const adminBalance = adminUser?.walletBalance || 0;
 
     // Calculate 7 days revenue aggregation
@@ -87,15 +98,15 @@ router.get('/reseller-stats', protect, admin, async (req, res) => {
     const dailyRevenueAgg = await ArjeeOrder.aggregate([
       { 
         $match: { 
-          ...filter,
-          status: { $in: ['Completed', 'Active'] },
+          ...(Object.keys(filter).length ? filter : {}),
+          status: { $in: validPaidStatuses },
           createdAt: { $gte: sevenDaysAgo }
         } 
       },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-          revenue: { $sum: "$totalPrice" }
+          revenue: { $sum: { $ifNull: ["$payableAmount", "$totalPrice"] } }
         }
       },
       { $sort: { _id: 1 } }
