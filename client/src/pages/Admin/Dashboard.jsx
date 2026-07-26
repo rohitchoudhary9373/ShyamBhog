@@ -26,7 +26,9 @@ import {
   FaSyncAlt,
   FaExternalLinkAlt,
   FaChartLine,
-  FaHistory
+  FaHistory,
+  FaReceipt,
+  FaChevronRight
 } from "react-icons/fa";
 
 export default function Dashboard() {
@@ -118,7 +120,7 @@ export default function Dashboard() {
   if (loading) return <Loader text="Syncing Dashboard..." />;
 
   return (
-    <div className="bg-[#F8FAFC] min-h-[100dvh] pb-20 p-4 sm:p-6 md:p-8 font-sans selection:bg-orange-100">
+    <div className="bg-[#F8FAFC] min-h-[100dvh] pb-24 p-4 sm:p-6 md:p-8 font-sans selection:bg-orange-100">
 
       {/* ⚪ CLEAN WHITE HEADER */}
       <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -151,7 +153,7 @@ export default function Dashboard() {
              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold text-xs shadow-sm transition-all active:scale-95 disabled:opacity-50"
            >
               <FaDownload className={exporting ? 'animate-bounce text-orange-500' : 'text-slate-400'} size={12} />
-              {exporting ? 'Exporting...' : 'Export'}
+              {exporting ? 'Exporting...' : 'Export CSV'}
            </button>
 
            <button onClick={fetchData} className="flex items-center gap-2 px-5 py-2.5 bg-[#0A1128] hover:bg-orange-600 text-white rounded-xl font-bold text-xs shadow-md transition-all active:scale-95">
@@ -169,120 +171,132 @@ export default function Dashboard() {
         <KPICard title="Treasury" value={`₹${stats.adminBalance.toLocaleString()}`} icon={<FaWallet />} bg="bg-blue-50 text-blue-600 border-blue-100" link="/admin/wallet" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* 🕹️ LEFT SIDE (Modules + Analytics) */}
-        <div className="lg:col-span-8 space-y-6">
-
-           {/* QUICK MODULES */}
-           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                 <div>
-                    <h3 className="text-base font-black text-[#0A1128] uppercase tracking-tight">Quick Access</h3>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Core System Modules</p>
+      {/* 🕒 FULL-WIDTH EXPANDED LIVE FEED SECTION */}
+      <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-sm mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-100">
+           <div className="space-y-0.5">
+              <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center">
+                    <FaReceipt size={14} />
                  </div>
+                 <h3 className="text-lg font-black text-[#0A1128] uppercase tracking-tight">Live Feed & Recent Bookings</h3>
+                 <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 text-[9px] font-black uppercase tracking-widest">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Live Stream
+                 </span>
               </div>
-              
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                 <ModuleCard title="Ritual Requests" path="/admin/manage-arjee" icon={<FaVideo />} color="text-red-600" bg="bg-red-50 border-red-100" />
-                 <ModuleCard title="Crowd Status" path="/admin/manage-crowd" icon={<FaUsers />} color="text-blue-600" bg="bg-blue-50 border-blue-100" />
-                 <ModuleCard title="Parking Guide" path="/admin/manage-parking" icon={<FaParking />} color="text-emerald-600" bg="bg-emerald-50 border-emerald-100" />
-                 <ModuleCard title="Services" path="/admin/services" icon={<FaBoxOpen />} color="text-orange-600" bg="bg-orange-50 border-orange-100" />
-              </div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-11">Real-time Devotee Ritual Requests & Seva Transactions</p>
            </div>
-
-           {/* 📈 GROWTH ANALYTICS (WHITE THEME) */}
-           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                 <div>
-                    <div className="flex items-center gap-2">
-                       <FaChartLine className="text-orange-600" size={14} />
-                       <h2 className="text-base font-black text-[#0A1128] uppercase tracking-tight">Growth Analytics</h2>
-                    </div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">7-Day Revenue Trends</p>
-                 </div>
-                 <Link to="/admin/wallet" className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1 uppercase tracking-widest">
-                    Financials <FaArrowRight size={10} />
-                 </Link>
-              </div>
-
-              <div className="h-[240px] w-full pt-2">
-                 <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData}>
-                       <defs>
-                          <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                             <stop offset="5%" stopColor="#F97316" stopOpacity={0.25}/>
-                             <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
-                          </linearGradient>
-                       </defs>
-                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 700, fill: '#64748B'}} />
-                       <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 700, fill: '#64748B'}} />
-                       <Tooltip 
-                         contentStyle={{ backgroundColor: '#FFFFFF', borderRadius: '14px', border: '1px solid #E2E8F0', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)', padding: '10px' }}
-                         itemStyle={{ fontSize: '11px', fontWeight: 'bold', color: '#F97316' }}
-                       />
-                       <Area type="monotone" dataKey="revenue" stroke="#F97316" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRev)" />
-                    </AreaChart>
-                 </ResponsiveContainer>
-              </div>
-           </div>
-
+           
+           <Link to="/admin/bookings" className="px-5 py-2.5 bg-[#0A1128] hover:bg-orange-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm flex items-center gap-2 shrink-0">
+              View All Bookings <FaChevronRight size={10} />
+           </Link>
         </div>
 
-        {/* 🕒 RIGHT SIDE (Live Activity Feed) */}
-        <div className="lg:col-span-4">
-           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col h-full">
-              <div className="flex justify-between items-center mb-4">
-                 <div>
-                    <h3 className="text-base font-black text-[#0A1128] uppercase tracking-tight">Live Feed</h3>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Recent Devotee Bookings</p>
-                 </div>
-                 <span className="text-[9px] font-bold bg-emerald-50 text-emerald-600 px-2.5 py-0.5 rounded-full border border-emerald-100 uppercase tracking-widest">Live</span>
+        {recent.length === 0 ? (
+           <div className="py-16 text-center flex flex-col items-center justify-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 p-8 gap-3">
+              <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-300 shadow-sm">
+                 <FaHistory size={24} />
               </div>
-              
-              <div className="flex-grow space-y-3 overflow-y-auto pr-1 custom-scrollbar min-h-[280px]">
-                 {recent.length === 0 ? (
-                    <div className="py-20 text-center flex flex-col items-center justify-center opacity-40 gap-2">
-                       <FaHistory size={18} className="text-slate-400" />
-                       <p className="text-xs font-bold uppercase tracking-widest text-slate-400">No recent orders</p>
-                    </div>
-                 ) : (
-                    recent.map(booking => (
-                       <div key={booking._id} className="p-3.5 bg-slate-50 hover:bg-orange-50/40 border border-slate-100 hover:border-orange-200 rounded-2xl transition-all duration-200 group">
-                          <div className="flex justify-between items-start mb-1.5">
-                             <div>
-                                <h4 className="font-bold text-xs text-[#0A1128] group-hover:text-orange-600 transition-colors uppercase tracking-tight">{booking.name}</h4>
-                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{booking.serviceType}</p>
-                             </div>
-                             <div className="text-right">
-                                <span className="text-xs font-black text-[#0A1128]">₹{booking.price}</span>
-                                <p className="text-[8px] font-bold text-slate-400">{new Date(booking.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
-                             </div>
-                          </div>
-                          
-                          <div className="flex justify-between items-center pt-2 border-t border-slate-200/50">
-                             <span className={`px-2 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-widest ${booking.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-orange-50 text-orange-700 border border-orange-100'}`}>
-                                {booking.status}
-                             </span>
-                             <a 
-                               href={`https://wa.me/91${booking.whatsapp}`} 
-                               target="_blank" 
-                               rel="noreferrer" 
-                               className="flex items-center gap-1 text-[9px] font-bold text-slate-400 hover:text-emerald-600 transition-colors uppercase tracking-wider"
-                             >
-                                WhatsApp <FaExternalLinkAlt size={8} />
-                             </a>
-                          </div>
-                       </div>
-                    ))
-                 )}
+              <div>
+                 <h4 className="text-sm font-black text-[#0A1128] uppercase tracking-tight">No Recent Devotee Orders</h4>
+                 <p className="text-xs font-medium text-slate-400 mt-1">Bookings submitted by devotees on the portal will stream here live.</p>
               </div>
-              
-              <Link to="/admin/bookings" className="w-full text-center mt-4 py-3.5 bg-[#0A1128] hover:bg-orange-600 text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-sm block">
-                 View All Bookings
+              <Link to="/admin/bookings" className="mt-2 text-xs font-bold text-orange-600 hover:underline uppercase tracking-wider">
+                 Check Historical Ledger &rarr;
               </Link>
            </div>
-        </div>
+        ) : (
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recent.map(booking => (
+                 <div key={booking._id} className="p-5 bg-slate-50 hover:bg-white border border-slate-100 hover:border-orange-200 rounded-2xl transition-all duration-200 shadow-xs hover:shadow-md group flex flex-col justify-between space-y-3">
+                    <div className="flex justify-between items-start">
+                       <div>
+                          <h4 className="font-black text-sm text-[#0A1128] group-hover:text-orange-600 transition-colors uppercase tracking-tight">{booking.name}</h4>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{booking.serviceType}</span>
+                       </div>
+                       <div className="text-right">
+                          <span className="text-base font-black text-[#0A1128]">₹{booking.price}</span>
+                          <p className="text-[9px] font-bold text-slate-400">{new Date(booking.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                       </div>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-3 border-t border-slate-200/60">
+                       <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${booking.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-orange-50 text-orange-700 border border-orange-100'}`}>
+                          {booking.status}
+                       </span>
+                       <a 
+                         href={`https://wa.me/91${booking.whatsapp}`} 
+                         target="_blank" 
+                         rel="noreferrer" 
+                         className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 hover:text-emerald-600 transition-colors uppercase tracking-wider bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs"
+                       >
+                          WhatsApp <FaExternalLinkAlt size={8} />
+                       </a>
+                    </div>
+                 </div>
+              ))}
+           </div>
+        )}
+      </div>
+
+      {/* 🕹️ BOTTOM GRID (Quick Modules + Growth Chart) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+         {/* QUICK MODULES */}
+         <div className="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div>
+               <div className="flex justify-between items-center mb-4">
+                  <div>
+                     <h3 className="text-base font-black text-[#0A1128] uppercase tracking-tight">Quick Access</h3>
+                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Core System Controllers</p>
+                  </div>
+               </div>
+               
+               <div className="grid grid-cols-2 gap-3">
+                  <ModuleCard title="Ritual Requests" path="/admin/manage-arjee" icon={<FaVideo />} color="text-red-600" bg="bg-red-50 border-red-100" />
+                  <ModuleCard title="Crowd Status" path="/admin/manage-crowd" icon={<FaUsers />} color="text-blue-600" bg="bg-blue-50 border-blue-100" />
+                  <ModuleCard title="Parking Guide" path="/admin/manage-parking" icon={<FaParking />} color="text-emerald-600" bg="bg-emerald-50 border-emerald-100" />
+                  <ModuleCard title="Services" path="/admin/services" icon={<FaBoxOpen />} color="text-orange-600" bg="bg-orange-50 border-orange-100" />
+               </div>
+            </div>
+         </div>
+
+         {/* 📈 GROWTH ANALYTICS (WHITE THEME) */}
+         <div className="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
+            <div className="flex justify-between items-center mb-4">
+               <div>
+                  <div className="flex items-center gap-2">
+                     <FaChartLine className="text-orange-600" size={14} />
+                     <h2 className="text-base font-black text-[#0A1128] uppercase tracking-tight">Growth Analytics</h2>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">7-Day Revenue Trends</p>
+               </div>
+               <Link to="/admin/wallet" className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1 uppercase tracking-widest">
+                  Financials <FaArrowRight size={10} />
+               </Link>
+            </div>
+
+            <div className="h-[220px] w-full pt-2">
+               <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData}>
+                     <defs>
+                        <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="5%" stopColor="#F97316" stopOpacity={0.25}/>
+                           <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
+                        </linearGradient>
+                     </defs>
+                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 700, fill: '#64748B'}} />
+                     <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 700, fill: '#64748B'}} />
+                     <Tooltip 
+                       contentStyle={{ backgroundColor: '#FFFFFF', borderRadius: '14px', border: '1px solid #E2E8F0', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)', padding: '10px' }}
+                       itemStyle={{ fontSize: '11px', fontWeight: 'bold', color: '#F97316' }}
+                     />
+                     <Area type="monotone" dataKey="revenue" stroke="#F97316" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRev)" />
+                  </AreaChart>
+               </ResponsiveContainer>
+            </div>
+         </div>
 
       </div>
     </div>
@@ -314,8 +328,8 @@ function KPICard({ title, value, icon, bg, link, isAlert }) {
 
 function ModuleCard({ title, path, icon, color, bg }) {
   return (
-    <Link to={path} className={`flex flex-col items-center justify-center p-3.5 rounded-2xl border ${bg} hover:border-orange-300 hover:shadow-sm transition-all duration-200 group min-h-[90px] text-center gap-1.5`}>
-       <div className={`w-8 h-8 rounded-lg ${bg} ${color} flex items-center justify-center text-sm transition-transform duration-200 group-hover:scale-110 border border-current/10`}>
+    <Link to={path} className={`flex flex-col items-center justify-center p-4 rounded-2xl border ${bg} hover:border-orange-300 hover:shadow-sm transition-all duration-200 group min-h-[95px] text-center gap-2`}>
+       <div className={`w-9 h-9 rounded-xl ${bg} ${color} flex items-center justify-center text-base transition-transform duration-200 group-hover:scale-110 border border-current/10`}>
           {icon}
        </div>
        <span className="text-[10px] font-bold text-slate-800 uppercase tracking-wider leading-tight">{title}</span>
