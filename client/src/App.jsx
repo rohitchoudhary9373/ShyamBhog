@@ -94,11 +94,17 @@ function StorefrontLayout() {
   }, [activeModal]);
 
   const getModalContent = () => {
-    if (activeModal === 'terms') return { title: t('footer.terms_conditions'), content: settings?.termsContent };
-    if (activeModal === 'privacy') return { title: t('footer.privacy_policy'), content: settings?.privacyPolicy };
-    if (activeModal === 'refund') return { title: t('footer.refund_policy'), content: settings?.refundPolicy };
-    if (activeModal === 'shipping') return { title: t('footer.shipping_policy'), content: settings?.shippingPolicy };
-    if (activeModal === 'nature') return { title: t('footer.service_nature'), content: settings?.serviceNature };
+    const termsText = t('policy_docs.terms') !== 'policy_docs.terms' ? t('policy_docs.terms') : settings?.termsContent;
+    const privacyText = t('policy_docs.privacy') !== 'policy_docs.privacy' ? t('policy_docs.privacy') : settings?.privacyPolicy;
+    const refundText = t('policy_docs.refund') !== 'policy_docs.refund' ? t('policy_docs.refund') : settings?.refundPolicy;
+    const shippingText = t('policy_docs.shipping') !== 'policy_docs.shipping' ? t('policy_docs.shipping') : settings?.shippingPolicy;
+    const natureText = t('policy_docs.nature') !== 'policy_docs.nature' ? t('policy_docs.nature') : settings?.serviceNature;
+
+    if (activeModal === 'terms') return { title: t('footer.terms_conditions'), content: termsText };
+    if (activeModal === 'privacy') return { title: t('footer.privacy_policy'), content: privacyText };
+    if (activeModal === 'refund') return { title: t('footer.refund_policy'), content: refundText };
+    if (activeModal === 'shipping') return { title: t('footer.shipping_policy'), content: shippingText };
+    if (activeModal === 'nature') return { title: t('footer.service_nature'), content: natureText };
 
     if (activeModal === 'contact') return {
       title: t('footer.contact_us'),
@@ -106,7 +112,7 @@ function StorefrontLayout() {
       details: [
         { icon: <FaWhatsapp className="text-green-500" />, label: 'WhatsApp', value: settings?.whatsapp, link: `https://wa.me/${settings?.whatsapp?.replace(/\D/g, '')}` },
         { icon: <FaEnvelope className="text-blue-500" />, label: 'Email', value: settings?.contactEmail, link: `mailto:${settings?.contactEmail}` },
-        { icon: <FaMapMarkerAlt className="text-red-500" />, label: 'Address', value: 'Khatu Shyam Ji, Rajasthan', link: settings?.parkingUrl || '#' },
+        { icon: <FaMapMarkerAlt className="text-red-500" />, label: 'Address', value: t('footer.hq_address') || 'Khatu Shyam Ji, Rajasthan', link: settings?.parkingUrl || '#' },
       ]
     };
     return null;

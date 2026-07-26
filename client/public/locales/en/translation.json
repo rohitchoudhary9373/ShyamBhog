@@ -35,7 +35,15 @@
     "response_time": "Response Time",
     "reply_notice": "We usually reply within 2-4 hours during temple hours.",
     "docs_updating": "Documentation is currently being updated...",
-    "support": "Support"
+    "support": "Support",
+    "hq_address": "Village - Khatu Shyam Ji, Sikar, Rajasthan - 332601 India"
+  },
+  "policy_docs": {
+    "nature": "• Premium Digital Devotional Services\n• Online Bhog, Prasad & Arjee Management\n• Real-time Darshan & Crowd Intelligence System\n• Devotee Assistance & Pilgrimage Support\n• Hotel, Stay & Parking Facilitation Services\n• Spiritual Experience & Seva Coordination\n• Secure, Transparent & Technology-Driven Operations",
+    "terms": "• All devotional services are subject to temple protocols and availability.\n• Bhog, Arjee, Prasad and seva requests are processed on a best-effort devotional basis.\n• Service timings may change during festivals, Ekadashi or high crowd periods.\n• Users must provide accurate personal and booking information.\n• Shyam Bhog reserves the right to modify, pause or cancel services when required.\n• All digital transactions are processed through secure payment gateways (Razorpay).",
+    "privacy": "• User privacy and data protection are maintained with strict confidentiality.\n• Personal information is used only for devotional services and operational support.\n• Sensitive payment data is securely processed through trusted payment gateways.\n• Shyam Bhog does not store confidential banking or card credentials.\n• User information is never sold or shared without valid operational necessity.",
+    "refund": "• All payments made for devotional services are subject to applicable cancellation and refund guidelines.\n• Certain devotional offerings and seva bookings may be non-refundable once processed.\n• In case of failed transactions, eligible reversals shall be processed through the original payment method (Razorpay).\n• Processing timelines for reversals may vary depending on banking and payment gateway procedures.",
+    "shipping": "• Devotional offerings are managed through structured and verified fulfillment processes.\n• Bhog, Prasad and seva requests are processed with operational transparency and devotional care.\n• Partner logistics and delivery services may be utilized where applicable for fulfillment support.\n• Digital confirmations and service updates are provided through official platform channels."
   },
   "common": {
     "loading": "Loading Divine Offerings...",
