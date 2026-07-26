@@ -39,7 +39,7 @@ export default function Home() {
         const tenantId = settingsAdminId || '';
         console.log(`[Home] Fetching devotee data for tenantId: "${tenantId}"`);
         const [srvRes, faqRes, galRes, feedRes, crowdRes, parkRes] = await Promise.all([
-          API.get(`/services?tenantId=${tenantId}`).catch(() => ({ data: [] })),
+          API.get('/services?tenantId=all').catch(() => ({ data: [] })),
           API.get(`/faq?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/gallery?tenantId=${tenantId}`).catch(() => ({ data: [] })),
           API.get(`/feedback?tenantId=${tenantId}`).catch(() => ({ data: [] })),
