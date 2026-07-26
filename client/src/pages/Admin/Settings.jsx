@@ -276,21 +276,21 @@ export default function Settings() {
                   </div>
                   <div>
                      <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Comm <span className="text-orange-600 not-italic">Hub</span></h3>
-                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Support & Outreach Protocols</p>
+                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Support & Outreach Protocols (Locked)</p>
                   </div>
                </div>
-               <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 flex items-center gap-2"><FaPhoneAlt size={8} /> Secure WhatsApp</label>
-                    <input type="text" name="whatsapp" value={form.whatsapp} onChange={handleChange} className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-[22px] outline-none focus:border-orange-500 font-bold text-[13px] text-slate-900 transition-all" />
+               <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-1">
+                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><FaPhoneAlt size={10} className="text-emerald-600" /> Secure WhatsApp</span>
+                     <p className="text-sm font-black text-slate-900">+91 6367793601</p>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 flex items-center gap-2"><FaEnvelope size={8} /> Administrative Email</label>
-                    <input type="email" name="contactEmail" value={form.contactEmail} onChange={handleChange} className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-[22px] outline-none focus:border-orange-500 font-bold text-[13px] text-slate-900 transition-all" />
+                  <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-1">
+                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><FaEnvelope size={10} className="text-blue-600" /> Administrative Email</span>
+                     <p className="text-sm font-black text-slate-900">Shyambhog.in@gmail.com</p>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 flex items-center gap-2"><FaMapMarkerAlt size={8} /> Registered HQ Address</label>
-                    <textarea name="companyAddress" value={form.companyAddress} onChange={handleChange} rows="3" className="w-full p-5 bg-slate-50 border border-slate-100 rounded-[22px] outline-none focus:border-orange-500 font-bold text-[12px] text-slate-600 resize-none transition-all" />
+                  <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-1">
+                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><FaMapMarkerAlt size={10} className="text-orange-600" /> Registered HQ Address</span>
+                     <p className="text-xs font-bold text-slate-700 leading-relaxed">Village - khatu Shyam ji, SIKAR, Rajasthan-332601 India</p>
                   </div>
                </div>
             </section>

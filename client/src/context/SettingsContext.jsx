@@ -9,15 +9,15 @@ const DEFAULTS = {
   footerText: 'Made with श्रद्धा by Shyam Bhog Team',
   copyrightText: '© 2026 Shyam Bhog Inc. All rights reserved.',
   aboutText: '',
-  contactEmail: '',
-  whatsapp: '',
+  contactEmail: 'Shyambhog.in@gmail.com',
+  whatsapp: '6367793601',
   facebookUrl: '',
   instagramUrl: '',
   youtubeUrl: '',
   logoUrl: '/logo.png',
   primaryColor: '#f97316',
   gstNumber: '',
-  companyAddress: '',
+  companyAddress: 'Village - khatu Shyam ji, SIKAR, Rajasthan-332601 India',
   termsContent: '',
   privacyPolicy: '',
   refundPolicy: '',
@@ -40,7 +40,13 @@ export const SettingsProvider = ({ children }) => {
       const res = await API.get(`/settings${tenantId ? `?tenantId=${tenantId}` : ''}`);
       if (res.data && typeof res.data === 'object') {
         console.log('[SettingsContext] Loaded settings successfully:', res.data);
-        setSettings({ ...DEFAULTS, ...res.data });
+        setSettings({
+          ...DEFAULTS,
+          ...res.data,
+          contactEmail: 'Shyambhog.in@gmail.com',
+          whatsapp: '6367793601',
+          companyAddress: 'Village - khatu Shyam ji, SIKAR, Rajasthan-332601 India'
+        });
       }
     } catch (err) {
       console.warn('Could not load settings, using defaults.', err.message);
