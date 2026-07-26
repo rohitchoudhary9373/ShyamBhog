@@ -4,13 +4,14 @@ import {
   FaWallet, FaPlus, FaHistory, FaUsers, FaArrowUp, 
   FaArrowDown, FaExchangeAlt, FaShieldAlt, FaSearch,
   FaFileInvoiceDollar, FaChartBar, FaArrowRight, FaSyncAlt,
-  FaFileExport, FaLock
+  FaFileExport, FaLock, FaCheckCircle, FaExclamationCircle, FaUserCheck
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminWallet() {
    const [totalRevenue, setTotalRevenue] = useState(0);
    const [adminBalance, setAdminBalance] = useState(0);
+   const [totalWalletFloat, setTotalWalletFloat] = useState(0);
    const [allUsers, setAllUsers] = useState([]);
    const [history, setHistory] = useState([]);
    const [loading, setLoading] = useState(true);
@@ -32,42 +33,44 @@ export default function AdminWallet() {
       setLoading(true);
       try {
          const [usersRes, historyRes, bookingsRes, profileRes] = await Promise.all([
-            API.get('/wallet/all-wallets'),
-            API.get('/wallet/global-history'),
-            API.get('/bookings'),
-            API.get('/users/profile')
+            API.get('/wallet/all-wallets').catch(() => ({ data: { users: [] } })),
+            API.get('/wallet/global-history').catch(() => ({ data: { history: [] } })),
+            API.get('/bookings').catch(() => ({ data: { data: [] } })),
+            API.get('/users/profile').catch(() => ({ data: { data: {} } }))
          ]);
-         setAllUsers(usersRes.data.users || []);
+         
+         const usersList = usersRes.data.users || [];
+         setAllUsers(usersList);
          setHistory(historyRes.data.history || []);
          setAdminBalance(profileRes.data.data?.walletBalance || 0);
 
-         const usersList = usersRes.data.users || [];
-         const totalWalletFloat = usersList.reduce((acc, u) => acc + (u.walletBalance || 0), 0);
+         const floatSum = usersList.reduce((acc, u) => acc + (u.walletBalance || 0), 0);
+         setTotalWalletFloat(floatSum);
 
          const bookingsArray = Array.isArray(bookingsRes.data) ? bookingsRes.data : (bookingsRes.data.data || []);
          const revenue = bookingsArray.reduce((acc, order) => {
-            if (['Completed', 'Active'].includes(order.status)) {
-               return acc + (order.totalPrice || order.price || 0);
+            if (['Completed', 'Active', 'Payment_Verified', 'Approved', 'Invoice_Generated'].includes(order.status)) {
+               return acc + (order.payableAmount || order.totalPrice || order.price || 0);
             }
             return acc;
          }, 0);
-         setTotalRevenue(revenue + totalWalletFloat);
+         setTotalRevenue(revenue);
       } catch (err) {
-         console.error(err);
+         console.error("Wallet Data Fetch Error:", err);
       } finally {
          setLoading(false);
       }
    };
 
    const filteredUsers = allUsers.filter(user =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.mobile.includes(searchQuery) ||
-      user._id.toLowerCase().includes(searchQuery.toLowerCase())
+      (user.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (user.mobile || '').includes(searchQuery) ||
+      (user._id || '').toLowerCase().includes(searchQuery.toLowerCase())
    );
 
    const handleAdjustment = async (e) => {
       e.preventDefault();
-      if (!adjAmount || adjAmount <= 0) return alert("Enter valid amount");
+      if (!adjAmount || Number(adjAmount) <= 0) return alert("Please enter a valid amount");
       if (!adjReason) return alert("Please provide a reason for adjustment");
 
       setIsSubmitting(true);
@@ -100,11 +103,11 @@ export default function AdminWallet() {
    };
 
    const exportWalletCSV = () => {
-      const headers = ['Devotee Name', 'WhatsApp', 'Email', 'Devotee ID', 'Unspent Wallet Balance (Liability)'];
+      const headers = ['Devotee Name', 'WhatsApp', 'Email', 'Devotee ID', 'Unspent Wallet Balance (₹)'];
 
       const rows = filteredUsers.map(u => [
          `"${u.name}"`,
-         u.mobile,
+         u.mobile || 'N/A',
          u.email || 'N/A',
          `SB-${u._id.slice(-6).toUpperCase()}`,
          u.walletBalance || 0
@@ -117,7 +120,7 @@ export default function AdminWallet() {
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `ShyamBhog_Treasury_Report_${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute("download", `ShyamBhog_Financial_Report_${new Date().toISOString().split('T')[0]}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -131,111 +134,135 @@ export default function AdminWallet() {
    );
 
    return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
       
       {/* ── FINANCIAL HEADER ── */}
-      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
-           <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-lg">
-                 <FaFileInvoiceDollar size={20} />
+           <div className="flex items-center gap-3 mb-1">
+              <div className="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/20">
+                 <FaFileInvoiceDollar size={18} />
               </div>
-              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Financial <span className="text-orange-600 not-italic">Center</span></h1>
+              <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Financial <span className="text-orange-600">Center</span></h1>
            </div>
-           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.4em] ml-1">Universal Treasury & Liability Governance</p>
+           <p className="text-slate-400 font-semibold text-[11px] uppercase tracking-widest">Real-time Revenue, Wallet Balances & Transaction Audit Log</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-6">
-           <div className="flex items-center gap-4 bg-white px-8 py-6 rounded-2xl border border-slate-200 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.02)] group relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-[0.03] text-6xl group-hover:scale-125 transition-transform duration-700"><FaShieldAlt /></div>
-              <div className="relative z-10">
-                 <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2 leading-none">Administrative Balance</p>
-                 <div className="flex items-center gap-6">
-                    <h2 className="text-3xl font-bold tracking-tighter text-slate-900">₹{adminBalance.toLocaleString()}</h2>
-                    <button 
-                      onClick={() => { setIsSelfTopup(true); setSelectedUser({ name: 'Platform Authority' }); }}
-                      className="bg-slate-900 text-white px-6 py-2.5 rounded-2xl text-[10px] font-semibold uppercase tracking-widest text-slate-500 hover:bg-orange-600 transition-all shadow-xl shadow-slate-100 active:scale-95"
-                    >
-                       Adjust
-                    </button>
-                 </div>
-              </div>
-           </div>
-
-           <div className="flex items-center gap-4 bg-slate-900 px-8 py-6 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-125 transition-transform duration-700"><FaWallet /></div>
-              <div className="relative z-10">
-                 <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2 leading-none">Net Platform Liability</p>
-                 <h2 className="text-3xl font-bold tracking-tighter text-white">₹{totalRevenue.toLocaleString()}</h2>
-              </div>
-           </div>
+        <div className="flex items-center gap-3 w-full md:w-auto">
+           <button 
+             onClick={exportWalletCSV} 
+             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-3 rounded-2xl text-xs font-bold transition-all shadow-sm active:scale-95"
+           >
+              <FaFileExport size={12} /> Export Audit CSV
+           </button>
+           <button 
+             onClick={fetchData} 
+             className="w-11 h-11 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20 transition-all active:scale-95 shrink-0"
+             title="Sync Financial Data"
+           >
+              <FaSyncAlt size={14} />
+           </button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+      {/* ── FINANCIAL METRICS CARDS ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Card 1: Platform Net Revenue */}
+        <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-6 md:p-8 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+           <div className="absolute top-0 right-0 p-6 opacity-10 text-7xl group-hover:scale-110 transition-transform"><FaWallet /></div>
+           <div className="relative z-10 space-y-3">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Net Revenue</span>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white">₹{totalRevenue.toLocaleString()}</h2>
+              <p className="text-[10px] font-bold text-emerald-400 flex items-center gap-1"><FaCheckCircle size={10} /> Verified Booking Payments</p>
+           </div>
+        </div>
 
-        {/* ── DEVOTEE WALLET LEDGER (LEFT) ── */}
-        <div className="xl:col-span-8 space-y-8">
-           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
-              <div className="flex items-center gap-3">
-                 <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
-                    <FaUsers size={14} />
-                 </div>
-                 <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Wallet <span className="text-orange-600 not-italic">Ledger</span></h3>
-              </div>
-              <div className="flex flex-wrap items-center gap-4">
-                 <button onClick={exportWalletCSV} className="flex items-center gap-2.5 bg-white border border-slate-200 px-6 py-3 rounded-2xl text-[10px] font-semibold uppercase tracking-widest text-slate-500 hover:border-emerald-500 hover:text-emerald-600 transition-all group">
-                    <FaFileExport size={12} className="group-hover:scale-110 transition-transform" />
-                    Export Audit
+        {/* Card 2: Wallet Liabilities */}
+        <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
+           <div className="absolute top-0 right-0 p-6 opacity-5 text-7xl text-orange-600 group-hover:scale-110 transition-transform"><FaUsers /></div>
+           <div className="relative z-10 space-y-3">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Unspent Wallet Funds</span>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">₹{totalWalletFloat.toLocaleString()}</h2>
+              <p className="text-[10px] font-bold text-slate-500">Active Devotee Wallet Balances</p>
+           </div>
+        </div>
+
+        {/* Card 3: Admin Treasury */}
+        <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group flex flex-col justify-between">
+           <div className="relative z-10 space-y-3">
+              <div className="flex justify-between items-center">
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Admin Treasury</span>
+                 <button 
+                   onClick={() => { setIsSelfTopup(true); setSelectedUser({ name: 'Primary Admin' }); }}
+                   className="px-3.5 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-md active:scale-95"
+                 >
+                    + Adjust
                  </button>
-                 <div className="relative">
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">₹{adminBalance.toLocaleString()}</h2>
+              <p className="text-[10px] font-bold text-slate-500">Platform Treasury Reserve</p>
+           </div>
+        </div>
+      </div>
+
+      {/* ── MAIN CONTENT GRID ── */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+
+        {/* ── DEVOTEE WALLET LEDGER (LEFT 7 COLS) ── */}
+        <div className="xl:col-span-7 space-y-6">
+           <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                 <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
+                       <FaUsers size={14} />
+                    </div>
+                    <h3 className="text-lg font-black text-slate-900 tracking-tight">Devotee Wallet Ledger</h3>
+                 </div>
+                 <div className="relative w-full sm:w-64">
                     <input
                        type="text"
-                       placeholder="Filter Devotees..."
+                       placeholder="Search Devotees..."
                        value={searchQuery}
                        onChange={(e) => setSearchQuery(e.target.value)}
-                       className="bg-white border border-slate-200 pl-12 pr-6 py-3 rounded-2xl text-xs font-semibold uppercase tracking-widest text-slate-500 outline-none focus:border-orange-500 transition-all w-full md:w-64 shadow-sm"
+                       className="w-full bg-slate-50 border border-slate-200 pl-10 pr-4 py-2.5 rounded-2xl text-xs font-bold text-slate-900 outline-none focus:border-orange-500 transition-all"
                     />
-                    <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={10} />
+                    <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={11} />
                  </div>
               </div>
-           </div>
 
-           <div className="bg-white rounded-2xl border border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] overflow-hidden">
-              <div className="divide-y divide-slate-50 max-h-[650px] overflow-y-auto custom-scrollbar">
+              <div className="divide-y divide-slate-100 max-h-[550px] overflow-y-auto custom-scrollbar pr-1">
                  <AnimatePresence>
                  {filteredUsers.length > 0 ? (
                     filteredUsers.map((user, i) => (
                        <motion.div 
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          key={user._id} 
-                          className="p-6 hover:bg-slate-50/40 transition-all duration-300 group flex flex-col md:flex-row items-center justify-between gap-6"
+                          key={user._id || i} 
+                          className="py-4 px-2 hover:bg-slate-50 rounded-2xl transition-all duration-200 flex items-center justify-between gap-4 group"
                        >
-                          <div className="flex items-center gap-6 flex-1">
-                             <div className="w-14 h-14 rounded-[22px] bg-slate-900 text-white flex items-center justify-center font-bold text-xl shadow-xl shadow-slate-100 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
-                                <span>{user.name.charAt(0)}</span>
-                                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent"></div>
+                          <div className="flex items-center gap-4 min-w-0">
+                             <div className="w-11 h-11 rounded-2xl bg-orange-600 text-white flex items-center justify-center font-black text-base shadow-md shrink-0">
+                                {user.name ? user.name.charAt(0).toUpperCase() : 'D'}
                              </div>
                              <div className="min-w-0">
-                                <p className="font-bold text-slate-900 text-[15px] tracking-tighter truncate group-hover:text-orange-600 transition-colors">{user.name}</p>
-                                <div className="flex items-center gap-3 mt-1">
-                                   <p className="text-[10px] font-bold text-slate-400">{user.mobile}</p>
-                                   <span className="w-1 h-1 rounded-full bg-slate-200"></span>
-                                   <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">SB-{user._id.slice(-6).toUpperCase()}</span>
+                                <p className="font-extrabold text-slate-900 text-sm tracking-tight truncate group-hover:text-orange-600 transition-colors">
+                                   {user.name || 'Devotee'}
+                                </p>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                   <span className="text-[11px] font-medium text-slate-500">{user.mobile || user.email || 'Google User'}</span>
                                    {user.walletFrozen && (
-                                      <span className="bg-red-100 text-red-600 text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">Frozen</span>
+                                      <span className="bg-red-100 text-red-600 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Frozen</span>
                                    )}
                                 </div>
                              </div>
                           </div>
 
-                          <div className="flex items-center gap-4 w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
-                             <div className="text-right mr-4">
-                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none mb-2">Devotee Balance</p>
-                                <p className="text-2xl font-bold text-slate-900 tracking-tighter group-hover:scale-105 transition-transform origin-right">₹{user.walletBalance?.toLocaleString() || 0}</p>
+                          <div className="flex items-center gap-3 shrink-0">
+                             <div className="text-right">
+                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Balance</p>
+                                <p className="text-base font-black text-slate-900 tracking-tight">₹{(user.walletBalance || 0).toLocaleString()}</p>
                              </div>
+                             
                              <button
                                 onClick={async () => {
                                    try {
@@ -247,18 +274,25 @@ export default function AdminWallet() {
                                       alert(err.response?.data?.message || "Action failed");
                                    }
                                 }}
-                                className={`px-6 py-4 rounded-[22px] text-xs font-semibold uppercase tracking-widest text-slate-500 transition-all active:scale-95 flex items-center gap-2 ${user.walletFrozen ? 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-200' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
+                                className={`p-2.5 rounded-xl text-xs font-bold transition-all ${user.walletFrozen ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                                title={user.walletFrozen ? "Unfreeze Wallet" : "Freeze Wallet"}
                              >
-                                <FaLock size={10} className={user.walletFrozen ? "animate-pulse" : ""} />
-                                {user.walletFrozen ? "Unfreeze" : "Freeze"}
+                                <FaLock size={12} />
+                             </button>
+
+                             <button
+                                onClick={() => { setIsSelfTopup(false); setSelectedUser(user); }}
+                                className="px-3 py-2 bg-orange-50 text-orange-600 hover:bg-orange-600 hover:text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                             >
+                                Adjust
                              </button>
                           </div>
                        </motion.div>
                     ))
                  ) : (
-                    <div className="py-40 text-center flex flex-col items-center justify-center gap-6 opacity-20">
-                       <FaChartBar size={48} />
-                       <p className="text-xs font-bold uppercase tracking-[0.4em]">Database query returned null results</p>
+                    <div className="py-20 text-center flex flex-col items-center justify-center gap-3 text-slate-300">
+                       <FaUsers size={36} />
+                       <p className="text-xs font-bold uppercase tracking-widest text-slate-400">No Devotee Accounts Found</p>
                     </div>
                  )}
                  </AnimatePresence>
@@ -266,57 +300,48 @@ export default function AdminWallet() {
            </div>
         </div>
 
-        {/* ── GLOBAL TRANSACTION LOG (RIGHT) ── */}
-        <div className="xl:col-span-4 space-y-8">
-           <div className="flex items-center gap-3 px-4">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                 <FaHistory size={14} />
+        {/* ── TRANSACTION AUDIT LOG (RIGHT 5 COLS) ── */}
+        <div className="xl:col-span-5 space-y-6">
+           <div className="bg-slate-900 rounded-3xl p-6 text-white space-y-6 shadow-xl border border-slate-800">
+              <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+                 <div className="w-8 h-8 rounded-xl bg-slate-800 text-orange-500 flex items-center justify-center font-bold">
+                    <FaHistory size={14} />
+                 </div>
+                 <h3 className="text-lg font-black text-white tracking-tight">Recent Audit Log</h3>
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Transfer <span className="text-orange-600 not-italic">Intel</span></h3>
-           </div>
-           
-           <div className="bg-slate-900 rounded-2xl shadow-sm border border-slate-200 p-2 overflow-hidden border border-white/5">
-              <div className="divide-y divide-white/5 max-h-[650px] overflow-y-auto custom-scrollbar">
+              
+              <div className="divide-y divide-slate-800/80 max-h-[550px] overflow-y-auto custom-scrollbar pr-1">
                  <AnimatePresence>
                  {history.length > 0 ? (
                     history.map((tx, i) => (
                        <motion.div 
                           initial={{ opacity: 0, x: 10 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          key={tx._id} 
-                          className="p-6 hover:bg-white/5 transition-all group border-l-4 border-transparent hover:border-orange-500"
+                          key={tx._id || i} 
+                          className="py-4 space-y-2 hover:bg-white/5 p-3 rounded-2xl transition-all"
                        >
-                          <div className="flex justify-between items-start mb-4">
-                             <div className="space-y-1">
-                                <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
-                                   {tx.type === 'credit' ? 'Registry Injection' : 'Registry Deduction'}
+                          <div className="flex justify-between items-start">
+                             <div>
+                                <p className="text-xs font-extrabold text-white">
+                                   {tx.userId?.name || tx.targetUserId?.name || 'Devotee'}
                                 </p>
-                                <p className="text-[13px] font-bold text-white tracking-tighter uppercase italic group-hover:text-orange-500 transition-colors">
-                                   {tx.userId?.role === 'user' ? tx.userId?.name : tx.targetUserId?.name}
-                                </p>
+                                <span className="text-[10px] font-bold text-slate-400">
+                                   {new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                </span>
                              </div>
-                             <div className={`px-4 py-2 rounded-xl text-[10px] font-bold tracking-tighter ${tx.type === 'credit' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+                             <div className={`px-2.5 py-1 rounded-xl text-xs font-black ${tx.type === 'credit' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
                                 {tx.type === 'credit' ? '+' : '-'}₹{tx.amount.toLocaleString()}
                              </div>
                           </div>
-                          <p className="text-[11px] font-medium text-slate-400 mb-6 italic leading-relaxed">"{tx.description || 'System synchronized manifest adjustment.'}"</p>
-                          <div className="flex justify-between items-center pt-5 border-t border-white/5">
-                             <div className="flex flex-col">
-                                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest leading-none mb-1">Time Marker</span>
-                                <span className="text-[10px] font-bold text-slate-400">{new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                             </div>
-                             <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/5">
-                                <FaShieldAlt size={8} className="text-orange-500" />
-                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Master Node</span>
-                             </div>
-                          </div>
+                          <p className="text-[11px] font-medium text-slate-400 italic leading-relaxed">
+                             "{tx.description || 'Wallet transaction completed'}"
+                          </p>
                        </motion.div>
                     ))
                  ) : (
-                    <div className="py-40 text-center flex flex-col items-center justify-center gap-4 opacity-10">
-                       <FaSyncAlt size={40} />
-                       <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Waiting for manifest sync...</p>
+                    <div className="py-20 text-center flex flex-col items-center justify-center gap-3 text-slate-600">
+                       <FaHistory size={36} />
+                       <p className="text-xs font-bold uppercase tracking-widest text-slate-500">No Transactions Recorded Yet</p>
                     </div>
                  )}
                  </AnimatePresence>
@@ -326,85 +351,83 @@ export default function AdminWallet() {
 
       </div>
 
-      {/* ── ADJUSTMENT STUDIO (MODAL) ── */}
+      {/* ── ADJUSTMENT MODAL ── */}
       <AnimatePresence>
          {selectedUser && (
             <motion.div 
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
-               className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+               className="fixed inset-0 z-[100] bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-6"
             >
-               <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => { setSelectedUser(null); setIsSelfTopup(false); }}></div>
                <motion.div 
-                  initial={{ scale: 0.9, y: 20 }}
+                  initial={{ scale: 0.95, y: 15 }}
                   animate={{ scale: 1, y: 0 }}
-                  exit={{ scale: 0.9, y: 20 }}
-                  className="relative z-10 w-full max-w-xl bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
+                  exit={{ scale: 0.95, y: 15 }}
+                  className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 p-8 space-y-6 relative"
                >
-                  <div className="p-12">
-                     <div className="flex justify-between items-center mb-10">
-                        <div>
-                           <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Treasury <span className="text-orange-600 not-italic">Adjustment</span></h3>
-                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manual Balance Governance: <span className="text-orange-600 font-bold">{selectedUser.name}</span></p>
-                        </div>
-                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-bold text-xl text-slate-900">
-                           {selectedUser.name.charAt(0)}
-                        </div>
+                  <button 
+                     onClick={() => { setSelectedUser(null); setIsSelfTopup(false); }}
+                     className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-black transition-all"
+                  >
+                     ✕
+                  </button>
+
+                  <div>
+                     <h3 className="text-xl font-black text-slate-900 tracking-tight">Adjust Wallet Balance</h3>
+                     <p className="text-xs font-medium text-slate-500 mt-0.5">Target: <strong className="text-orange-600">{selectedUser.name}</strong></p>
+                  </div>
+
+                  <form onSubmit={handleAdjustment} className="space-y-5">
+                     <div className="flex bg-slate-100 p-1.5 rounded-2xl gap-2">
+                        <button
+                           type="button"
+                           onClick={() => setAdjType('credit')}
+                           className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${adjType === 'credit' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
+                        >
+                           + Add Money (Credit)
+                        </button>
+                        <button
+                           type="button"
+                           onClick={() => setAdjType('debit')}
+                           className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${adjType === 'debit' ? 'bg-red-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
+                        >
+                           - Deduct Money (Debit)
+                        </button>
                      </div>
 
-                     <form onSubmit={handleAdjustment} className="space-y-8">
-                        <div className="flex p-2 bg-slate-100 rounded-xl gap-2">
-                           <button 
-                             type="button"
-                             onClick={() => setAdjType('credit')}
-                             className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[22px] text-[10px] font-bold uppercase tracking-widest transition-all ${adjType === 'credit' ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-100' : 'text-slate-500 hover:bg-slate-200'}`}
-                           >
-                              <FaPlus /> Registry Injection
-                           </button>
-                           <button 
-                             type="button"
-                             onClick={() => setAdjType('debit')}
-                             className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[22px] text-[10px] font-bold uppercase tracking-widest transition-all ${adjType === 'debit' ? 'bg-red-600 text-white shadow-xl shadow-red-100' : 'text-slate-500 hover:bg-slate-200'}`}
-                           >
-                              <FaArrowDown /> Registry Deduction
-                           </button>
-                        </div>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Amount (₹)</label>
+                        <input
+                           type="number"
+                           min="1"
+                           required
+                           placeholder="e.g. 500"
+                           value={adjAmount}
+                           onChange={(e) => setAdjAmount(e.target.value)}
+                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-orange-500 font-bold text-slate-900 text-base transition-all"
+                        />
+                     </div>
 
-                        <div className="space-y-3">
-                           <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 flex items-center gap-2"><FaLock size={8} /> Adjustment Quantum (₹)</label>
-                           <div className="relative">
-                              <span className="absolute left-8 top-1/2 -translate-y-1/2 text-3xl font-bold text-slate-300 group-focus-within:text-orange-500 transition-colors">₹</span>
-                              <input 
-                                type="number" 
-                                placeholder="0.00"
-                                value={adjAmount}
-                                onChange={(e) => setAdjAmount(e.target.value)}
-                                className="w-full pl-16 pr-8 py-8 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 font-bold text-4xl text-slate-900 transition-all text-center"
-                              />
-                           </div>
-                        </div>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Reason / Reference Note</label>
+                        <textarea
+                           required
+                           placeholder="Provide a clear reason for this adjustment..."
+                           value={adjReason}
+                           onChange={(e) => setAdjReason(e.target.value)}
+                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-orange-500 font-medium text-slate-800 text-xs h-24 resize-none transition-all"
+                        />
+                     </div>
 
-                        <div className="space-y-3">
-                           <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Operational Manifest Remark</label>
-                           <textarea 
-                             placeholder="Internal documentation for this treasury change..."
-                             value={adjReason}
-                             onChange={(e) => setAdjReason(e.target.value)}
-                             className="w-full p-6 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-orange-500 font-bold text-[12px] text-slate-600 min-h-[120px] resize-none transition-all italic"
-                           />
-                        </div>
-
-                        <button 
-                           disabled={isSubmitting}
-                           className={`w-full py-5 rounded-xl font-bold uppercase tracking-[0.2em] text-[11px] transition-all shadow-sm border border-slate-200 text-white ${
-                              adjType === 'credit' ? 'bg-emerald-600 shadow-emerald-100' : 'bg-red-600 shadow-red-100'
-                           } ${isSubmitting ? 'opacity-50 cursor-wait' : 'active:scale-95'}`}
-                        >
-                           {isSubmitting ? 'Synchronizing Treasury...' : `Confirm Registry ${adjType === 'credit' ? 'Injection' : 'Deduction'}`}
-                        </button>
-                     </form>
-                  </div>
+                     <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-4 bg-slate-950 hover:bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 disabled:opacity-50"
+                     >
+                        {isSubmitting ? "Processing Adjustment..." : "Confirm & Save Adjustment"}
+                     </button>
+                  </form>
                </motion.div>
             </motion.div>
          )}
