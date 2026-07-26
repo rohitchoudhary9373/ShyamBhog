@@ -6,7 +6,7 @@
 
   <!-- Home Page -->
   <url>
-    <loc>https://shyambhog.com/</loc>
+    <loc>https://www.shyambhog.in/</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
   <!-- Live Crowd Status & Darshan Timings -->
   <url>
-    <loc>https://shyambhog.com/crowd-status</loc>
+    <loc>https://www.shyambhog.in/crowd-status</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
@@ -22,7 +22,7 @@
 
   <!-- Watch Live Arjee -->
   <url>
-    <loc>https://shyambhog.com/watch-arjee</loc>
+    <loc>https://www.shyambhog.in/watch-arjee</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -30,7 +30,7 @@
 
   <!-- Parking Guide Page -->
   <url>
-    <loc>https://shyambhog.com/parking-guide</loc>
+    <loc>https://www.shyambhog.in/parking-guide</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -38,19 +38,19 @@
 
   <!-- Service Categories -->
   <url>
-    <loc>https://shyambhog.com/services/arjee</loc>
+    <loc>https://www.shyambhog.in/services/arjee</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://shyambhog.com/services/bhog</loc>
+    <loc>https://www.shyambhog.in/services/bhog</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://shyambhog.com/services/swamani</loc>
+    <loc>https://www.shyambhog.in/services/swamani</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -58,19 +58,19 @@
 
   <!-- Policies -->
   <url>
-    <loc>https://shyambhog.com/policy/terms</loc>
+    <loc>https://www.shyambhog.in/policy/terms</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://shyambhog.com/policy/privacy</loc>
+    <loc>https://www.shyambhog.in/policy/privacy</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://shyambhog.com/policy/refund</loc>
+    <loc>https://www.shyambhog.in/policy/refund</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>

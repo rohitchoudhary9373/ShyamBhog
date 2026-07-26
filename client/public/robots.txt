@@ -19,4 +19,4 @@ Disallow: /razorpay-checkout
 Disallow: /book/
 
 # Sitemap location
-Sitemap: https://shyambhog.com/sitemap.xml
+Sitemap: https://www.shyambhog.in/sitemap.xml
