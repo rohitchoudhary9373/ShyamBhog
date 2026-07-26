@@ -80,8 +80,10 @@ router.get("/", async (req, res) => {
     if (activeOnly === "true") filter.isActive = true;
 
     // SaaS Filtering
-    if (tenantId) {
+    if (tenantId && tenantId !== 'all') {
       filter.adminId = tenantId;
+    } else if (tenantId === 'all') {
+      // Unified view: Return all services across all contexts
     } else {
       const superAdmin = await User.findOne({ role: "admin" }).lean();
       if (superAdmin) {

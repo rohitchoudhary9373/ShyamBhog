@@ -42,7 +42,7 @@ export default function ManageServices() {
 
   useEffect(() => {
     if (isSuper) fetchResellers();
-    const ownerId = user?.role === 'agent' ? user?.parentAdmin : user?._id;
+    const ownerId = isSuper ? 'all' : (user?.role === 'agent' ? user?.parentAdmin : user?._id);
     setSelectedTenant(ownerId);
   }, []);
 
@@ -300,10 +300,7 @@ export default function ManageServices() {
                     onChange={(e) => setSelectedTenant(e.target.value)}
                     className="bg-transparent border-none outline-none font-bold text-xs text-slate-900 cursor-pointer focus:ring-0"
                   >
-                    <option value={user?._id}>Master</option>
-                    {resellers.map(r => (
-                      <option key={r._id} value={r._id}>{r.name}</option>
-                    ))}
+                    <option value="all">Rohit Choudhary</option>
                   </select>
                 </div>
              )}
