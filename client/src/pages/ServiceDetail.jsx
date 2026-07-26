@@ -133,10 +133,11 @@ export default function ServiceDetail() {
       if (!globalSlot) return setError(t('booking.select_date'));
       if (isArjee) {
          if (members.some(m => !m.name || !m.whatsapp)) return setError(t('booking.devotee_details'));
+         if (members.some(m => m.whatsapp.replace(/\D/g, '').length !== 10)) return setError(i18n.language === 'en' ? "Please enter a valid 10-digit WhatsApp number" : "कृपया 10 अंकों का वैध व्हाट्सएप नंबर दर्ज करें");
       } else {
          if (user) {
             if (!standardContact.name) standardContact.name = user.name || 'Devotee';
-            if (!standardContact.whatsapp) standardContact.whatsapp = user.mobile || user.whatsapp || '8888888888';
+            if (!standardContact.whatsapp) standardContact.whatsapp = user.mobile || user.whatsapp || '9999999999';
          } else {
             if (!standardContact.name || !standardContact.whatsapp) return setError(t('booking.devotee_details'));
          }
@@ -153,7 +154,11 @@ export default function ServiceDetail() {
 
    const handleMemberChange = (index, field, value) => {
       const newMembers = [...members];
-      newMembers[index][field] = value;
+      if (field === 'whatsapp') {
+         newMembers[index][field] = value.replace(/\D/g, '').slice(0, 10);
+      } else {
+         newMembers[index][field] = value;
+      }
       setMembers(newMembers);
    };
 
@@ -348,7 +353,10 @@ export default function ServiceDetail() {
                                        </div>
                                        <div className="space-y-2">
                                           <label className="text-[10px] font-medium text-slate-400 ml-1">{t('booking.whatsapp_no')}</label>
-                                          <input type="tel" required value={m.whatsapp} onChange={(e) => handleMemberChange(idx, 'whatsapp', e.target.value)} placeholder="10 Digit Number" className="w-full p-3.5 bg-orange-50/30 border border-orange-50 rounded-xl outline-none focus:border-orange-500 focus:bg-white font-medium text-[#0A1128] text-sm transition-all" />
+                                          <div className="flex items-center gap-2 bg-orange-50/30 border border-orange-50 rounded-xl p-1 focus-within:border-orange-500 focus-within:bg-white transition-all">
+                                             <span className="px-3 py-2 bg-orange-100/60 text-slate-700 text-xs font-black rounded-lg shrink-0">+91</span>
+                                             <input type="tel" maxLength={10} inputMode="numeric" pattern="[0-9]{10}" required value={m.whatsapp} onChange={(e) => handleMemberChange(idx, 'whatsapp', e.target.value)} placeholder="10 Digit Mobile Number" className="w-full bg-transparent border-none outline-none font-medium text-[#0A1128] text-sm py-2 pr-3" />
+                                          </div>
                                        </div>
                                     </div>
                                     <div className="space-y-2">

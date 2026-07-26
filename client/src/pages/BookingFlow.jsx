@@ -71,7 +71,11 @@ export default function BookingFlow() {
 
   const handleMemberChange = (index, field, value) => {
     const newMembers = [...members];
-    newMembers[index][field] = value;
+    if (field === 'whatsapp') {
+      newMembers[index][field] = value.replace(/\D/g, '').slice(0, 10);
+    } else {
+      newMembers[index][field] = value;
+    }
     setMembers(newMembers);
   };
 
@@ -95,8 +99,10 @@ export default function BookingFlow() {
     e.preventDefault();
     if (isArjee) {
       if (members.some(m => !m.name || !m.whatsapp)) return setError("Fill details for all members");
+      if (members.some(m => m.whatsapp.replace(/\D/g, '').length !== 10)) return setError("Please enter a valid 10-digit WhatsApp number for all members");
     } else {
       if (!standardContact.name || !standardContact.whatsapp) return setError("Contact details required");
+      if (standardContact.whatsapp.replace(/\D/g, '').length !== 10) return setError("Please enter a valid 10-digit WhatsApp number");
     }
 
     setSubmitLoading(true);
@@ -262,7 +268,10 @@ export default function BookingFlow() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               <input type="text" required value={m.name} onChange={(e) => handleMemberChange(idx, 'name', e.target.value)} placeholder="Full Name" className="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-primary font-bold text-slate-900" />
-                              <input type="tel" required value={m.whatsapp} onChange={(e) => handleMemberChange(idx, 'whatsapp', e.target.value)} placeholder="WhatsApp Number" className="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-primary font-bold text-slate-900" />
+                              <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl p-1 focus-within:border-primary transition-all">
+                                <span className="px-3 py-2.5 bg-slate-100 text-slate-700 text-xs font-black rounded-xl shrink-0">+91</span>
+                                <input type="tel" maxLength={10} inputMode="numeric" pattern="[0-9]{10}" required value={m.whatsapp} onChange={(e) => handleMemberChange(idx, 'whatsapp', e.target.value)} placeholder="10 Digit WhatsApp Number" className="w-full bg-transparent border-none outline-none font-bold text-slate-900 text-sm py-2 pr-3" />
+                              </div>
                             </div>
                             <textarea value={m.message} onChange={(e) => handleMemberChange(idx, 'message', e.target.value)} placeholder="Your sacred prayer..." className="w-full p-5 bg-white border border-slate-200 rounded-2xl outline-none focus:border-primary h-24 resize-none font-medium text-slate-600 text-sm" />
                           </motion.div>
@@ -277,7 +286,10 @@ export default function BookingFlow() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" required value={standardContact.name} onChange={(e) => setStandardContact({ ...standardContact, name: e.target.value })} placeholder="Full Name" className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-primary font-bold text-slate-900" />
-                        <input type="tel" required value={standardContact.whatsapp} onChange={(e) => setStandardContact({ ...standardContact, whatsapp: e.target.value })} placeholder="WhatsApp Number" className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-primary font-bold text-slate-900" />
+                        <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl p-1 focus-within:border-primary transition-all">
+                          <span className="px-3 py-2.5 bg-slate-200/70 text-slate-700 text-xs font-black rounded-xl shrink-0">+91</span>
+                          <input type="tel" maxLength={10} inputMode="numeric" pattern="[0-9]{10}" required value={standardContact.whatsapp} onChange={(e) => setStandardContact({ ...standardContact, whatsapp: e.target.value.replace(/\D/g, '').slice(0, 10) })} placeholder="10 Digit WhatsApp Number" className="w-full bg-transparent border-none outline-none font-bold text-slate-900 text-sm py-2 pr-3" />
+                        </div>
                       </div>
                       <div className="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100">
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Order Quantity</span>
