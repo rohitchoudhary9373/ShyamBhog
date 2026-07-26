@@ -83,17 +83,12 @@ export default function Navbar() {
 
           {/* ── LOGO ── */}
           <Link to="/" className="flex items-center whitespace-nowrap gap-1.5 md:gap-2.5 group">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-orange-50 flex items-center justify-center overflow-hidden border border-orange-100/50 shadow-inner shrink-0">
-              {settings?.logoUrl && !logoError ? (
-                <img
-                  src={getFullUrl(settings?.logoUrl)}
-                  alt={settings?.brandName}
-                  className="w-full h-full object-contain transition-transform group-hover:scale-110"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <span className="text-primary font-black text-sm md:text-xl leading-none italic">{settings?.brandName?.charAt(0) || 'S'}</span>
-              )}
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white flex items-center justify-center p-0.5 border border-orange-100/80 shadow-md shrink-0">
+              <img
+                src="/logo.png"
+                alt={settings?.brandName || "Shyam Bhog"}
+                className="w-full h-full object-contain transition-transform group-hover:scale-110"
+              />
             </div>
             <span className="text-sm md:text-xl font-black text-primary tracking-tighter whitespace-nowrap leading-none transition-colors">
               {settings?.brandName || 'Shyam Bhog'}

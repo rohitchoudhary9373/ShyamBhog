@@ -166,20 +166,15 @@ export default function AdminLayout() {
         {/* Brand Identity */}
         <div className="h-16 flex items-center px-6 border-b border-white/5 bg-slate-950/80 backdrop-blur-md sticky top-0 z-10">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-white shadow-md group-hover:bg-slate-700 transition-colors">
-              {adminSettings?.logoUrl && !logoError ? (
-                <img
-                  src={getMediaUrl(adminSettings?.logoUrl)}
-                  alt="Logo"
-                  className="w-full h-full object-cover rounded-lg"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <FaShieldAlt size={16} className="text-orange-500" />
-              )}
+            <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center p-1 shadow-md border border-orange-100 shrink-0">
+              <img
+                src="/logo.png"
+                alt="Shyam Bhog Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-white tracking-tight leading-none">{adminSettings?.brandName || 'Admin'}</span>
+              <span className="text-sm font-bold text-white tracking-tight leading-none">{adminSettings?.brandName || 'Shyam Bhog'}</span>
             </div>
           </Link>
         </div>

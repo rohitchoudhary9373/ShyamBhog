@@ -6,7 +6,9 @@ export const getBaseURL = () => {
 };
 
 export const getMediaUrl = (path) => {
-  if (!path) return '';
+  if (!path || path === '/logo.png' || path === 'logo.png' || path.includes('logo.png')) {
+    return '/logo.png';
+  }
   
   // If the path is already a fully qualified URL (starts with http:// or https:// or //)
   if (/^(https?:)?\/\//i.test(path)) {
