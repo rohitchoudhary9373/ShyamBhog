@@ -104,16 +104,23 @@ export default function Navbar() {
 
           {/* ── ACTIONS ── */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Language Selector (Mobile & Desktop) */}
-            <div className="relative">
-              <button 
-                onClick={() => changeLanguage(i18n.language === 'hi' ? 'en' : 'hi')} 
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-orange-50 border border-orange-200/80 text-orange-600 font-black text-[11px] uppercase tracking-wider hover:bg-orange-600 hover:text-white transition-all shadow-sm active:scale-95"
-                title="Switch Language / भाषा बदलें"
-              >
-                <FaGlobe size={12} />
-                <span>{i18n.language === 'hi' ? 'English' : 'हिन्दी'}</span>
+            {/* Language Selector (Desktop) */}
+            <div className="relative hidden sm:block">
+              <button onClick={() => setLangOpen(!langOpen)} className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-primary hover:text-white transition-all shadow-sm">
+                <FaGlobe className={langOpen ? 'rotate-180 transition-transform' : ''} size={14} />
               </button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.div initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.9 }} className="absolute top-full mt-4 right-0 w-48 bg-white border border-slate-100 rounded-3xl shadow-2xl py-3 z-50 max-h-[350px] overflow-y-auto custom-scrollbar ring-8 ring-slate-50/50">
+                    {languages.map(lang => (
+                      <button key={lang.code} onClick={() => changeLanguage(lang.code)} className={`w-full text-left px-5 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-between ${i18n.language === lang.code ? 'text-primary' : 'text-slate-500'}`}>
+                        {lang.name}
+                        {i18n.language === lang.code && <div className="w-1 h-1 rounded-full bg-primary animate-pulse"></div>}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {isLoggedIn() ? (
