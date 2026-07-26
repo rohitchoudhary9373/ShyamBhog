@@ -384,31 +384,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* ── FAQ ── */}
-      <section className="w-full max-w-xl px-6 py-8 md:py-12">
-        <div className="mb-6 text-center">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase">{t('home.faq')}</h2>
-        </div>
-        <div className="space-y-4">
-          {faqs.map(faq => (
-            <div key={faq._id} className="bg-white rounded-[24px] border border-orange-50 overflow-hidden shadow-sm">
-              <button onClick={() => setOpenFaq(openFaq === faq._id ? null : faq._id)} className="w-full text-left px-7 py-5 flex justify-between items-center font-black text-sm text-[#0A1128] hover:text-orange-600 transition-all">
-                <span className="pr-4">{faq?.question || 'Untitled Question'}</span>
-                <div className={`w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-600 transition-transform duration-500 ${openFaq === faq._id ? 'rotate-180 bg-orange-600 text-white shadow-lg' : ''}`}>▼</div>
-              </button>
-              <AnimatePresence>
-                {openFaq === faq._id && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden bg-orange-50/20">
-                    <div className="px-7 pb-6 text-slate-500 text-[13px] font-medium leading-relaxed italic border-t border-orange-50/50 pt-5 whitespace-pre-wrap">
-                      {faq?.answer || 'No answer provided.'}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </div>
-      </section>
+
 
       {/* ── GALLERY ── */}
       {galleries.length > 0 && (
