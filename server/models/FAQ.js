@@ -20,7 +20,7 @@ const FAQSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['General', 'Hotel', 'Parking', 'Arjee', 'Bhog', 'Swamani'],
+    enum: ['General', 'Hotel', 'Parking', 'Arjee', 'Bhog', 'Swamani', 'CrowdStatus'],
     default: 'General'
   },
   isActive: {

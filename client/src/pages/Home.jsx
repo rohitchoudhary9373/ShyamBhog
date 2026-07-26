@@ -58,7 +58,7 @@ export default function Home() {
         setServices(servicesArray.filter(s => s.isActive));
 
         const faqArray = Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data?.data || []);
-        setFaqs(faqArray.filter(f => f.isActive !== false && f.category !== 'Hotel' && f.category !== 'Parking'));
+        setFaqs(faqArray.filter(f => f.isActive !== false && (f.category === 'General' || !f.category)));
 
         const galleryArray = Array.isArray(galRes.data) ? galRes.data : (galRes.data.data || []);
         setGalleries(galleryArray.filter(g => g.isActive));
