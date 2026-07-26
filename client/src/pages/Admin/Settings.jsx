@@ -122,8 +122,12 @@ export default function Settings() {
                     <a href="https://www.instagram.com/shyambhog.in/" target="_blank" rel="noreferrer" className="text-orange-600 hover:underline font-mono text-[11px] truncate max-w-[200px]">shyambhog.in</a>
                  </div>
                  <div className="p-3.5 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100">
-                    <span className="flex items-center gap-2"><FaYoutube className="text-red-600" /> YouTube</span>
-                    <a href="https://youtu.com/AqBbSULT9tE?si=rNC58XBqz-BXF_9G" target="_blank" rel="noreferrer" className="text-orange-600 hover:underline font-mono text-[11px] truncate max-w-[200px]">Official Video Feed</a>
+                    <span className="flex items-center gap-2"><FaYoutube className="text-slate-400" /> YouTube</span>
+                    <span className="text-slate-400 font-medium text-[11px]">Not Configured</span>
+                 </div>
+                 <div className="p-3.5 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100">
+                    <span className="flex items-center gap-2"><FaFacebook className="text-slate-400" /> Facebook</span>
+                    <span className="text-slate-400 font-medium text-[11px]">Not Configured</span>
                  </div>
               </div>
            </div>
