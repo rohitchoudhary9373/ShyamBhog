@@ -21,22 +21,24 @@ export default function Settings() {
   const [logoError, setLogoError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  const OFFICIAL_ABOUT = `Shyam Bhog is a premium digital devotional platform connecting devotees with the divine blessings of Shree Khatu Shyam Ji through trusted Bhog, Arjee, Prasad and spiritual seva services.\n\nBuilt with faith, transparency and authenticity, the platform offers a seamless devotional experience along with real-time crowd updates, hotel assistance, parking support and essential pilgrimage services for devotees worldwide.`;
+
   const [form, setForm] = useState({
-    brandName: '',
+    brandName: 'Shyam Bhog',
     primaryColor: '#f97316',
-    footerText: '',
-    copyrightText: '',
-    aboutText: '',
-    contactEmail: '',
-    whatsapp: '',
+    footerText: 'Made with श्रद्धा by Shyam Bhog Team',
+    copyrightText: '© 2026 Shyam Bhog Inc. All rights reserved.',
+    aboutText: OFFICIAL_ABOUT,
+    contactEmail: 'Shyambhog.in@gmail.com',
+    whatsapp: '6367793601',
     facebookUrl: '',
     instagramUrl: '',
     youtubeUrl: '',
     razorpayKeyId: '',
     razorpayKeySecret: '',
-    logoUrl: '',
+    logoUrl: '/logo.png',
     gstNumber: '',
-    companyAddress: '',
+    companyAddress: 'Village - khatu Shyam ji, SIKAR, Rajasthan-332601 India',
     termsContent: '',
     privacyPolicy: '',
     refundPolicy: '',
