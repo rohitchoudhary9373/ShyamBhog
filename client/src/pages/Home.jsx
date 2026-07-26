@@ -214,7 +214,7 @@ export default function Home() {
             className={`px-4 py-2.5 transition-all relative text-sm font-bold ${activeTab === tab ? 'text-[#0A1128]' : 'text-slate-400 hover:text-slate-900'}`}
           >
             <span className="relative">
-              {tab}
+              {t(`home.tabs.${tab.toLowerCase()}`) || tab}
               {tab === 'Swamani' && (
                 <span className="absolute -top-3 -right-6 bg-[#6366f1] text-white text-[8px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-tighter">NEW</span>
               )}
