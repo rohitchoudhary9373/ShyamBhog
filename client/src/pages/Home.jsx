@@ -60,7 +60,7 @@ export default function Home() {
         setServices(servicesArray.filter(s => s.isActive));
 
         const faqArray = Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data?.data || []);
-        setFaqs(faqArray.filter(f => f.isActive !== false));
+        setFaqs(faqArray.filter(f => f.isActive !== false).slice(0, 5));
 
         const galleryArray = Array.isArray(galRes.data) ? galRes.data : (galRes.data.data || []);
         setGalleries(galleryArray.filter(g => g.isActive));
