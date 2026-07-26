@@ -180,23 +180,19 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-3 md:col-span-2">
-                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Global Platform Logo</label>
-                    <label className="flex items-center gap-6 p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:bg-orange-50/30 hover:border-orange-500 transition-all group">
-                      {logoSrc && !logoError ? (
-                        <div className="w-16 h-16 rounded-2xl bg-white p-2 shadow-xl border border-slate-100">
-                           <img src={logoSrc} alt="Logo" className="w-full h-full object-contain" onError={() => setLogoError(true)} />
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-300">
-                           <FaUpload size={20} />
-                        </div>
-                      )}
-                      <div className="flex-1">
-                         <p className="text-xs font-bold text-slate-900 uppercase tracking-widest group-hover:text-orange-600 transition-colors">Upload High-Res Vector</p>
-                         <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mt-1">PNG, JPG or SVG • Recommended 512x512</p>
-                      </div>
-                      <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
-                    </label>
+                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2">Official Brand Emblem (Fixed & Protected)</label>
+                    <div className="flex items-center gap-6 p-6 bg-orange-50/40 border border-orange-100/80 rounded-2xl">
+                       <div className="w-16 h-16 rounded-2xl bg-white p-2 shadow-md border border-orange-100 flex items-center justify-center shrink-0">
+                          <img src="/logo.png" alt="Shyam Bhog Logo" className="w-full h-full object-contain" />
+                       </div>
+                       <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                             <FaLock className="text-orange-600" size={12} />
+                             <p className="text-xs font-bold text-slate-900 uppercase tracking-widest">Official Gold Emblem Locked</p>
+                          </div>
+                          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mt-1">Permanent Shyam Bhog logo active across all web pages & invoices.</p>
+                       </div>
+                    </div>
                   </div>
                </div>
             </section>

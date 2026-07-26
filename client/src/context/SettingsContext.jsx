@@ -14,7 +14,7 @@ const DEFAULTS = {
   facebookUrl: '',
   instagramUrl: '',
   youtubeUrl: '',
-  logoUrl: '',
+  logoUrl: '/logo.png',
   primaryColor: '#f97316',
   gstNumber: '',
   companyAddress: '',
