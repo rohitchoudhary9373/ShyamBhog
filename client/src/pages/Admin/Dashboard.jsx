@@ -183,7 +183,6 @@ export default function Dashboard() {
                  <ModuleCard title="Crowd Status" path="/admin/manage-crowd" icon={<FaUsers />} color="text-blue-500" bg="bg-blue-50" />
                  <ModuleCard title="Parking" path="/admin/manage-parking" icon={<FaParking />} color="text-emerald-500" bg="bg-emerald-50" />
                  <ModuleCard title="Catalog" path="/admin/services" icon={<FaBoxOpen />} color="text-orange-500" bg="bg-orange-50" />
-                 <ModuleCard title="CMS Visuals" path="/admin/content" icon={<FaImage />} color="text-indigo-500" bg="bg-indigo-50" />
                  <ModuleCard title="Security Log" path="/admin/security" icon={<FaHistory />} color="text-slate-500" bg="bg-slate-50" />
               </div>
            </div>

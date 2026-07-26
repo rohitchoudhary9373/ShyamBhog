@@ -25,7 +25,6 @@ import AdminLayout from "./pages/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
 import Bookings from "./pages/Admin/Bookings";
 import ManageServices from "./pages/Admin/ManageServices";
-import ManageContent from "./pages/Admin/ManageContent";
 import ManageFeedback from "./pages/Admin/ManageFeedback";
 import Agents from "./pages/Admin/Agents";
 import Refunds from "./pages/Admin/Refunds";
@@ -505,7 +504,7 @@ function App() {
           }>
             <Route index element={<Dashboard />} />
             <Route path="services" element={<ManageServices />} />
-            <Route path="content" element={<ManageContent />} />
+            <Route path="content" element={<Navigate to="/admin" replace />} />
             <Route path="feedback" element={<ManageFeedback />} />
             <Route path="bookings" element={<Bookings />} />
             <Route path="agents" element={<Navigate to="/admin" replace />} />

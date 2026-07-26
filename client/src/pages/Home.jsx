@@ -6,16 +6,17 @@ import { useSettings } from '../context/SettingsContext';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
 import { getMediaUrl } from '../utils/url';
-import { FaVideo, FaUsers, FaParking, FaBed, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaVideo, FaUsers, FaParking, FaBed, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass, FaChevronDown, FaChevronUp, FaGlobe } from 'react-icons/fa';
 import SEO from '../components/SEO';
 
 export default function Home() {
   const { cart, addToCart, updateQuantity } = useCart();
   const { settings } = useSettings();
   const settingsAdminId = settings?.adminId;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [services, setServices] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  const [selectedFaqCat, setSelectedFaqCat] = useState('All');
   const [galleries, setGalleries] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
   const [activeTab, setActiveTab] = useState('Arjee');
@@ -58,7 +59,7 @@ export default function Home() {
         setServices(servicesArray.filter(s => s.isActive));
 
         const faqArray = Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data?.data || []);
-        setFaqs(faqArray.filter(f => f.isActive !== false && (f.category === 'General' || !f.category)));
+        setFaqs(faqArray.filter(f => f.isActive !== false));
 
         const galleryArray = Array.isArray(galRes.data) ? galRes.data : (galRes.data.data || []);
         setGalleries(galleryArray.filter(g => g.isActive));
@@ -490,14 +491,41 @@ export default function Home() {
       {/* ── MAIN PAGE FAQ SECTION ── */}
       {faqs.length > 0 && (
         <section className="w-full max-w-xl px-6 py-8 md:py-12">
-          <div className="text-center mb-8">
+          <div className="flex flex-col items-center text-center mb-6">
+             <div className="flex items-center justify-between w-full mb-3">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Devotional Guidance</span>
+                <button
+                  onClick={() => i18n.changeLanguage(i18n.language === 'hi' ? 'en' : 'hi')}
+                  className="flex items-center gap-1.5 px-3 py-1 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border border-orange-200/60 shadow-sm"
+                  title="Switch Language / भाषा बदलें"
+                >
+                  <FaGlobe size={11} />
+                  <span>{i18n.language === 'hi' ? 'English' : 'हिन्दी'}</span>
+                </button>
+             </div>
              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase mb-1">
                Frequently Asked <span className="text-orange-600">Questions</span>
              </h2>
-             <p className="text-slate-400 font-medium text-[10px] uppercase tracking-widest">Essential guidance for devotees</p>
+             <p className="text-slate-400 font-medium text-[10px] uppercase tracking-widest">100% Verified Guidance for Baba Shyam Devotees</p>
           </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap justify-center gap-1.5 mb-6">
+            {['All', ...new Set(faqs.map(f => f.category || 'General'))].map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedFaqCat(cat)}
+                className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all ${selectedFaqCat === cat ? 'bg-slate-900 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:border-orange-300'}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
           <div className="space-y-3">
-             {faqs.map((faq, idx) => (
+             {faqs
+               .filter(f => selectedFaqCat === 'All' || (f.category || 'General') === selectedFaqCat)
+               .map((faq, idx) => (
                 <div key={faq._id || idx} className={`bg-white rounded-[24px] border ${openFaq === idx ? 'border-orange-200 shadow-xl shadow-orange-50' : 'border-orange-50 shadow-sm'} overflow-hidden transition-all duration-300`}>
                    <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between p-5 text-left group">
                       <span className="font-bold text-[#0A1128] text-sm pr-4 group-hover:text-orange-600 transition-colors">{faq.question}</span>
@@ -508,7 +536,7 @@ export default function Home() {
                    <AnimatePresence>
                       {openFaq === idx && (
                          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
-                            <div className="p-5 pt-0 text-slate-500 text-xs sm:text-sm font-medium leading-relaxed border-t border-orange-50/50 pt-4 bg-orange-50/10">"{faq.answer}"</div>
+                            <div className="p-5 pt-0 text-slate-600 text-xs sm:text-sm font-medium leading-relaxed border-t border-orange-50/50 pt-4 bg-orange-50/10">"{faq.answer}"</div>
                          </motion.div>
                       )}
                    </AnimatePresence>

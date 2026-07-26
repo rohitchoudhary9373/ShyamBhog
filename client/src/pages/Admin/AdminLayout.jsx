@@ -109,7 +109,6 @@ export default function AdminLayout() {
     { name: "Orders", path: "/admin/bookings", icon: <FaBox />, permission: 'manage_bookings' },
     { name: "Service Catalog", path: "/admin/services", icon: <FaBox />, permission: 'manage_services' },
     { name: "Ritual Requests", path: "/admin/manage-arjee", icon: <FaVideo />, permission: 'manage_content' },
-    { name: "CMS Library", path: "/admin/content", icon: <FaBox />, permission: 'manage_content' },
     { name: "Testimonials", path: "/admin/feedback", icon: <FaUsers />, permission: 'manage_feedback' },
     { name: "Refunds", path: "/admin/refunds", icon: <FaShieldAlt />, permission: 'manage_refunds' },
     { name: "Crowd Status", path: "/admin/manage-crowd", icon: <FaUsers />, permission: 'manage_content' },
