@@ -219,7 +219,7 @@ export default function ManageServices() {
       data.append('isFeaturedCart', formData.isFeaturedCart);
       data.append('cartPriority', formData.cartPriority);
       data.append('includes', JSON.stringify(formData.includes));
-      if (isSuper) data.append('adminId', selectedTenant);
+      if (isSuper && selectedTenant && selectedTenant !== 'all') data.append('adminId', selectedTenant);
 
       if (imageFile) data.append('image', imageFile);
 

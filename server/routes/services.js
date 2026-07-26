@@ -259,7 +259,7 @@ router.post("/", protect, admin, upload.single("image"), async (req, res) => {
 
     const newService = {
       ...data,
-      adminId: (req.user.role === 'admin' && data.adminId) ? data.adminId : req.effectiveId,
+      adminId: (req.user.role === 'admin' && data.adminId && data.adminId !== 'all') ? data.adminId : req.effectiveId,
       features: parseArray(data.features),
       benefits: parseArray(data.benefits),
       steps: parseArray(data.steps),
@@ -311,6 +311,9 @@ router.put("/:id", protect, admin, upload.single("image"), async (req, res) => {
     const updateData = {
       ...data,
     };
+    if (updateData.adminId === 'all') {
+      delete updateData.adminId;
+    }
 
     if (data.features !== undefined) updateData.features = parseArray(data.features);
     if (data.benefits !== undefined) updateData.benefits = parseArray(data.benefits);
