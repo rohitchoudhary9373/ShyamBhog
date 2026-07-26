@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
       if (superAdminUser) adminId = superAdminUser._id;
     }
 
-    const filter = { isApproved: true, adminId };
+    const filter = { isApproved: true };
     const feedback = await Feedback.find(filter)
                                    .sort({ createdAt: -1 })
                                    .select('-mobile');
