@@ -82,6 +82,18 @@
     "placeholder_feedback": "Your divine experience or feedback",
     "default_desc": "Experience the divine grace with this sacred offering."
   },
+  "faq_items": {
+    "q_0": "What is Shyam Bhog, and how does it work?",
+    "a_0": "Shyam Bhog is a dedicated digital devotional platform connecting devotees with Shri Khatu Shyam Ji Temple services. You can book Arjee, Bhog, and Swamani offerings online, track live crowd status, and access pilgrimage assistance.",
+    "q_1": "How does the Shyam Bhog donation process work if I cannot visit Khatu in person?",
+    "a_1": "If you cannot visit Khatu in person, our team acts on your behalf. We print your Arjee in sacred red ink and offer pure Bhog Prasad at Baba Shyam's Darbar with full devotional rituals, providing digital confirmation.",
+    "q_2": "Is it safe to book and pay online on your website?",
+    "a_2": "Yes, 100%. All transactions are secured through 256-bit encrypted payment gateways (Razorpay). You receive instant digital receipts and order tracking in your profile.",
+    "q_3": "How do I get confirmation after making a booking?",
+    "a_3": "Immediately after payment, you get an instant digital confirmation receipt. You can also view your active bookings and lifecycle updates under your Profile section.",
+    "q_4": "Can I book for my entire family or a Kirtan group?",
+    "a_4": "Yes! You can add multiple devotee names and specific prayers under a single booking for your family members or group."
+  },
   "profile": {
     "title": "Devotee Profile",
     "edit_title": "Edit Devotee Profile",
