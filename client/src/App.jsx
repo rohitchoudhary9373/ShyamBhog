@@ -508,7 +508,7 @@ function App() {
             <Route path="content" element={<ManageContent />} />
             <Route path="feedback" element={<ManageFeedback />} />
             <Route path="bookings" element={<Bookings />} />
-            <Route path="agents" element={<Agents />} />
+            <Route path="agents" element={<Navigate to="/admin" replace />} />
             <Route path="refunds" element={<Refunds />} />
             <Route path="security" element={<LoginHistory />} />
             <Route path="settings" element={<Settings />} />
