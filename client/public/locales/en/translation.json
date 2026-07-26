@@ -89,7 +89,9 @@
     "no_offerings": "No offerings available currently in this section.",
     "placeholder_name": "Name",
     "placeholder_feedback": "Your divine experience or feedback",
-    "default_desc": "Experience the divine grace with this sacred offering."
+    "default_desc": "Experience the divine grace with this sacred offering.",
+    "faq_title_prefix": "Frequently Asked",
+    "faq_title_highlight": "Questions"
   },
   "faq_items": {
     "q_0": "What is Shyam Bhog, and how does it work?",

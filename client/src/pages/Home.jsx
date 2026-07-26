@@ -470,9 +470,9 @@ export default function Home() {
         <section className="w-full max-w-xl px-6 py-8 md:py-12">
           <div className="text-center mb-6">
              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase mb-1">
-               Frequently Asked <span className="text-orange-600">Questions</span>
+               {t('home.faq_title_prefix') || "Frequently Asked"} <span className="text-orange-600">{t('home.faq_title_highlight') || "Questions"}</span>
              </h2>
-             <p className="text-slate-400 font-medium text-[10px] uppercase tracking-widest">{t('home.faq_subtitle') || "100% Verified Guidance for Baba Shyam Devotees"}</p>
+             <p className="text-slate-400 font-medium text-[10px] uppercase tracking-widest">{t('home.faq_subtitle')}</p>
           </div>
 
           <div className="space-y-3">
