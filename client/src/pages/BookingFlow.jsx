@@ -95,14 +95,20 @@ export default function BookingFlow() {
   const walletDeduction = useWallet ? Math.min(walletData.balance, finalAmount) : 0;
   const payableAmount = finalAmount - walletDeduction;
 
+  const isValidIndianMobile = (num) => /^[6-9]\d{9}$/.test(String(num || '').trim());
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isArjee) {
       if (members.some(m => !m.name || !m.whatsapp)) return setError("Fill details for all members");
-      if (members.some(m => m.whatsapp.replace(/\D/g, '').length !== 10)) return setError("Please enter a valid 10-digit WhatsApp number for all members");
+      if (members.some(m => !isValidIndianMobile(m.whatsapp))) {
+        return setError("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9 for all members");
+      }
     } else {
       if (!standardContact.name || !standardContact.whatsapp) return setError("Contact details required");
-      if (standardContact.whatsapp.replace(/\D/g, '').length !== 10) return setError("Please enter a valid 10-digit WhatsApp number");
+      if (!isValidIndianMobile(standardContact.whatsapp)) {
+        return setError("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9");
+      }
     }
 
     setSubmitLoading(true);
@@ -118,17 +124,16 @@ export default function BookingFlow() {
         items = [{ serviceId: serviceDetails._id, title: serviceDetails.title, price: serviceDetails.price, quantity: quantity, slot: globalSlot ? new Date(globalSlot) : null, message: standardContact.message }];
       }
 
-      const bookingPayload = { name: isArjee ? members[0].name : standardContact.name, whatsapp: isArjee ? members[0].whatsapp : standardContact.whatsapp, items, totalPrice: finalAmount, taxAmount, walletDeduction, payableAmount, serviceType: isCart ? 'Cart' : serviceDetails.category, paymentMode: isCart ? 'one-time' : (serviceDetails.paymentMode || 'one-time'), tenantId: isCart ? cart[0]?.adminId : serviceDetails.adminId };
+      const devoteeContact = isArjee ? members[0].whatsapp : standardContact.whatsapp;
+      const devoteeName = isArjee ? members[0].name : standardContact.name;
+
+      const bookingPayload = { name: devoteeName, whatsapp: devoteeContact, items, totalPrice: finalAmount, taxAmount, walletDeduction, payableAmount, serviceType: isCart ? 'Cart' : serviceDetails.category, paymentMode: isCart ? 'one-time' : (serviceDetails.paymentMode || 'one-time'), tenantId: isCart ? cart[0]?.adminId : serviceDetails.adminId };
 
       // 1. Create PENDING order first to track it
       const orderRes = await API.post('/bookings/v2', bookingPayload);
       const pendingOrder = orderRes.data.data;
 
       if (payableAmount === 0) {
-        // Wallet only - already handled by v2 if we wanted, but let's be explicit
-        // Actually pay-with-wallet-v2 does it all. 
-        // If I use v2 here, I should make sure it doesn't create DUPLICATES.
-        // Let's refine: v2 creates the order. If it's 100% wallet, we are done.
         alert("Confirmed! 🎉");
         if (isCart) clearCart(); navigate("/profile"); return;
       }
@@ -138,10 +143,9 @@ export default function BookingFlow() {
       if (!rzpOrderRes.data.success) throw new Error(rzpOrderRes.data.message);
 
       const options = {
-        key: rzpOrderRes.data.key_id, amount: rzpOrderRes.data.amount, currency: rzpOrderRes.data.currency, name: "Shyam Bhog", order_id: rzpOrderRes.data.id,
+        key: rzpOrderRes.data.key_id, amount: rzpOrderRes.data.amount, currency: rzpOrderRes.data.currency, name: settings?.brandName || "Shyam Bhog", order_id: rzpOrderRes.data.id,
         handler: async (response) => {
           try {
-            // 3. Verify and Upgrade to COMPLETED
             const verifyRes = await API.post('/payment/verify-hybrid', { ...response, orderId: pendingOrder._id, purpose: 'hybrid_booking_v2' });
             if (verifyRes.data.success) { alert("Booked Successfully! 🙏"); if (isCart) clearCart(); navigate("/profile"); }
           } catch (err) {
@@ -149,7 +153,15 @@ export default function BookingFlow() {
             setSubmitLoading(false);
           }
         },
-        prefill: { name: isArjee ? members[0].name : standardContact.name, contact: isArjee ? members[0].whatsapp : standardContact.whatsapp },
+        prefill: { 
+          name: devoteeName, 
+          contact: devoteeContact,
+          email: user?.email || ''
+        },
+        readonly: {
+          contact: true,
+          name: true
+        },
         theme: { color: "#ff6b00" },
         modal: {
           ondismiss: async () => {

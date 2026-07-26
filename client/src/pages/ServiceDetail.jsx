@@ -129,17 +129,28 @@ export default function ServiceDetail() {
    const walletDeduction = useWallet ? Math.min(walletData.balance, finalAmount) : 0;
    const payableAmount = finalAmount - walletDeduction;
 
+   const isValidIndianMobile = (num) => /^[6-9]\d{9}$/.test(String(num || '').trim());
+
    const handleNextStep = () => {
       if (!globalSlot) return setError(t('booking.select_date'));
       if (isArjee) {
          if (members.some(m => !m.name || !m.whatsapp)) return setError(t('booking.devotee_details'));
-         if (members.some(m => m.whatsapp.replace(/\D/g, '').length !== 10)) return setError(i18n.language === 'en' ? "Please enter a valid 10-digit WhatsApp number" : "कृपया 10 अंकों का वैध व्हाट्सएप नंबर दर्ज करें");
+         if (members.some(m => !isValidIndianMobile(m.whatsapp))) {
+            return setError(i18n.language === 'en' 
+               ? "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9" 
+               : "कृपया 6, 7, 8 या 9 से शुरू होने वाला 10 अंकों का वैध मोबाइल नंबर दर्ज करें");
+         }
       } else {
          if (user) {
             if (!standardContact.name) standardContact.name = user.name || 'Devotee';
             if (!standardContact.whatsapp) standardContact.whatsapp = user.mobile || user.whatsapp || '9999999999';
          } else {
             if (!standardContact.name || !standardContact.whatsapp) return setError(t('booking.devotee_details'));
+            if (!isValidIndianMobile(standardContact.whatsapp)) {
+               return setError(i18n.language === 'en' 
+                  ? "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9" 
+                  : "कृपया 6, 7, 8 या 9 से शुरू होने वाला 10 अंकों का वैध मोबाइल नंबर दर्ज करें");
+            }
          }
       }
       if (!user) {
@@ -172,6 +183,10 @@ export default function ServiceDetail() {
          const bookingPayload = { name: isArjee ? members[0].name : standardContact.name, whatsapp: isArjee ? members[0].whatsapp : standardContact.whatsapp, items, totalPrice: finalAmount, taxAmount, walletDeduction, payableAmount, serviceType: service.category, paymentMode: service.paymentMode || 'one-time', tenantId: service.adminId };
          if (payableAmount === 0) { await API.post('/payment/pay-with-wallet-v2', bookingPayload); alert("Confirmed! 🎉"); navigate("/profile"); return; }
          
+         const devoteeContact = isArjee ? members[0].whatsapp : standardContact.whatsapp;
+         const devoteeName = isArjee ? members[0].name : standardContact.name;
+         const devoteeEmail = user?.email || '';
+
          if (isRecurring) {
             const subRes = await API.post('/payment/create-subscription', {
                amount: payableAmount,
@@ -204,7 +219,15 @@ export default function ServiceDetail() {
                      setSubmitLoading(false);
                   }
                },
-               prefill: { name: isArjee ? members[0].name : standardContact.name, contact: isArjee ? members[0].whatsapp : standardContact.whatsapp },
+               prefill: { 
+                  name: devoteeName, 
+                  contact: devoteeContact,
+                  email: devoteeEmail
+               },
+               readonly: {
+                  contact: true,
+                  name: true
+               },
                theme: { color: "#ff6b00" },
                modal: { ondismiss: () => setSubmitLoading(false) }
             };
@@ -225,7 +248,15 @@ export default function ServiceDetail() {
                   setSubmitLoading(false);
                }
             },
-            prefill: { name: isArjee ? members[0].name : standardContact.name, contact: isArjee ? members[0].whatsapp : standardContact.whatsapp },
+            prefill: { 
+               name: devoteeName, 
+               contact: devoteeContact,
+               email: devoteeEmail
+            },
+            readonly: {
+               contact: true,
+               name: true
+            },
             theme: { color: "#ff6b00" }, modal: { ondismiss: () => setSubmitLoading(false) }
          };
          new window.Razorpay(options).open();
