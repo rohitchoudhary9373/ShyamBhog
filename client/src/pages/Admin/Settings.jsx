@@ -395,8 +395,9 @@ export default function Settings() {
           <button
             type="submit"
             disabled={saving}
-            className={`w-full xl:w-auto px-16 py-5 rounded-2xl font-bold text-[11px] uppercase tracking-[0.3em] transition-all shadow-md text-white ${saving
-              ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+            className={`px-10 py-5 rounded-2xl text-xs font-black uppercase tracking-widest text-white transition-all shadow-xl ${
+              saving 
+              ? 'bg-slate-400 cursor-not-allowed' 
               : 'bg-orange-600 hover:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0 shadow-orange-200'
               }`}
           >
@@ -404,6 +405,34 @@ export default function Settings() {
           </button>
         </div>
       </form>
+
+      {/* ── RESET TEST DATA & REVENUE ── */}
+      <div className="bg-red-50/50 rounded-[32px] p-8 border border-red-100/60 mt-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-1 text-left">
+          <h3 className="text-sm font-bold text-red-900 uppercase tracking-wide">Danger Zone: Reset System Metrics & Orders</h3>
+          <p className="text-[11px] text-red-600 font-medium">Clear all test orders, test transactions, and test accounts. Reset total revenue and active orders to ₹0.</p>
+        </div>
+        <button
+          type="button"
+          onClick={async () => {
+            if (window.confirm("ARE YOU SURE? This will clear all test orders, test transactions, and non-admin test users, resetting Total Revenue and Orders to 0.")) {
+              try {
+                setSaving(true);
+                const res = await API.post('/settings/reset-test-data');
+                alert(res.data.message || "Database test data cleared cleanly!");
+                window.location.reload();
+              } catch (err) {
+                alert(err.response?.data?.message || "Error clearing data");
+              } finally {
+                setSaving(false);
+              }
+            }
+          }}
+          className="px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shrink-0"
+        >
+          Clear Test Data & Reset Revenue
+        </button>
+      </div>
 
       {/* Invoice Format Preview */}
       <AnimatePresence>

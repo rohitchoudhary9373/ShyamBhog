@@ -123,4 +123,42 @@ router.put("/", protect, admin, upload.single("logo"), async (req, res) => {
   }
 });
 
+// ── POST /api/settings/reset-test-data (Admin Only) ──────
+router.post("/reset-test-data", protect, admin, async (req, res) => {
+  try {
+    const ArjeeOrder = require("../models/ArjeeOrder");
+    const Transaction = require("../models/Transaction");
+    const Refund = require("../models/Refund");
+    const Feedback = require("../models/Feedback");
+    const FAQ = require("../models/FAQ");
+
+    const adminEmail = 'rohitchoudhary9373@gmail.com';
+
+    // 1. Clear test orders & transactions
+    const delOrders = await ArjeeOrder.deleteMany({});
+    const delTx = await Transaction.deleteMany({});
+    const delRef = await Refund.deleteMany({});
+    const delFeed = await Feedback.deleteMany({});
+
+    // 2. Clear non-admin users
+    const delUsers = await User.deleteMany({ role: { $ne: 'admin' } });
+
+    // 3. Re-seed clean FAQs for primary admin
+    const primaryAdmin = await User.findOne({ email: adminEmail }) || req.user;
+    
+    res.json({
+      success: true,
+      message: "Database cleared! Orders and Revenue reset to 0. Non-admin users removed.",
+      stats: {
+        deletedOrders: delOrders.deletedCount,
+        deletedTransactions: delTx.deletedCount,
+        deletedRefunds: delRef.deletedCount,
+        deletedUsers: delUsers.deletedCount
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
