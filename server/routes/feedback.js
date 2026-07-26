@@ -61,9 +61,10 @@ router.get('/admin', protect, admin, async (req, res) => {
 
     if (req.user.role !== 'admin') {
       filter.adminId = req.effectiveId;
-    } else if (tenantId) {
+    } else if (tenantId && tenantId !== 'all') {
       filter.adminId = tenantId;
     }
+    // If tenantId is 'all' or superAdmin, return all user submitted reviews
 
     const feedback = await Feedback.find(filter).populate('adminId', 'name').sort({ createdAt: -1 });
     res.json(feedback);

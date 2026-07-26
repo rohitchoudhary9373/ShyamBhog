@@ -49,7 +49,7 @@ export default function ManageFeedback() {
 
   useEffect(() => {
     if (isSuperAdmin) fetchResellers();
-    const ownerId = user?.role === 'agent' ? user?.parentAdmin : user?._id;
+    const ownerId = isSuperAdmin ? 'all' : (user?.role === 'agent' ? user?.parentAdmin : user?._id);
     setSelectedTenant(ownerId);
   }, []);
 
