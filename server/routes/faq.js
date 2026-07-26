@@ -41,6 +41,14 @@ const officialFaqs = [
 // Helper to auto seed
 const ensureFaqsSeeded = async (adminId) => {
   try {
+    // Delete old legacy un-curated questions
+    await FAQ.deleteMany({
+      $or: [
+        { question: { $regex: /lost in Khatu|standard Shyam Bhog basket|arrival in Khatu is delayed|change the date or time|bulk booking for my entire family/i } },
+        { answer: { $regex: /lost in Khatu|receive my Bhog basket when I arrive/i } }
+      ]
+    });
+
     const count = await FAQ.countDocuments();
     if (count === 0) {
       const targetAdmin = adminId || (await User.findOne({ role: 'admin' }))?._id;
