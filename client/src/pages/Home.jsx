@@ -489,7 +489,42 @@ export default function Home() {
         </section>
       )}
 
+      {/* ── 13-LANGUAGE SUPPORTED FAQ SECTION ── */}
+      {faqs.length > 0 && (
+        <section className="w-full max-w-xl px-6 py-8 md:py-12">
+          <div className="text-center mb-6">
+             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight leading-snug text-[#0A1128] uppercase mb-1">
+               Frequently Asked <span className="text-orange-600">Questions</span>
+             </h2>
+             <p className="text-slate-400 font-medium text-[10px] uppercase tracking-widest">{t('home.faq_subtitle') || "100% Verified Guidance for Baba Shyam Devotees"}</p>
+          </div>
 
+          <div className="space-y-3">
+             {faqs.slice(0, 5).map((faq, idx) => {
+                const questionText = t(`faq_items.q_${idx}`) !== `faq_items.q_${idx}` ? t(`faq_items.q_${idx}`) : faq.question;
+                const answerText = t(`faq_items.a_${idx}`) !== `faq_items.a_${idx}` ? t(`faq_items.a_${idx}`) : faq.answer;
+                
+                return (
+                  <div key={faq._id || idx} className={`bg-white rounded-[24px] border ${openFaq === idx ? 'border-orange-200 shadow-xl shadow-orange-50' : 'border-orange-50 shadow-sm'} overflow-hidden transition-all duration-300`}>
+                     <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between p-5 text-left group">
+                        <span className="font-bold text-[#0A1128] text-sm pr-4 group-hover:text-orange-600 transition-colors">{questionText}</span>
+                        <div className={`w-7 h-7 rounded-full ${openFaq === idx ? 'bg-orange-600 text-white' : 'bg-orange-50 text-orange-400'} flex items-center justify-center transition-all shrink-0`}>
+                           {openFaq === idx ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
+                        </div>
+                     </button>
+                     <AnimatePresence>
+                        {openFaq === idx && (
+                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
+                              <div className="p-5 text-slate-600 text-xs sm:text-sm font-medium leading-relaxed border-t border-orange-50/50 bg-orange-50/10 whitespace-pre-line">{answerText}</div>
+                           </motion.div>
+                        )}
+                     </AnimatePresence>
+                  </div>
+                );
+             })}
+          </div>
+        </section>
+      )}
 
       {/* ── SUBMIT FEEDBACK ── */}
       <section className="w-full max-w-xl px-6 py-8 md:py-12">
