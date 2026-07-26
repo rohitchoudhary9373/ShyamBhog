@@ -45,7 +45,7 @@ export default function Profile() {
                const cleanUserWhatsapp = cleanPhone(user.whatsappNumber);
 
                const isPhoneMatch = cleanOrderWhatsapp && (cleanOrderWhatsapp === cleanUserMobile || cleanOrderWhatsapp === cleanUserWhatsapp);
-               
+
                const oUserIdStr = o.userId?._id ? String(o.userId._id) : (o.userId ? String(o.userId) : '');
                const uIdStr = user._id ? String(user._id) : '';
                const isIdMatch = uIdStr && oUserIdStr === uIdStr;
@@ -79,7 +79,7 @@ export default function Profile() {
       try {
          await API.put('/auth/profile', editForm);
          setUserData(editForm);
-         
+
          // Update localStorage userInfo so header/other parts sync immediately
          const currentUser = JSON.parse(localStorage.getItem("userInfo") || "{}");
          localStorage.setItem("userInfo", JSON.stringify({ ...currentUser, ...editForm }));
@@ -113,19 +113,19 @@ export default function Profile() {
    const statusStyle = (status) => {
       switch (status) {
          case "Invoice_Generated":
-         case "Completed": 
+         case "Completed":
             return "bg-emerald-50 text-emerald-600 border-emerald-200";
          case "Approved":
             return "bg-blue-50 text-blue-600 border-blue-200";
          case "Payment_Verified":
             return "bg-teal-50 text-teal-600 border-teal-200";
-         case "Cancelled": 
-         case "Failed": 
+         case "Cancelled":
+         case "Failed":
             return "bg-red-50 text-red-600 border-red-200";
          case "Refund_Receipt_Generated":
-         case "Refunded": 
+         case "Refunded":
             return "bg-purple-50 text-purple-600 border-purple-200";
-         default: 
+         default:
             return "bg-amber-50 text-amber-600 border-amber-200";
       }
    };
@@ -252,8 +252,8 @@ export default function Profile() {
                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
                               <div className="flex items-start gap-4">
                                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 shadow-inner shrink-0 ${order.status === 'Completed' ? 'bg-emerald-50 border-emerald-100 text-emerald-500' :
-                                       order.status === 'Failed' ? 'bg-red-50 border-red-100 text-red-500' :
-                                          'bg-orange-50 border-orange-100 text-primary'
+                                    order.status === 'Failed' ? 'bg-red-50 border-red-100 text-red-500' :
+                                       'bg-orange-50 border-orange-100 text-primary'
                                     }`}>
                                     {order.status === 'Failed' ? <FaTimes size={18} /> : order.category === 'Arjee' ? <FaPrayingHands size={18} /> : order.category === 'Bhog' ? <FaBoxOpen size={18} /> : <FaCheckCircle size={18} />}
                                  </div>
@@ -394,7 +394,7 @@ export default function Profile() {
                                  <FaDownload size={12} /> View Refund Receipt
                               </Link>
                            )}
-                           
+
                            {/* Remove fallback invoice buttons, ensuring they ONLY appear if Admin generates them */}
                         </div>
                      </motion.div>

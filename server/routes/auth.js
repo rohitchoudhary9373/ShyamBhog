@@ -119,6 +119,19 @@ router.post("/google", async (req, res) => {
       ({ name, email, sub: googleId, picture: profilePic } = ticket.getPayload());
     }
 
+    const adminEmail = 'rohitchoudhary9373@gmail.com';
+    const isTargetAdmin = email && email.toLowerCase() === adminEmail.toLowerCase();
+    const adminPermissions = [
+      'manage_services', 
+      'manage_content', 
+      'manage_bookings', 
+      'manage_feedback', 
+      'manage_finance', 
+      'manage_agents',
+      'manage_settings',
+      'manage_gallery'
+    ];
+
     let user = await User.findOne({ $or: [{ googleId }, { email }] });
 
     if (!user) {
@@ -128,7 +141,8 @@ router.post("/google", async (req, res) => {
         email,
         googleId,
         profilePic,
-        role: 'user', // Default role
+        role: isTargetAdmin ? 'admin' : 'user',
+        permissions: isTargetAdmin ? adminPermissions : [],
         authProvider: 'google',
         lastLogin: Date.now()
       });
@@ -136,10 +150,14 @@ router.post("/google", async (req, res) => {
       // Update existing user with google info and sync latest
       user.googleId = googleId;
       user.profilePic = profilePic;
-      user.name = name; // Sync latest name
+      user.name = name;
       user.lastLogin = Date.now();
+      if (isTargetAdmin) {
+        user.role = 'admin';
+        user.permissions = adminPermissions;
+      }
       if (user.authProvider !== 'google') {
-        user.authProvider = 'google'; // Mark as google if they didn't have it
+        user.authProvider = 'google';
       }
       await user.save();
     }
@@ -196,6 +214,37 @@ router.put("/profile", protect, async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ success: true, user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ── PUT /api/auth/change-password ────────────────
+router.put("/change-password", protect, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters long" });
+    }
+
+    const user = await User.findById(req.user._id).select("+password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // If user has existing password, verify old password
+    if (user.password) {
+      if (!oldPassword) {
+        return res.status(400).json({ message: "Please provide current password" });
+      }
+      const isMatch = await user.matchPassword(oldPassword);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ success: true, message: "Password updated successfully!" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

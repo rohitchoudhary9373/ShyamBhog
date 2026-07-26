@@ -29,6 +29,51 @@ class PaymentController {
     res.json({ success: true, ...order, key_id: keyId });
   }
 
+  // POST /api/payment/create-subscription
+  async createSubscription(req, res) {
+    const { amount, title, serviceId, devoteeName, devoteeWhatsapp, period = 'monthly', totalCount = 12 } = req.body;
+    const { keyId, keySecret } = await paymentService.getRazorpayKeys();
+
+    if (!keyId || !keySecret) {
+      throw new ApiError(400, "Razorpay API Keys are missing. Please configure them in Admin Settings.");
+    }
+
+    const rzp = new Razorpay({ key_id: keyId, key_secret: keySecret });
+    const amountInPaise = Math.round(amount * 100);
+
+    const plan = await rzp.plans.create({
+      period: period || 'monthly',
+      interval: 1,
+      item: {
+        name: title || "Dainik Arjee Monthly AutoPay",
+        amount: amountInPaise,
+        currency: "INR",
+        description: "Automated Monthly Arjee Booking"
+      }
+    });
+
+    const subscription = await rzp.subscriptions.create({
+      plan_id: plan.id,
+      total_count: totalCount || 12,
+      quantity: 1,
+      customer_notify: 1,
+      notes: {
+        serviceId: serviceId || '',
+        devoteeName: devoteeName || '',
+        devoteeWhatsapp: devoteeWhatsapp || '',
+        userId: req.user ? req.user._id.toString() : ''
+      }
+    });
+
+    res.json({
+      success: true,
+      subscription_id: subscription.id,
+      key_id: keyId,
+      plan_id: plan.id,
+      amount
+    });
+  }
+
   // POST /api/payment/verify
   async verifyPayment(req, res) {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, purpose } = req.body;
@@ -269,6 +314,55 @@ class PaymentController {
           action: 'webhook_refund_processed',
           status: 'success',
           payload: { refundId, paymentId, amount: refund.amount / 100 }
+        });
+      } else if (event === 'subscription.charged') {
+        const subscription = payload.payload.subscription.entity;
+        const payment = payload.payload.payment.entity;
+        const subId = subscription.id;
+        const paymentId = payment.id;
+        const amount = payment.amount / 100;
+        const notes = subscription.notes || {};
+
+        logger.info(`Subscription charged: ${subId} | Payment: ${paymentId} | Amount: ${amount}`);
+
+        const superAdmin = await User.findOne({ role: 'admin' }).lean();
+        const adminId = superAdmin ? superAdmin._id : null;
+
+        const newOrder = await ArjeeOrder.create({
+          adminId: adminId,
+          userId: notes.userId || null,
+          name: notes.devoteeName || 'Devotee',
+          whatsapp: notes.devoteeWhatsapp || '9999999999',
+          serviceType: 'Arjee',
+          paymentMode: 'recurring',
+          totalPrice: amount,
+          payableAmount: amount,
+          paymentId: paymentId,
+          status: 'Payment_Verified',
+          slot: new Date(),
+          items: [{
+            serviceId: notes.serviceId || null,
+            title: 'Dainik Arjee (Monthly AutoPay)',
+            price: amount,
+            quantity: 1,
+            slot: new Date(),
+            devoteeName: notes.devoteeName || 'Devotee',
+            devoteeWhatsapp: notes.devoteeWhatsapp || '9999999999'
+          }]
+        });
+
+        await PaymentAuditLog.create({
+          action: 'webhook_subscription_charged',
+          status: 'success',
+          payload: { subId, paymentId, amount, orderId: newOrder._id }
+        });
+      } else if (event === 'subscription.authenticated') {
+        const subscription = payload.payload.subscription.entity;
+        logger.info(`Subscription authenticated & AutoPay mandate active: ${subscription.id}`);
+        await PaymentAuditLog.create({
+          action: 'webhook_subscription_authenticated',
+          status: 'success',
+          payload: { subscriptionId: subscription.id }
         });
       }
 

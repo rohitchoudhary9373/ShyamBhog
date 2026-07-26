@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
 import { getMediaUrl } from '../utils/url';
 import { FaVideo, FaUsers, FaParking, FaBed, FaArrowRight, FaWhatsapp, FaShoppingCart, FaStar, FaBolt, FaShieldAlt, FaPrayingHands, FaRegCompass } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const { cart, addToCart, updateQuantity } = useCart();
@@ -121,6 +122,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center bg-[#FFFBF5] min-h-[100dvh] pt-2 pb-8 font-sans selection:bg-orange-100">
+      <SEO 
+        title="Shyam Bhog | Khatu Shyam Ji Online Arjee, Bhog & Swamani Prasad Booking"
+        description="Book Khatu Shyam Ji Online Arjee, Special Bhog Prasad & Swamani offerings with live video confirmation. Check live crowd status & darshan timings at Shri Khatu Shyam Dham, Sikar."
+        keywords="Khatu Shyam Ji, Shyam Bhog, Khatu Shyam Arjee, Online Arjee Booking, Swamani Prasad, Khatu Shyam Bhog, Khatu Shyam Live Crowd Status, Darshan Timings, Nishan Yatra, Sikar Rajasthan"
+        canonical="https://shyambhog.com/"
+      />
 
       {/* ── HERO ── */}
       <section className="w-full max-w-xl px-6 mb-4 text-center animate-fade-in pt-2">

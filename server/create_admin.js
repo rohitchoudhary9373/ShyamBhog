@@ -12,14 +12,15 @@ const setupAdmin = async () => {
     console.log('Connected to DB:', mongoUri);
 
     const mobile = '6367793601';
+    const email = 'rohitchoudhary9373@gmail.com';
     const password = 'FounderRohit@2006'; 
-    const name = 'Admin';
+    const name = 'Rohit Choudhary (Admin)';
 
-    // Delete any existing user with this mobile to avoid duplicate key error
-    await User.deleteMany({ mobile });
-    // Delete existing admins to keep it "Single Admin" as requested
-    await User.deleteMany({ role: { $in: ['admin', 'admin'] } });
-    console.log('Cleared existing admin accounts and target mobile.');
+    // Delete any existing user with this mobile or email
+    await User.deleteMany({ $or: [{ mobile }, { email }] });
+    // Delete existing admins to keep it "Single Admin"
+    await User.deleteMany({ role: { $in: ['admin'] } });
+    console.log('Cleared existing admin accounts and target credentials.');
 
     const permissions = [
       'manage_services', 
@@ -35,6 +36,7 @@ const setupAdmin = async () => {
     await User.create({
       name,
       mobile,
+      email,
       password,
       role: 'admin',
       permissions,
@@ -42,8 +44,9 @@ const setupAdmin = async () => {
     });
 
     console.log('-----------------------------------');
-    console.log('Single Admin Account Created:');
-    console.log('Mobile:   ', mobile);
+    console.log('Single Admin Account Configured:');
+    console.log('Email:     ', email);
+    console.log('Mobile:    ', mobile);
     console.log('Password:  [SECURELY HASHED]');
     console.log('Role:      admin');
     console.log('-----------------------------------');

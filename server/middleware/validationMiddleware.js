@@ -159,6 +159,16 @@ const schemas = {
     type: Joi.string().valid('topup', 'booking').required()
   }),
 
+  paymentCreateSubscription: Joi.object({
+    amount: Joi.number().positive().required(),
+    title: Joi.string().allow('', null).optional(),
+    serviceId: objectId.allow('', null).optional(),
+    devoteeName: Joi.string().allow('', null).optional(),
+    devoteeWhatsapp: Joi.string().allow('', null).optional(),
+    period: Joi.string().valid('monthly', 'yearly', 'daily').default('monthly'),
+    totalCount: Joi.number().integer().positive().default(12)
+  }),
+
   // Wallet schemas
   walletSelfTopup: Joi.object({
     amount: Joi.number().positive().required(),

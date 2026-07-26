@@ -57,11 +57,12 @@ app.set("io", io);
 global.io = io;
 
 // ──────────────────────────────────────
+// ──────────────────────────────────────
 // SECURITY & RATE LIMITING
 // ──────────────────────────────────────
-const { generalLimiter, authLimiter, nosqlSanitizer } = require("./middleware/security");
+const { generalLimiter, authLimiter, paymentLimiter, nosqlSanitizer, helmetConfig } = require("./middleware/security");
 
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmetConfig);
 app.use(cors({ origin: "*", credentials: true }));
 
 // ──────────────────────────────────────
@@ -91,7 +92,7 @@ app.get("/", (req, res) => res.json({ success: true, message: "🚀 Shyam Bhog A
 // ──────────────────────────────────────
 // RAZORPAY STANDARD CHECKOUT ENDPOINTS
 // ──────────────────────────────────────
-app.post("/api/create-order", async (req, res) => {
+app.post("/api/create-order", paymentLimiter, async (req, res) => {
   try {
     const { amount, currency, receipt } = req.body;
 
@@ -144,7 +145,7 @@ app.post("/api/create-order", async (req, res) => {
   }
 });
 
-app.post("/api/verify-payment", async (req, res) => {
+app.post("/api/verify-payment", paymentLimiter, async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 

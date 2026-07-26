@@ -9,13 +9,20 @@ import {
    FaCompass, 
    FaCheckCircle,
    FaPlus,
-   FaMinus
+   FaMinus,
+   FaCar,
+   FaBus,
+   FaChargingStation,
+   FaUserCheck,
+   FaClock,
+   FaDirections
 } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 import MapActionSheet from '../components/MapActionSheet';
 import { getMediaUrl } from '../utils/url';
+import SEO from '../components/SEO';
 
 export default function ParkingGuidePage() {
    const { t } = useTranslation();
@@ -33,13 +40,10 @@ export default function ParkingGuidePage() {
       const fetchData = async () => {
          try {
             const tenantId = settingsAdminId || '';
-            console.log(`[ParkingGuidePage] Fetching ALL parkings (ignoring local tenantId)`);
             const [parkRes, faqRes] = await Promise.all([
                API.get('/parking'),
                API.get(`/faq?category=Parking${tenantId ? `&tenantId=${tenantId}` : ''}`)
             ]);
-            console.log('Live Parking API Response:', parkRes.data);
-            console.log('[ParkingGuidePage] API Responses received:', { parkings: parkRes.data, faqs: faqRes.data });
             setParkings(parkRes.data);
             const faqArray = Array.isArray(faqRes.data) ? faqRes.data : (faqRes.data.data || []);
             setFaqs(faqArray.filter(f => f.isActive));
@@ -64,6 +68,73 @@ export default function ParkingGuidePage() {
 
    return (
       <div className="min-h-[100dvh] bg-[#FDF8F1] flex flex-col items-center font-sans selection:bg-orange-100">
+         <SEO 
+            title="Shyam Bhog Parking | Safe Car & Bus Parking at Khatu Shyam"
+            description="Book safe, 24/7 guarded car & bus parking at Shyam Bhog Parking near Shri Khatu Shyam Ji Temple. CCTV security, VIP valet & instant online slot reservation."
+            keywords="Shyam Bhog Parking, Shyam Bhog parking online booking, safe car parking near Khatu Shyam Ji temple, Shyam Bhog VIP valet parking, Khatu Shyam bus parking, Shyam Bhog 24/7 secure parking Sikar, Khatu Shyam Parking, Khatu Shyam Safe Parking, Free Parking Khatu Shyam Ji, VIP Parking Khatu Dham"
+            canonical="https://shyambhog.com/parking-guide"
+            jsonLd={[
+               {
+                  "@context": "https://schema.org",
+                  "@type": "ParkingFacility",
+                  "name": "Shyam Bhog Parking",
+                  "image": "https://shyambhog.com/favicon.svg",
+                  "@id": "https://shyambhog.com/parking-guide/#parking",
+                  "url": "https://shyambhog.com/parking-guide",
+                  "telephone": "+91-9876543210",
+                  "priceRange": "₹30 - ₹1500",
+                  "address": {
+                     "@type": "PostalAddress",
+                     "streetAddress": "Main Temple Approach Road, Near Toran Dwar",
+                     "addressLocality": "Khatu Shyam Ji",
+                     "addressRegion": "Rajasthan",
+                     "postalCode": "332602",
+                     "addressCountry": "IN"
+                  },
+                  "geo": {
+                     "@type": "GeoCoordinates",
+                     "latitude": 27.3639,
+                     "longitude": 75.4019
+                  },
+                  "openingHoursSpecification": {
+                     "@type": "OpeningHoursSpecification",
+                     "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                     "opens": "00:00",
+                     "closes": "23:59"
+                  }
+               },
+               {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [
+                     {
+                        "@type": "Question",
+                        "name": "What is Shyam Bhog Parking and where is it located?",
+                        "acceptedAnswer": {
+                           "@type": "Answer",
+                           "text": "Shyam Bhog Parking is a premier 24/7 guarded car and bus parking facility situated on the main approach road near Toran Dwar in Khatu Shyam Ji, Sikar, Rajasthan."
+                        }
+                     },
+                     {
+                        "@type": "Question",
+                        "name": "Can I book a parking slot online at Shyam Bhog Parking?",
+                        "acceptedAnswer": {
+                           "@type": "Answer",
+                           "text": "Yes, devotees can pre-book guaranteed car, SUV, and bus parking slots online through the official Shyam Bhog portal to avoid peak rush."
+                        }
+                     },
+                     {
+                        "@type": "Question",
+                        "name": "Is overnight parking safe at Shyam Bhog Parking?",
+                        "acceptedAnswer": {
+                           "@type": "Answer",
+                           "text": "Yes, Shyam Bhog Parking features 50+ night-vision CCTV cameras and 24/7 uniformed security guards patrolling the entire gated campus."
+                        }
+                     }
+                  ]
+               }
+            ]}
+         />
          
          {/* ── LUXURY HEADER ── */}
          <nav className="w-full max-w-xl px-6 pt-10 pb-8 flex flex-col items-center text-center gap-2 relative">
@@ -73,10 +144,10 @@ export default function ParkingGuidePage() {
             >
                <FaChevronLeft size={14}/>
             </button>
-            <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">Safe <span className="text-orange-600 underline decoration-orange-200">Parking</span></h1>
+            <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">Shyam Bhog <span className="text-orange-600 underline decoration-orange-200">Parking</span></h1>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
                <span className="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse"></span>
-               Verified Official Zones
+               24/7 Verified Official Parking Plaza & Nav Guide
             </p>
          </nav>
 
@@ -115,7 +186,7 @@ export default function ParkingGuidePage() {
                            <div className="w-full h-48 rounded-[20px] overflow-hidden mb-6 bg-slate-50">
                               <img 
                                  src={getMediaUrl(p.imageUrl)} 
-                                 alt={p.name} 
+                                 alt={`${p.name} - Shyam Bhog Parking Khatu Shyam`} 
                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                                  onError={(e) => { e.target.style.display = 'none'; }}
                               />
@@ -174,7 +245,7 @@ export default function ParkingGuidePage() {
                <div className="flex flex-col gap-3">
                   {faqs.map((faq, idx) => (
                      <div 
-                        key={faq._id} 
+                        key={faq._id || idx} 
                         className={`bg-white rounded-[24px] border border-orange-100/30 transition-all overflow-hidden ${openFaq === idx ? 'shadow-xl border-orange-200' : 'shadow-sm'}`}
                      >
                         <button
@@ -209,7 +280,7 @@ export default function ParkingGuidePage() {
             <footer className="text-center py-10 opacity-30 flex flex-col items-center gap-3">
                <FaShieldAlt size={20} className="text-[#0A1128]"/>
                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-[#0A1128]">
-                  Official Parking Guide
+                  Shyam Bhog Official Parking Guide
                </p>
             </footer>
 
@@ -225,3 +296,4 @@ export default function ParkingGuidePage() {
       </div>
    );
 }
+

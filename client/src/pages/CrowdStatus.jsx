@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toPng } from 'html-to-image';
+import SEO from '../components/SEO';
 
 export default function CrowdStatus() {
   const navigate = useNavigate();
@@ -277,7 +278,35 @@ export default function CrowdStatus() {
   );
 
   return (
-    <div className={`min-h-[100dvh] bg-[#FDF8F1] pb-16 font-sans selection:bg-orange-100 transition-colors duration-1000 relative overflow-hidden`}>
+    <div className="min-h-[100dvh] bg-[#FDF8F1] text-slate-800 pb-20 selection:bg-orange-100 font-sans">
+      <SEO 
+        title="Khatu Shyam Ji Live Crowd Status & Darshan Wait Time Today | Shyam Bhog"
+        description="Check real-time Khatu Shyam Ji Temple crowd status, live darshan line wait times, and Aarti timings. Plan your Khatu Dham yatra with live updates today."
+        keywords="Khatu Shyam Crowd Status, Khatu Shyam Live Darshan, Khatu Shyam Line Wait Time, Khatu Shyam Aarti Timings, Khatu Dham Bheed Status Today, Sikar Rajasthan"
+        canonical="https://shyambhog.com/crowd-status"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is the live crowd status at Khatu Shyam Ji Temple right now?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Live crowd status and line wait times at Shri Khatu Shyam Ji Temple are updated hourly on Shyam Bhog portal."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the Aarti timings at Khatu Shyam Ji Temple?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Khatu Shyam Ji Aarti happens 5 times daily: Mangala Aarti (04:30 AM/05:30 AM), Shringar Aarti (08:00 AM), Bhog Aarti (12:30 PM), Sandhya Aarti (06:30 PM/07:30 PM), and Sayana Aarti (10:00 PM)."
+              }
+            }
+          ]
+        }}
+      />
       
       {/* 🔮 AMBIENCE 🔮 */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-orange-50/40 to-transparent pointer-events-none -z-10"></div>

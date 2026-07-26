@@ -19,7 +19,6 @@ import MyWallet from "./pages/Wallet";
 import Profile from "./pages/Profile";
 import PolicyPage from "./pages/PolicyPage";
 import PremiumInvoicePage from "./pages/PremiumInvoicePage";
-import RazorpayCheckout from "./pages/RazorpayCheckout";
 
 // Admin
 import AdminLayout from "./pages/Admin/AdminLayout";
@@ -488,7 +487,6 @@ function App() {
           <Route path="/parking-guide" element={<ParkingGuidePage />} />
           <Route path="/crowd-status" element={<CrowdStatus />} />
           <Route path="/policy/:type" element={<PolicyPage />} />
-          <Route path="/razorpay-checkout" element={<RazorpayCheckout />} />
 
           {/* 🔐 USER PROTECTED (Inside Website Layout) */}
           <Route element={<ProtectedRoute />}>

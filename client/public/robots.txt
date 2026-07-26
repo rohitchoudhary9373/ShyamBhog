@@ -1,0 +1,22 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /watch-arjee
+Allow: /services/
+Allow: /services/*
+Allow: /crowd-status
+Allow: /parking-guide
+Allow: /policy/*
+
+# Disallow private user & admin dashboard pages
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /profile
+Disallow: /cart
+Disallow: /wallet
+Disallow: /login
+Disallow: /razorpay-checkout
+Disallow: /book/
+
+# Sitemap location
+Sitemap: https://shyambhog.com/sitemap.xml

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import { useSettings } from '../context/SettingsContext';
 import { getMediaUrl } from '../utils/url';
+import SEO from '../components/SEO';
 
 export default function WatchArjee() {
   const navigate = useNavigate();
@@ -48,6 +49,12 @@ export default function WatchArjee() {
 
   return (
     <div className="min-h-[100dvh] bg-[#FDF8F1] flex flex-col items-center font-sans selection:bg-orange-100">
+      <SEO 
+        title="Watch Khatu Shyam Ji Live Arjee & Bhog Videos | Shyam Bhog"
+        description="Watch verified ritual video recordings and live proofs of Arjee, Special Bhog Prasad & Swamani offerings directly from Shri Khatu Shyam Ji Temple."
+        keywords="Watch Khatu Shyam Arjee, Khatu Shyam Live Bhog Video, Khatu Shyam Ritual Proof, Online Arjee Darshan"
+        canonical="https://shyambhog.com/watch-arjee"
+      />
       
       {/* ── LUXURY HEADER ── */}
       <nav className="w-full max-w-xl px-6 pt-10 pb-6 flex flex-col items-center text-center gap-2 relative">

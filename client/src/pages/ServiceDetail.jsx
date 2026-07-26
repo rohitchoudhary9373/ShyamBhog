@@ -12,6 +12,7 @@ import {
    FaChevronDown, FaChevronUp, FaBolt, FaHistory
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import SEO from '../components/SEO';
 
 export default function ServiceDetail() {
    const { serviceId } = useParams();
@@ -161,13 +162,55 @@ export default function ServiceDetail() {
       setSubmitLoading(true);
       setError('');
       try {
+         const isRecurring = service.paymentMode === 'recurring';
          let items = isArjee ? members.map(m => ({ serviceId: service._id, title: `${service.title} (${m.name})`, price: service.price, quantity: 1, slot: new Date(globalSlot), message: m.message, devoteeName: m.name, devoteeWhatsapp: m.whatsapp })) : [{ serviceId: service._id, title: service.title, price: service.price, quantity: quantity, slot: new Date(globalSlot), message: standardContact.message }];
          const bookingPayload = { name: isArjee ? members[0].name : standardContact.name, whatsapp: isArjee ? members[0].whatsapp : standardContact.whatsapp, items, totalPrice: finalAmount, taxAmount, walletDeduction, payableAmount, serviceType: service.category, paymentMode: service.paymentMode || 'one-time', tenantId: service.adminId };
          if (payableAmount === 0) { await API.post('/payment/pay-with-wallet-v2', bookingPayload); alert("Confirmed! 🎉"); navigate("/profile"); return; }
+         
+         if (isRecurring) {
+            const subRes = await API.post('/payment/create-subscription', {
+               amount: payableAmount,
+               title: service.title,
+               serviceId: service._id,
+               devoteeName: bookingPayload.name,
+               devoteeWhatsapp: bookingPayload.whatsapp,
+               period: 'monthly'
+            });
+
+            if (!subRes.data.success) throw new Error(subRes.data.message || "Failed to initialize subscription");
+
+            const options = {
+               key: subRes.data.key_id,
+               subscription_id: subRes.data.subscription_id,
+               name: settings?.brandName || "Shyam Bhog",
+               description: `${service.title} (Monthly Auto-Pay)`,
+               handler: async (response) => {
+                  try {
+                     const verifyRes = await API.post('/payment/verify-hybrid', { 
+                        razorpay_order_id: response.razorpay_subscription_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        bookingDetails: bookingPayload, 
+                        purpose: 'hybrid_booking' 
+                     });
+                     if (verifyRes.data.success) { alert("Auto-Pay Mandate Set & Booked! 🙏"); navigate("/profile"); }
+                  } catch (err) {
+                     setError(err.response?.data?.message || err.message || "Verification failed.");
+                     setSubmitLoading(false);
+                  }
+               },
+               prefill: { name: isArjee ? members[0].name : standardContact.name, contact: isArjee ? members[0].whatsapp : standardContact.whatsapp },
+               theme: { color: "#ff6b00" },
+               modal: { ondismiss: () => setSubmitLoading(false) }
+            };
+            new window.Razorpay(options).open();
+            return;
+         }
+
          const orderRes = await API.post('/payment/create-order', { amount: payableAmount });
          if (!orderRes.data.success) throw new Error(orderRes.data.message);
          const options = {
-            key: orderRes.data.key_id, amount: orderRes.data.amount, currency: orderRes.data.currency, name: "Shyam Bhog", order_id: orderRes.data.id,
+            key: orderRes.data.key_id, amount: orderRes.data.amount, currency: orderRes.data.currency, name: settings?.brandName || "Shyam Bhog", order_id: orderRes.data.id,
             handler: async (response) => {
                try {
                   const verifyRes = await API.post('/payment/verify-hybrid', { ...response, bookingDetails: bookingPayload, purpose: 'hybrid_booking' });
@@ -189,6 +232,30 @@ export default function ServiceDetail() {
 
    return (
       <div className="min-h-[100dvh] bg-[#FFFBF5] font-sans text-slate-900 selection:bg-orange-100 pb-20">
+         <SEO 
+            title={`Book ${service.title} Online - Khatu Shyam Ji | Shyam Bhog`}
+            description={service.description || `Book ${service.title} online at Shri Khatu Shyam Ji Temple. Guaranteed video proof and divine grace.`}
+            keywords={`${service.title}, Khatu Shyam ${service.category}, Book ${service.title} Online, Shyam Bhog Offering`}
+            canonical={`https://shyambhog.com/services/detail/${serviceId}`}
+            ogImage={getMediaUrl(service.imageUrl)}
+            jsonLd={{
+               "@context": "https://schema.org/",
+               "@type": "Service",
+               "name": service.title,
+               "image": getMediaUrl(service.imageUrl),
+               "description": service.description,
+               "provider": {
+                  "@type": "HinduTemple",
+                  "name": "Shri Khatu Shyam Ji Temple - Shyam Bhog",
+                  "telephone": "+91-9876543210"
+               },
+               "offers": {
+                  "@type": "Offer",
+                  "priceCurrency": "INR",
+                  "price": service.price
+               }
+            }}
+         />
          
          {/* ── PREMIUM MINIMAL NAV ── */}
          <nav className="sticky top-0 z-[100] bg-white/40 backdrop-blur-3xl border-b border-orange-100/10 px-6 py-4 flex items-center justify-between">

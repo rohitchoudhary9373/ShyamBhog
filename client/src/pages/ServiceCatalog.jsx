@@ -6,6 +6,7 @@ import { useSettings } from '../context/SettingsContext';
 import { FaShoppingCart, FaBolt, FaCrown } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { getMediaUrl } from '../utils/url';
+import SEO from '../components/SEO';
 
 export default function ServiceCatalog() {
   const { category } = useParams();
@@ -37,6 +38,12 @@ export default function ServiceCatalog() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in bg-[#FDF8F1] min-h-[100dvh]">
+      <SEO 
+        title={`Khatu Shyam Ji ${dbCategory} Online Booking Services | Shyam Bhog`}
+        description={`Explore and book online Khatu Shyam Ji ${dbCategory} offerings. High quality divine prasad and offerings delivered with video proof.`}
+        keywords={`Khatu Shyam ${dbCategory}, Book Khatu Shyam ${dbCategory}, Shyam Bhog ${dbCategory}, Khatu Shyam Ji Prasad Services`}
+        canonical={`https://shyambhog.com/services/${category}`}
+      />
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
         <div className="max-w-2xl">
           <h1 className="text-5xl font-black text-slate-900 tracking-tighter mb-4 flex items-center flex-wrap gap-3 italic">
