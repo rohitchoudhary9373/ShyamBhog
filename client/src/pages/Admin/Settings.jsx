@@ -18,9 +18,8 @@ export default function Settings() {
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
   const [logoError, setLogoError] = useState(false);
-
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [form, setForm] = useState({
     brandName: '',
@@ -82,6 +81,7 @@ export default function Settings() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+    setSaveSuccess(false);
 
     try {
       const fd = new FormData();
@@ -92,7 +92,6 @@ export default function Settings() {
         }
       });
       if (logoFile) fd.append('logo', logoFile);
-      fd.append('adminPassword', adminPassword);
 
       const res = await API.put('/settings', fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -101,7 +100,8 @@ export default function Settings() {
       if (res.data) setForm(prev => ({ ...prev, ...res.data }));
       setLogoFile(null);
       await refreshSettings();
-      setAdminPassword('');
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 4000);
     } catch (err) {
       alert(err.response?.data?.message || 'Error saving settings');
     } finally {
@@ -382,27 +382,22 @@ export default function Settings() {
         </div>
 
         {/* ── AUTHORIZATION & DEPLOYMENT ── */}
-        <div className="flex flex-col xl:flex-row items-center justify-end gap-6 pt-10 border-t border-slate-100">
-          <div className="w-full xl:w-96 space-y-3">
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 flex items-center gap-2">
-              <FaFingerprint className="text-red-500" size={10} /> Confirm Authority Token
-            </label>
-            <input
-              type="password"
-              required
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-              placeholder="Enter password to authorize genesis..."
-              className="w-full px-8 py-5 bg-slate-900 text-white border border-slate-800 rounded-xl outline-none focus:border-orange-500 font-mono text-[11px] placeholder:text-slate-700 transition-all shadow-xl"
-            />
+        <div className="flex flex-col xl:flex-row items-center justify-between gap-6 pt-10 border-t border-slate-100">
+          <div>
+            {saveSuccess && (
+              <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 border border-emerald-100 px-5 py-3 rounded-xl">
+                <FaCheckCircle size={16} />
+                <span className="text-[11px] font-black uppercase tracking-widest">Brand Manifest Deployed Successfully! 🎉</span>
+              </div>
+            )}
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className={`w-full xl:w-auto px-16 py-6 rounded-2xl font-bold text-[11px] uppercase tracking-[0.3em] transition-all shadow-sm border border-slate-200 text-white ${saving
-              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-orange-600 hover:bg-slate-900 hover:-translate-y-1 active:translate-y-0 shadow-orange-200'
+            className={`w-full xl:w-auto px-16 py-5 rounded-2xl font-bold text-[11px] uppercase tracking-[0.3em] transition-all shadow-md text-white ${saving
+              ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+              : 'bg-orange-600 hover:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0 shadow-orange-200'
               }`}
           >
             {saving ? 'Synchronizing Genesis...' : 'Deploy Brand Manifest'}

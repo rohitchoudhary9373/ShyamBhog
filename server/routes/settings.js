@@ -73,18 +73,6 @@ router.get("/", async (req, res) => {
 router.put("/", protect, admin, upload.single("logo"), async (req, res) => {
   try {
     const adminId = req.user._id;
-    const adminPassword = req.body.adminPassword;
-
-    if (!adminPassword) {
-      return res.status(400).json({ message: "Administrator password is required to save changes." });
-    }
-
-    // Verify Admin Password
-    const user = await User.findById(adminId).select("+password");
-    const isMatch = await user.matchPassword(adminPassword);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid administrator password. Security verification failed." });
-    }
 
     let settings = await Setting.findOne({ adminId });
     if (!settings) {
