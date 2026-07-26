@@ -79,16 +79,9 @@ router.get("/", async (req, res) => {
     if (category) filter.category = category;
     if (activeOnly === "true") filter.isActive = true;
 
-    // SaaS Filtering
-    if (tenantId && tenantId !== 'all') {
+    // SaaS Filtering for Public & Master Portal
+    if (tenantId && tenantId !== 'all' && tenantId !== 'undefined' && tenantId !== '') {
       filter.adminId = tenantId;
-    } else if (tenantId === 'all') {
-      // Unified view: Return all services across all contexts
-    } else {
-      const superAdmin = await User.findOne({ role: "admin" }).lean();
-      if (superAdmin) {
-        filter.adminId = superAdmin._id;
-      }
     }
 
     const services = await ServiceItem.find(filter)

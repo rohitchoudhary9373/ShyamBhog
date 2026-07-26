@@ -82,7 +82,7 @@ export default function Home() {
     fetchData();
   }, [settingsAdminId]);
 
-  const filteredServices = services.filter(s => s.category === activeTab);
+  const filteredServices = services.filter(s => s.category?.toLowerCase() === activeTab?.toLowerCase());
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
