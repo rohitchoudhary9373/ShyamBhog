@@ -122,7 +122,6 @@ export default function AdminLayout() {
     { name: "Devotees", path: "/admin/users", icon: <FaUsers />, permission: 'admin_only' },
     { name: "Security Log", path: "/admin/security", icon: <FaHistory />, permission: 'admin_only' },
     { name: "Financials", path: "/admin/wallet", icon: <FaWallet />, permission: 'manage_wallet' },
-    { name: "Settings", path: "/admin/settings", icon: <FaCog />, permission: 'admin_only' },
   ];
 
   const menu = fullMenu.filter(item =>

@@ -29,7 +29,6 @@ import ManageFeedback from "./pages/Admin/ManageFeedback";
 import Agents from "./pages/Admin/Agents";
 import Refunds from "./pages/Admin/Refunds";
 import LoginHistory from "./pages/Admin/LoginHistory";
-import Settings from "./pages/Admin/Settings";
 import AdminWallet from "./pages/Admin/Wallet";
 import ManageDevotees from "./pages/Admin/ManageDevotees";
 import ManageArjee from "./pages/Admin/ManageArjee";
@@ -510,7 +509,7 @@ function App() {
             <Route path="agents" element={<Navigate to="/admin" replace />} />
             <Route path="refunds" element={<Refunds />} />
             <Route path="security" element={<LoginHistory />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="settings" element={<Navigate to="/admin" replace />} />
             <Route path="manage-arjee" element={<ManageArjee />} />
             <Route path="manage-crowd" element={<ManageCrowd />} />
             <Route path="manage-parking" element={<ManageParkingDetailed />} />
