@@ -521,7 +521,7 @@ function App() {
             <Route path="hotel-bookings" element={<Navigate to="/admin" replace />} />
             <Route path="hotel-pricing" element={<Navigate to="/admin" replace />} />
             <Route path="hotel-payouts" element={<Navigate to="/admin" replace />} />
-            <Route path="users" element={<Navigate to="/admin" replace />} />
+            <Route path="users" element={<ManageDevotees />} />
             <Route path="wallet" element={<AdminWallet />} />
           </Route>
         </Route>
