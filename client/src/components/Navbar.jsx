@@ -187,9 +187,9 @@ export default function Navbar() {
             <a href="/#feedback" onClick={() => setOpen(false)}>{t('nav.feedback')}</a>
             <div className="pt-4 border-t border-slate-50">
               <p className="text-[10px] text-slate-300 mb-4 tracking-widest">{t('nav.select_lang')}</p>
-              <div className="grid grid-cols-2 gap-2">
-                {languages.slice(0, 4).map(lang => (
-                  <button key={lang.code} onClick={() => changeLanguage(lang.code)} className={`px-4 py-2 rounded-xl text-[10px] border transition-all ${i18n.language === lang.code ? 'bg-primary border-primary text-white' : 'border-slate-100 text-slate-500'}`}>{lang.name}</button>
+              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto custom-scrollbar p-1">
+                {languages.map(lang => (
+                  <button key={lang.code} onClick={() => changeLanguage(lang.code)} className={`px-3 py-2 rounded-xl text-[10px] border transition-all truncate ${i18n.language === lang.code ? 'bg-primary border-primary text-white font-bold' : 'border-slate-100 text-slate-500'}`}>{lang.name}</button>
                 ))}
               </div>
             </div>
