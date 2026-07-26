@@ -120,7 +120,6 @@ export default function AdminLayout() {
       isDisabledShowcase: true,
       permission: 'manage_hotels'
     },
-    { name: "Users", path: "/admin/users", icon: <FaUsers />, permission: 'manage_devotees' },
     { name: "Security Log", path: "/admin/security", icon: <FaHistory />, permission: 'admin_only' },
     { name: "Financials", path: "/admin/wallet", icon: <FaWallet />, permission: 'manage_wallet' },
     { name: "Settings", path: "/admin/settings", icon: <FaCog />, permission: 'admin_only' },
