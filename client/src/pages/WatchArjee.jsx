@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import { useSettings } from '../context/SettingsContext';
 import { getMediaUrl } from '../utils/url';
+import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 
 export default function WatchArjee() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { settings } = useSettings();
   const settingsAdminId = settings?.adminId;
   const [videos, setVideos] = useState([]);
@@ -64,10 +66,10 @@ export default function WatchArjee() {
         >
           <FaChevronLeft size={14}/>
         </button>
-        <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">Ritual <span className="text-orange-600 underline decoration-orange-200">Proofs</span></h1>
+        <h1 className="text-3xl font-black text-[#0A1128] tracking-tighter uppercase italic">{t('arjee.title') || "Ritual Proofs"}</h1>
         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse"></span>
-          Live from Khatu Dham
+          {t('arjee.live_from') || "Live from Khatu Dham"}
         </p>
       </nav>
 
@@ -76,7 +78,7 @@ export default function WatchArjee() {
         {loading ? (
           <div className="py-20 text-center flex flex-col items-center gap-4">
              <div className="w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
-             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Invoking Divine Proofs...</p>
+             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t('arjee.fetching')}</p>
           </div>
         ) : (videos && videos.length > 0) ? (
           <div className="flex flex-col items-center gap-10">
